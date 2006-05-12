@@ -178,13 +178,15 @@ class LibraryLoader(object):
 # Make a list of all know modules (described in *Config.py files in the 
 # config_py directory) and load the information described in those Config.py
 # files.
-dirs = [p for p in itkConfig.config_py if os.path.isdir(p)]
+dirs = [p for p in itkConfig.path if os.path.isdir(p)]
 module_data = {}
 for d in dirs:
-  known_modules = [f[:-9] for f in os.listdir(d) if f.endswith('Config.py')]
+  known_modules = [f[:-9] for f in os.listdir(d+os.sep+"Configuration") if f.endswith('Config.py')]
   known_modules.sort()
-
+  sys.path.append(d)
+  sys.path.append(d+os.sep+".."+os.sep+"lib")
+  
   for module in known_modules:
     data = {}
-    execfile(os.path.join(d, module + 'Config.py'), data)
+    execfile(os.path.join(d+os.sep+"Configuration", module + 'Config.py'), data)
     module_data[module] = data

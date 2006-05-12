@@ -36,10 +36,13 @@ swig_lib = normalized_path('@CONFIG_PYTHON_SWIGLIB_DIR@')
 swig_py = normalized_path('@CONFIG_PYTHON_SWIGPY_DIR@')
 
 # config_py: location of xxxConfix.py CMake-generated library descriptions 
-config_py = [normalized_path('@CONFIG_PYTHON_CONFIGPY_DIR@')]
+config_py = normalized_path('@CONFIG_PYTHON_CONFIGPY_DIR@')
+
+# put the itkConfig.py path in the path list
+path = [normalized_path('')]
 # also populate path with the WRAPITK_PYTHON_PATH var
 if os.environ.has_key('WRAPITK_PYTHON_PATH'):
-  config_py.extend(os.environ['WRAPITK_PYTHON_PATH'].split(':'))
+  path.extend(os.environ['WRAPITK_PYTHON_PATH'].split(':'))
 
 # location for test input
 data_root = normalized_path('@CONFIG_WRAP_ITK_DATA_ROOT@')
