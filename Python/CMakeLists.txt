@@ -37,8 +37,8 @@ IF(CMAKE_CONFIGURATION_TYPES)
     # SWIG-generated libs and *.py files are sent to ${config} subdir
     # This assumes that LIBRARY_OUTPUT_PATH is WrapITK_BINARY_DIR/bin (bad!)
     # TODO: We need a better way to do this.
-    SET(CONFIG_PYTHON_SWIGPY_DIR "../../bin/${config}")
-    SET(CONFIG_PYTHON_SWIGLIB_DIR "../../bin/${config}")
+    SET(CONFIG_PYTHON_SWIGPY_DIR "../../lib/${config}")
+    SET(CONFIG_PYTHON_SWIGLIB_DIR "../../lib/${config}")
     CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/itkConfig.py.in"
                    "${WrapITK_BINARY_DIR}/Python/${config}/itkConfig.py"
                    @ONLY IMMEDIATE)
@@ -48,16 +48,16 @@ ELSE(CMAKE_CONFIGURATION_TYPES)
   SET(CONFIG_WRAP_ITK_TEST_ROOT "../Testing")
   SET(CONFIG_PYTHON_CONFIGPY_DIR "Configuration")
 
-  SET(CONFIG_PYTHON_SWIGPY_DIR "../bin")
-  SET(CONFIG_PYTHON_SWIGLIB_DIR "../bin")
+  SET(CONFIG_PYTHON_SWIGPY_DIR "../lib")
+  SET(CONFIG_PYTHON_SWIGLIB_DIR "../lib")
   CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/itkConfig.py.in"
                  "${WrapITK_BINARY_DIR}/Python/itkConfig.py"
                  @ONLY IMMEDIATE)
 ENDIF(CMAKE_CONFIGURATION_TYPES)
 
 SET(CONFIG_WRAP_ITK_TEST_ROOT "None")
-SET(CONFIG_PYTHON_SWIGLIB_DIR "../Python-SWIG")
-SET(CONFIG_PYTHON_SWIGPY_DIR "../Python-SWIG")
+SET(CONFIG_PYTHON_SWIGLIB_DIR "../lib")
+SET(CONFIG_PYTHON_SWIGPY_DIR "../lib")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/itkConfig.py.in"
                "${WrapITK_BINARY_DIR}/Python/InstallOnly/itkConfig.py"
               @ONLY IMMEDIATE)

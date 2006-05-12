@@ -81,9 +81,7 @@ MACRO(LINK_IF_EXISTS dir)
   ENDIF(EXISTS "${dir}")
 ENDMACRO(LINK_IF_EXISTS)
 
-LINK_IF_EXISTS("${WrapITK_DIR}/Tcl-SWIG")
-LINK_IF_EXISTS("${WrapITK_DIR}/Perl-SWIG")
-LINK_IF_EXISTS("${WrapITK_DIR}/Python-SWIG")
-LINK_IF_EXISTS("${WrapITK_DIR}/Java-SWIG")
+LINK_DIRECTORIES("${WrapITK_DIR}/lib")
 
-LINK_IF_EXISTS("${WrapITK_DIR}/bin")
+# libraries are all in the same dir
+SET (LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib" CACHE INTERNAL "Single output directory for building all libraries.")

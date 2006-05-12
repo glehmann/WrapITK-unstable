@@ -245,7 +245,7 @@ MACRO(CREATE_WRAPPER_FILES library_name language extension mdx_files library_idx
     STRING(REGEX REPLACE "wrap_" "" simple_base_name "${base_name}")
     IF(NOT "${extension}" STREQUAL "")
       SET(swig_language_file "${LIBRARY_OUTPUT_PATH}/${WRAP_ITK_INSTALL_INTDIR}${simple_base_name}.${extension}")
-      WRAP_ITK_INSTALL("/${language}-SWIG" "${swig_language_file}")    
+      WRAP_ITK_INSTALL("/lib" "${swig_language_file}")    
     ENDIF(NOT "${extension}" STREQUAL "")
   ENDFOREACH(cable_file)
   
@@ -258,7 +258,7 @@ MACRO(CREATE_WRAPPER_FILES library_name language extension mdx_files library_idx
     CREATE_EXTRA_SWIG_FILE("${library_name}" "${language}" "${swig_input}" "${cxx_output}" "${outdir}")
     IF(NOT "${extension}" STREQUAL "")
       SET(swig_language_file "${LIBRARY_OUTPUT_PATH}/${WRAP_ITK_INSTALL_INTDIR}${base_name}.${extension}")
-      WRAP_ITK_INSTALL("/${language}-SWIG" "${swig_language_file}")
+      WRAP_ITK_INSTALL("/lib" "${swig_language_file}")
     ENDIF(NOT "${extension}" STREQUAL "")
   ENDFOREACH(swig_input)
   
@@ -481,5 +481,5 @@ MACRO(CREATE_WRAPPER_LIBRARY library_name sources language library_type custom_l
     ${LINK_LIBRARIES_${language}} )
   
   GET_TARGET_PROPERTY(library_location ${library_name} LOCATION)
-  WRAP_ITK_INSTALL("/${language}-SWIG" ${library_location})
+  WRAP_ITK_INSTALL("/lib" ${library_location})
 ENDMACRO(CREATE_WRAPPER_LIBRARY)
