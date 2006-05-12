@@ -1,4 +1,4 @@
-import os, sys, imp, itkConfig, itkTemplate
+import os, os.path, sys, imp, itkConfig, itkTemplate
 
 def LoadModule(name, namespace = None):
   """This function causes a SWIG module to be loaded into memory after its dependencies
@@ -178,10 +178,13 @@ class LibraryLoader(object):
 # Make a list of all know modules (described in *Config.py files in the 
 # config_py directory) and load the information described in those Config.py
 # files.
-known_modules = [f[:-9] for f in os.listdir(itkConfig.config_py) if f.endswith('Config.py')]
-known_modules.sort()
+dirs = [p for p in itkConfig.config_py if os.path.isdir(p)]
 module_data = {}
-for module in known_modules:
-  data = {}
-  execfile(os.path.join(itkConfig.config_py, module + 'Config.py'), data)
-  module_data[module] = data
+for d in dirs:
+  known_modules = [f[:-9] for f in os.listdir(d) if f.endswith('Config.py')]
+  known_modules.sort()
+
+  for module in known_modules:
+    data = {}
+    execfile(os.path.join(d, module + 'Config.py'), data)
+    module_data[module] = data
