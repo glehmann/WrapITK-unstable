@@ -105,7 +105,14 @@ ELSE ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
     INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Python/${path}" FILES ${install_tgt})
 
     # create the directory to avoid loosing case on windows
-    FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${WRAP_ITK_INSTALL_INTDIR}${path})
+    IF(CMAKE_CONFIGURATION_TYPES)
+      FOREACH(config ${CMAKE_CONFIGURATION_TYPES})
+        SET(dst "${CMAKE_CURRENT_BINARY_DIR}/${WRAP_ITK_INSTALL_INTDIR}${path}")
+        STRING(REPLACE "\${BUILD_TYPE}" "${config}" dst ${dst})
+        FILE(MAKE_DIRECTORY "${dst}")
+        FILE(APPEND "c:/WrapITK.log" "- ${file} --> ${path} --> ${dst}\n")
+      ENDFOREACH(config)
+    ENDIF(CMAKE_CONFIGURATION_TYPES)
 
     ADD_CUSTOM_COMMAND(SOURCE ${src}
       COMMAND ${CMAKE_COMMAND}
