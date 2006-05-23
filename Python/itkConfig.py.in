@@ -39,7 +39,7 @@ swig_py = normalized_path('@CONFIG_PYTHON_SWIGPY_DIR@')
 config_py = normalized_path('@CONFIG_PYTHON_CONFIGPY_DIR@')
 
 # put the itkConfig.py path in the path list
-path = [normalized_path('')]
+path = [os.path.join(config_py,'..')]
 # also populate path with the WRAPITK_PYTHON_PATH var
 if os.environ.has_key('WRAPITK_PYTHON_PATH'):
   path.extend(os.environ['WRAPITK_PYTHON_PATH'].split(':'))
