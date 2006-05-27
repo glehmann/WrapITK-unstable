@@ -178,9 +178,12 @@ MACRO(WRAPPER_LIBRARY_CREATE_LIBRARY)
   ENDIF(WRAP_ITK_PYTHON AND WRAPPER_LIBRARY_PYTHON)
 
   IF(WRAP_ITK_JAVA AND WRAPPER_LIBRARY_JAVA)
+    # .java files are placed in InsightToolkit.jar - there is no need to install
+    # so pass an empty extension for the "created file type" variable, so we know
+    # not to try to install the .java files
     SET(library_type "MODULE")
     SET(custom_library_prefix "")
-    CREATE_WRAPPER_FILES_AND_LIBRARY("Java" "java" "${wrap_java_sources}"
+    CREATE_WRAPPER_FILES_AND_LIBRARY("Java" "" "${wrap_java_sources}"
       "${master_index_files}" "${library_idx_files}" "${gccxml_inc_file}" 
       "${swig_library_files}" "${library_type}" "${custom_library_prefix}")
   ENDIF(WRAP_ITK_JAVA AND WRAPPER_LIBRARY_JAVA)
