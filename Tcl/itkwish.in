@@ -96,5 +96,5 @@ elif [ "$1" = "--run" ]; then
   exec "$@"
 else
   # Run real itkwish executable in this environment.
-  exec "@CONFIG_WRAP_ITK_TCL_SWIG_DIR@/itkwish" "$@"
+  exec "@CONFIG_WRAP_ITK_ITKWISH_DIR@/itkwish" "$@"
 fi
