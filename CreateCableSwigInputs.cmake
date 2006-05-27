@@ -464,7 +464,7 @@ ENDMACRO(WRAP_TEMPLATE)
 # n and above.
 #
 # E.g., if only WRAP_unsigned_char is selected and 2- and 3-dimensional images
-# are selected, then WRAP_IMAGE_FILTER_INT(2)  will create instantiations for 
+# are selected, then WRAP_IMAGE_FILTER_USIGN_INT(2)  will create instantiations for 
 # filter<itk::Image<unsigned char, 2>, itk::Image<unsigned char, 2> >
 # and
 # filter<itk::Image<unsigned char, 3>, itk::Image<unsigned char, 3> >
@@ -481,13 +481,17 @@ MACRO(WRAP_IMAGE_FILTER_VECTOR param_count)
   WRAP_IMAGE_FILTER("${WRAP_ITK_VECTOR}" ${param_count} "${ARGN}")
 ENDMACRO(WRAP_IMAGE_FILTER_VECTOR)
 
-MACRO(WRAP_IMAGE_FILTER_INT param_count)
-  WRAP_IMAGE_FILTER("${WRAP_ITK_INT}" ${param_count} "${ARGN}")
-ENDMACRO(WRAP_IMAGE_FILTER_INT)
+MACRO(WRAP_IMAGE_FILTER_USIGN_INT param_count)
+  WRAP_IMAGE_FILTER("${WRAP_ITK_USIGN_INT}" ${param_count} "${ARGN}")
+ENDMACRO(WRAP_IMAGE_FILTER_USIGN_INT)
 
 MACRO(WRAP_IMAGE_FILTER_SIGN_INT param_count)
   WRAP_IMAGE_FILTER("${WRAP_ITK_SIGN_INT}" ${param_count} "${ARGN}")
 ENDMACRO(WRAP_IMAGE_FILTER_SIGN_INT)
+
+MACRO(WRAP_IMAGE_FILTER_INT param_count)
+  WRAP_IMAGE_FILTER("${WRAP_ITK_INT}" ${param_count} "${ARGN}")
+ENDMACRO(WRAP_IMAGE_FILTER_INT)
 
 MACRO(WRAP_IMAGE_FILTER_REAL param_count)
   WRAP_IMAGE_FILTER("${WRAP_ITK_REAL}" ${param_count} "${ARGN}")

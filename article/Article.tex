@@ -800,7 +800,7 @@ Here is the \verb$BasicFiltersB/wrap_itkMedianImageFilter.cmake$ file:
 
 \small \begin{verbatim}
 WRAP_CLASS("itk::MedianImageFilter" POINTER)
-  WRAP_IMAGE_FILTER_INT(2)
+  WRAP_IMAGE_FILTER_USIGN_INT(2)
   WRAP_IMAGE_FILTER_SIGN_INT(2)
   WRAP_IMAGE_FILTER_REAL(2)
 END_WRAP_CLASS()
@@ -879,11 +879,11 @@ by the developer to create a wrappers but must {\em never} be modified.
 \begin{itemize}
   \item \verb$WRAP_ITK_DIMS$ contains all the dimensions selected by the user.
 
-  \item \verb$WRAP_ITK_INT$ contains all unsigned integer types selected by the user.
+  \item \verb$WRAP_ITK_USIGN_INT$ contains all unsigned integer types selected by the user.
 
   \item \verb$WRAP_ITK_SIGN_INT$ contains all signed integer types selected by the user.
 
-  \item \verb$WRAP_ITK_INTEGRAL$ contains all signed and unsigned integral types
+  \item \verb$WRAP_ITK_INT$ contains all signed and unsigned integral types
 selected by the user.
 
   \item \verb$WRAP_ITK_REAL$ contains all the real types selected by the user.
@@ -972,8 +972,8 @@ n and above.
 
  This macro create a template instantiation with \verb$size$
 \verb$itk::Image$ parameters of the given pixel type. So if you are wrapping a filter
-which should take two images with integral pixel types, write \verb$WRAP_IMAGE_FILTER_INT(2)$. The
-specific integral data type(s) (\verb$char$, \verb$long$, or \verb$short$ in the \verb$WRAP_IMAGE_FILTER_INT$ case) will
+which should take two images with integral pixel types, write \verb$WRAP_IMAGE_FILTER_USIGN_INT(2)$. The
+specific integral data type(s) (\verb$char$, \verb$long$, or \verb$short$ in the \verb$WRAP_IMAGE_FILTER_USIGN_INT$ case) will
 be determined by the user-selected build parameters (e.g. \verb$WRAP_long$, and
 \verb$WRAP_short$).
 
