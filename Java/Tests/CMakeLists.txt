@@ -1,5 +1,8 @@
 # MAKE_DIRECTORY(Java/Tests)
 
+# put all generated files in this list
+SET(targets "")
+
 # configure the tests
 
 UNIQUE(types "${WRAP_ITK_SCALAR};UC")
@@ -26,7 +29,7 @@ FOREACH(JAVA_TEST_IMAGE_DIMENSION ${WRAP_ITK_DIMS})
       ${WrapITK_SOURCE_DIR}/images/cthead1.png
       ${TEST_FILE_NAME}.img
     )
-    ADD_CUSTOM_TARGET(JavaSimplePipeline${JAVA_TEST_PIXEL_TYPE}${JAVA_TEST_IMAGE_DIMENSION} ALL DEPENDS ${TEST_FILE_NAME}.class)
+    SET(targets ${targets} ${TEST_FILE_NAME}.class)
 
   ENDFOREACH(JAVA_TEST_PIXEL_TYPE)
 ENDFOREACH(JAVA_TEST_IMAGE_DIMENSION)
@@ -43,3 +46,4 @@ ENDFOREACH(JAVA_TEST_IMAGE_DIMENSION)
 # ENDFOREACH(test)
 
 
+ADD_CUSTOM_TARGET(JavaTests DEPENDS ${targets})
