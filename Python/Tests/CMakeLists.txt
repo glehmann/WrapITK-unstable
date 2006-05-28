@@ -8,6 +8,9 @@ CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/pythonTestDriver.py.in"
               "${CMAKE_CURRENT_BINARY_DIR}/pythonTestDriver.py"
               @ONLY IMMEDIATE)
 
+# install pythonTestDriver.py.in, so it can be used by external projects for testing
+WRAP_ITK_INSTALL("/Configuration/Python/Tests" "${CMAKE_CURRENT_SOURCE_DIR}/pythonTestDriver.py.in")
+
 
 SET(PYTHON "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/pythonTestDriver.py")
 

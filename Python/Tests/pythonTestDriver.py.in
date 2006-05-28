@@ -17,6 +17,12 @@ if os.environ.has_key(env_python_path) :
 else:
   os.environ[env_python_path] = "@PYTHON_TEST_PYTHON_PATH@"
 
+env_wrapitk_python_path = "WRAPITK_PYTHON_PATH"
+if os.environ.has_key(env_wrapitk_python_path) :
+  os.environ[env_wrapitk_python_path] = "@PYTHON_TEST_WRAPITK_PYTHON_PATH@:%s" % os.environ[env_wrapitk_python_path]
+else:
+  os.environ[env_wrapitk_python_path] = "@PYTHON_TEST_WRAPITK_PYTHON_PATH@"
+
 
 
 # setup the option manager to be able to compare the resulting images in the same test
