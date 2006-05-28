@@ -465,7 +465,7 @@ MACRO(CREATE_WRAPPER_LIBRARY library_name sources language library_type custom_l
     
   IF(EXTERNAL_WRAP_ITK_PROJECT)
     # Don't add dependencies on modules created by WrapITK
-    FILTER(dep_list "${WRAPPER_LIBRARY_DEPENDS}" "${WRAP_ITK_MODULES}")
+    REMOVE(dep_list "${WRAPPER_LIBRARY_DEPENDS}" "${WRAP_ITK_MODULES}")
   ELSE(EXTERNAL_WRAP_ITK_PROJECT)
     SET(dep_list ${WRAPPER_LIBRARY_DEPENDS})
   ENDIF(EXTERNAL_WRAP_ITK_PROJECT)

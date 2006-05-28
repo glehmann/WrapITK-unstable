@@ -52,7 +52,7 @@ MACRO(INTERSECTION var_name list1 list2)
   SET(${var_name} ${intersect_tmp})
 ENDMACRO(INTERSECTION)
 
-MACRO(FILTER var_name list1 list2)
+MACRO(REMOVE var_name list1 list2)
   # Remove elements in list2 from list1 and store the result in var_name.
   SET(filter_tmp "")
   FOREACH(l ${list1})
@@ -61,7 +61,7 @@ MACRO(FILTER var_name list1 list2)
     ENDIF(NOT "${list2}" MATCHES "(^|;)${l}(;|$)")
   ENDFOREACH(l)
   SET(${var_name} ${filter_tmp})
-ENDMACRO(FILTER)
+ENDMACRO(REMOVE)
 
 
 ################################################################################

@@ -927,19 +927,35 @@ of feature to manipulate lists in CMake, and should be replaced by
 some CMake native commands in the future.
 
 \begin{itemize}
-  \item \verb$UNIQUE()$
+  \item \verb$UNIQUE(var list)$ create a new list called \verb$var$ composed of the same
+element than the ones in \verb$list$ without duplicate. This macro is useful to impose
+a type even if it hasn't been selected by the user. The following line for example, from
+\verb$Modules/IO/wrap_itkImageFileReader.cmake$, force the unsigned char type to be
+wrapped:
 
-  \item \verb$SORT()$
+\small \begin{verbatim}
+  UNIQUE(image_types "UC;${WRAP_ITK_ALL_TYPES}")
+\end{verbatim} \normalsize
 
-  \item \verb$INTERSECTION()$
+  \item \verb$SORT(var list)$ create a new list called \verb$var$ which contains the
+same elements than \verb$list$ sorted lexicographically
 
-  \item \verb$FILTER()$
+  \item \verb$INTERSECTION(var list1 list2)$ create a new list called \verb$var$ which
+is the intersection of lists \verb$list1$ and \verb$list2$
 
-  \item \verb$FILTER_DIMS()$
+  \item \verb$REMOVE(var list1 list2)$ Remove elements in \verb$list2$ from \verb$list1$
+and store the result in \verb$var$
 
-  \item \verb$INCREMENT()$
+  \item \verb$INCREMENT(var number)$ increment \verb$number$ by one an store the result
+in \verb$var$
 
-  \item \verb$DECREMENT()$
+  \item \verb$DECREMENT(var number)$ decrement \verb$number$ by one an store the result
+in \verb$var$
+
+  \item \verb$FILTER_DIMS(var dimension_condition)$ processes a \verb$dimension_condition$
+and returns a list of the dimensions that (a) meet the condition, and (b) were selected
+to be wrapped. Recall that the condition is either a CMake list of dimensions, or a
+string of the form "n+" where n is a number.
 
 \end{itemize}
 
@@ -959,8 +975,9 @@ n and above.
 
   \item \verb$WRAP_IMAGE_FILTER_type(size)$ . \verb$type$ can be one of:
   \begin{itemize}
-    \item \verb$INT$
+    \item \verb$USIGN_INT$
     \item \verb$SIGN_INT$
+    \item \verb$INT$
     \item \verb$REAL$
     \item \verb$VECTOR_REAL$
     \item \verb$COV_VECTOR_REAL$
