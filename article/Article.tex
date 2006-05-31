@@ -42,7 +42,8 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 % At minimum, give your name and an email address.  You can include a
 % snail-mail address if you like.
 \author{Ga\"etan Lehmann{$^1$}{\small{,}} Zachary Pincus{$^2$} {\small{and}} Benoit Regrain{$^3$}}
-\authoraddress{{$^1$}Unit\'e de Biologie du D\'eveloppement et de la Reproduction, Institut National de la Recherche Agronomique, 78350 Jouy-en-Josas, France\\
+\authoraddress{{$^1$}INRA, UMR 1198; ENVA; CNRS, FRE 2857, Biologie du D\'eveloppement et 
+Reproduction, Jouy en Josas, F-78350, France\\
 {$^2$}Program in Biomedical Informatics and Department of Biochemistry, Stanford University School of Medicine, Stanford, California\\
 {$^3$}CREATIS, CNRS UMR 5515, 69621 Villeurbanne, France}
 
@@ -120,6 +121,10 @@ Python. This is not the case in the standard ITK wrappers.
 
   \item ITK was broken on MacOS X \cite{MacOsXWebSite} with python.
 
+  \item  Loading python modules can take lot of time. With WrapITK, by default,
+only the modules really used are loaded, and so the loading time is higly shorter
+in common situations.
+
 \end{itemize}
 
 The article you're reading is not as nice and complete than what we would have
@@ -139,8 +144,8 @@ to be sure everything work as it should. See below for details about how
 to report bugs are contribute patches.
 
 Several tests are available\footnote{There is currently 49 tests with the default
-configuration.} for Python, Tcl and Java. They can be run with the \verb$ctest$
-command.
+configuration.} for Python, Tcl and Java. They ensure the high quality of WrapITK.
+They can be run with the \verb$ctest$ command.
 
 \section{Performance}
 
@@ -164,13 +169,17 @@ a nightly updated archive is available at
 
     \subsubsection{ITK}
 
-WrapITK will work properly with the ITK 2.6.0 release. 
+WrapITK will work properly with the ITK 2.8.0 release.
 
 There are some optional
 patches to the ITK source in \verb$WrapITK/patches/optional$ which can be applied to
 version 2.6.0. These optional patches provide
 better support for python by providing some methods like \verb$__str__$, or methods
 for standard python sequence interface (see below).
+
+Some required patch may appear in the development version version of WrapITK. Those
+patches are required for the last stable version of ITK, and should be already
+integrated in the last CVS version of ITK.
 
     \subsubsection{CableSwig}
 
@@ -198,7 +207,7 @@ WrapITK have been tested with Tcl 8.4.11.
     \subsubsection{Java}
 
 Java \cite{JavaWebSite} is required only to build java support.
-WrapITK have been tested with java \verb$1.5.0_06-b05$.
+WrapITK have been tested with java \verb$1.5.0_06-b05$ and \verb$1.4.2_11$.
 
     \subsubsection{Build options}
 
@@ -281,6 +290,7 @@ This media also contain several packages which may be useful to use WrapITK,
 and which are not available in mandriva linux 2006.0. Here is the full list:
 \begin{itemize}
   \item \verb$cmake$
+  \item \verb$darcs$
   \item \verb$itk-data$
   \item \verb$itk-doc$
   \item \verb$itk-examples$
@@ -319,6 +329,7 @@ that python knows where to find the itk scripts.
 On linux boxes however, the user have to set the \verb$LD_LIBRARY_PATH$ to
 point to libSwigRuntime.so. For example
 \verb$export LD_LIBRARY_PATH=/usr/lib/InsightToolkit/WrapITK/Python-SWIG$.
+This step is not required with the mandriva's package.
 
 If WrapITK has not been installed, then you will either need to set the
 \verb$PYTHONPATH$ environment variable to contain the directory
@@ -384,8 +395,8 @@ def write( image, fileName ) :
 
      \subsubsection{The {\em New()} method}
 
-Lots of classes have a \verb$New()$ method which returns a smart pointer to that class. The
-\verb$New()$ method in python has some additional features:
+Lots of classes have a \verb$New()$ method which returns a smart pointer to an object of
+that class. In python, the \verb$New()$ method has some additional features:
 \begin{itemize}
   \item Arguments to the new method are assumed to be filter inputs. So you could
 write:
@@ -402,7 +413,7 @@ or even
 \begin{verbatim}
 adder = itk.AddImageFilter[...].New( readerA, readerB )
 \end{verbatim}
-In that case, \verb$New$ will use the \verb$GetOutput()$ method of the object, if it
+In that case, \verb$New()$ will use the \verb$GetOutput()$ method of the object, if it
 exist, to get the image and set the inputs of the new filter.
 
   \item Additionally, keyword arguments are allowed as well. Keyword arguments cause
@@ -692,7 +703,7 @@ or just
 smartPtr = itk.SmartPointer[image](image.GetPointer())
 \end{verbatim} \normalsize
 
-\verb$itk$ module can be very long to import. The \verb$itkConfig$ module define
+WrapITK modules can be very long to import. The \verb$itkConfig$ module define
 a \verb$ImportCallback$ method which will be called when each sub module is
 imported in the import process. \verb$ImportCallback$ can be customized to report the
 progress status of the import process. It must be a function that can take
@@ -713,11 +724,27 @@ import itk
 \verb$progress$ take only the value $0$ and $1$, but may take values between $0$ and $1$
 in the future.
 
+It must be noticed that using \verb$import itk$ load only python code, and doesn't load
+any C++ compiled code. This feature is called {\em lazy loading}. It imply some specific
+behaviors:
+\begin{itemize}
+ \item \verb$import itk$ is done in a very short time
+ \item a compiled module is loaded only when a class in that module is used. Thus,
+when a python program is run, only the revelant modules are loaded in memory
+ \item using a class in a program can block the program (for a short time). The user
+can choose to load the entire library at once with the command \verb$itk.force_load()$.
+\end{itemize}
+
+
     \subsection{TCL usage}
+
+Some examples are available in \verb$Tcl/Tests$ directory.
 
 Write me.
 
     \subsection{Java usage}
+
+Some examples are available in \verb$Java/Tests$ directory.
 
 Write me.
 
@@ -975,16 +1002,23 @@ n and above.
 
   \item \verb$WRAP_IMAGE_FILTER_type(size)$ . \verb$type$ can be one of:
   \begin{itemize}
-    \item \verb$USIGN_INT$
-    \item \verb$SIGN_INT$
-    \item \verb$INT$
-    \item \verb$REAL$
-    \item \verb$VECTOR_REAL$
-    \item \verb$COV_VECTOR_REAL$
-    \item \verb$RGB$
-    \item \verb$ALL$
-    \item \verb$SCALAR$
-    \item \verb$VECTOR$
+    \item \verb$USIGN_INT$ to select all the image types with unsigned integral
+pixel types selected by the user
+    \item \verb$SIGN_INT$ to select all the image types with signed integral
+pixel types selected by the user
+    \item \verb$INT$ to select all the image types with signed and unsigned integral
+pixel types selected by the user
+    \item \verb$REAL$ to select all the image types with real pixel types selected by the user
+    \item \verb$VECTOR_REAL$ to select all the image types with \verb$Vector$
+pixel types selected by the user
+    \item \verb$COV_VECTOR_REAL$ to select all the image types with \verb$CovariantVector$
+pixel types selected by the user
+    \item \verb$RGB$ to select all the image types with \verb$RGBPixel$
+pixel types selected by the user
+    \item \verb$SCALAR$ to select all the image types with scalar pixel types selected by the user
+    \item \verb$VECTOR$ to select all the image types with \verb$Vector$ and \verb$CovariantVector$
+pixel types selected by the user
+    \item \verb$ALL$ to select all the image types selected by the user.
   \end{itemize}
 
  This macro create a template instantiation with \verb$size$
