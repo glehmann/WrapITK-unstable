@@ -46,17 +46,10 @@ WRAP_CLASS("itk::ImageToImageFilter" POINTER)
       ENDFOREACH(t)
     ENDFOREACH(d)
       
-  # Vector <-> scalar
-  IF(WRAP_vector_double AND WRAP_double)
-    WRAP_IMAGE_FILTER_TYPES(VD D)
-    WRAP_IMAGE_FILTER_TYPES(D VD)
-  ENDIF(WRAP_vector_double AND WRAP_double)
-		    
-  IF(WRAP_vector_float AND WRAP_float)
-    WRAP_IMAGE_FILTER_TYPES(VF F)
-    WRAP_IMAGE_FILTER_TYPES(F VF)
-  ENDIF(WRAP_vector_float AND WRAP_float)
-				
+  # *Vector <-> scalar
+  WRAP_IMAGE_FILTER_COMBINATIONS("${WRAP_ITK_VECTOR}" "${WRAP_ITK_SCALAR}")
+  WRAP_IMAGE_FILTER_COMBINATIONS("${WRAP_ITK_SCALAR}" "${WRAP_ITK_VECTOR}")
+
   # complex <-> scalar
   IF(WRAP_complex_float AND WRAP_float)
     WRAP_IMAGE_FILTER_TYPES(CF F)
