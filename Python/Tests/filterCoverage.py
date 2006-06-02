@@ -57,7 +57,10 @@ excludeSet = set(["UnaryFunctorImageFilter",
   "RegionGrowImageFilter",
   "ConnectedComponentFunctorImageFilter",
   "BasicDilateImageFilter",
-  "BasicErodeImageFilter"])
+  "BasicErodeImageFilter",
+  "BasicErodeImageFilter",
+  "AdaptImageFilter",
+  ])
 
 
 # get filters from sources
