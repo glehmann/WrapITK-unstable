@@ -19,6 +19,11 @@ watershed.SetInput(gradient.GetOutput())
 watershed.SetThreshold(0.01)
 watershed.SetLevel(0.2)
 
+
+# not UL writer available
+# will wait for LabelToRGBImageFIlter to be integrated in the toolkit
+# to add this test
+
 writer = itk.itkImageFileWriterUL2_New()
 writer.SetFileName( sys.argv[2] )
 writer.SetInput( watershed.GetOutput()  )

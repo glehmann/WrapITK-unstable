@@ -163,6 +163,27 @@ IF(WRAP_float AND WRAP_2)
 #     --compare complexImage.mhd ${WrapITK_SOURCE_DIR}/images/complexImage.mhd
   )
 
+  ADD_TEST( PythonGradientMagnitudeRecursiveGaussianImageFilterTest
+    ${PYTHON}
+    ${CMAKE_CURRENT_SOURCE_DIR}/GradientMagnitudeRecursiveGaussianImageFilter.py
+    ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+    GradientMagnitudeRecursiveGaussianImageFilter.png
+    5
+    --compare GradientMagnitudeRecursiveGaussianImageFilter.png
+    	      ${WrapITK_SOURCE_DIR}/images/GradientMagnitudeRecursiveGaussianImageFilter.png
+  )
+
+  ADD_TEST( PythonGradientAnisotropicDiffusionImageFilterTest
+    ${PYTHON}
+    ${CMAKE_CURRENT_SOURCE_DIR}/GradientAnisotropicDiffusionImageFilter.py
+    ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+    GradientAnisotropicDiffusionImageFilter.png
+    5 0.125 1.0
+    --compare GradientAnisotropicDiffusionImageFilter.png
+              ${WrapITK_SOURCE_DIR}/images/GradientAnisotropicDiffusionImageFilter.png
+  )
+					
+
 ENDIF(WRAP_float AND WRAP_2)
 
 
