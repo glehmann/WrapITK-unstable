@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import commands, sys, re
+import sys, re, itk, os
+from sys import argv
 
 # python 2.3 compatibility
 if sys.version < '2.4' :
@@ -29,7 +30,8 @@ if sys.version < '2.4' :
 	    return i
 
 # declares filter which will not be wrapped
-excludeSet = set(["UnaryFunctorImageFilter",
+excluded = set([
+  "UnaryFunctorImageFilter",
   "ReconstructionImageFilter",
   "PadImageFilter",
   "ObjectMorphologyImageFilter",
@@ -64,26 +66,22 @@ excludeSet = set(["UnaryFunctorImageFilter",
 
 
 # get filters from sources
-filterFiles = commands.getoutput("find /usr/include/InsightToolkit -name 'itk*Filter.h'").splitlines()
-filters = set([f.split('/')[-1][len('itk'):-len('.h')] for f in filterFiles]) - excludeSet
-fDict = {}
-for filterFile in filterFiles :
-            d = filterFile.split('/')[4]
-	    f = filterFile.split('/')[-1][len('itk'):-len('.h')]
-	    fDict[f] = d
-			    
-# get filter from wrapper files
-wrappersFiles = commands.getoutput("find -name 'wrap_itk*Filter*.cmake'").splitlines()
-wrappers = set([f.split('/')[-1][len('wrap_itk'):-len('.cmake')].split('_')[0] for f in wrappersFiles])
+headers = sum([ f for p,d,f in os.walk(argv[1]) ], [])
+filters = set([f[len('itk'):-len('.h')] for f in headers if f.endswith("Filter.h")]) - excluded
 
-nonWrapped = filters - wrappers
+# get filter from wrapper files
+# remove filters which are not in the toolkit (external projects, PyImageFilter, ...)
+wrapped = set([a for a in dir(itk) if a.endswith("Filter")]).intersection(filters)
+
+nonWrapped = filters - wrapped
+
 for f in sorted(nonWrapped) :
-	print '%s (%s) is not wrapped' % (f, fDict[f])
+	print '%s is not wrapped' % f
 
 print
 
 print
 print '%i filters' % len(filters)
-print '%i wrapped filters' % len(wrappers)
+print '%i wrapped filters' % len(wrapped)
 print '%i non wrapped filters' % len(nonWrapped)
-print '%f%% covered' % (len(wrappers) / float(len(filters)) * 100)
+print '%f%% covered' % (len(wrapped) / float(len(filters)) * 100)
