@@ -1,7 +1,28 @@
-# MAKE_DIRECTORY(Java/Tests)
 
 # put all generated files in this list
 SET(targets "")
+
+# configure and build the test driver
+FIND_PROGRAM(IMAGE_COMPARE ImageCompare)
+SET(JAVA_TEST_ITK_JAR "${WrapITK_BINARY_DIR}/Java/InsightToolkit.jar")
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/javaTestDriver.java.in"
+   "${CMAKE_CURRENT_BINARY_DIR}/javaTestDriver.java"
+   @ONLY IMMEDIATE
+)
+
+ADD_CUSTOM_COMMAND(
+  OUTPUT javaTestDriver.class
+  DEPENDS ${WrapITK_BINARY_DIR}/Java/Tests/javaTestDriver.java
+  COMMAND ${JAVA_COMPILE}
+  ARGS -classpath "${CMAKE_CURRENT_SOURCE_DIR}/argparser.jar"
+  -d "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/javaTestDriver.java"
+)
+
+SET(targets ${targets} javaTestDriver.class)
+
+# a convenient var to use in tests
+SET(JAVA_DRIVER "${JAVA_RUNTIME}" -classpath ".:${CMAKE_CURRENT_SOURCE_DIR}/argparser.jar" javaTestDriver)
+
 
 # configure the tests
 
@@ -23,27 +44,18 @@ FOREACH(JAVA_TEST_IMAGE_DIMENSION ${WRAP_ITK_DIMS})
     )
 
     ADD_TEST(JavaSimplePipeline${JAVA_TEST_PIXEL_TYPE}${JAVA_TEST_IMAGE_DIMENSION}
-      ${JAVA_RUNTIME}
-      -classpath .:${WrapITK_BINARY_DIR}/Java/InsightToolkit.jar
+      ${JAVA_DRIVER}
       ${TEST_FILE_NAME}
       ${WrapITK_SOURCE_DIR}/images/cthead1.png
       ${TEST_FILE_NAME}.img
+      --compare ${TEST_FILE_NAME}.img ${WrapITK_SOURCE_DIR}/images/cthead1.png
     )
+    
     SET(targets ${targets} ${TEST_FILE_NAME}.class)
 
   ENDFOREACH(JAVA_TEST_PIXEL_TYPE)
 ENDFOREACH(JAVA_TEST_IMAGE_DIMENSION)
 
-# compile the test programs
-# FOREACH(test )
-#   ADD_CUSTOM_COMMAND(
-#     OUTPUT ${test}.class
-#     DEPENDS ${WrapITK_BINARY_DIR}/Java/InsightToolkit.jar ${test}.java
-#     COMMAND ${JAVA_COMPILE}
-#     ARGS -classpath "${WrapITK_BINARY_DIR}/Java/InsightToolkit.jar" -d "${CMAKE_CURRENT_BINARY_DIR}" ${CMAKE_CURRENT_SOURCE_DIR}/${test}.java
-#   )
-#   ADD_CUSTOM_TARGET(${test} ALL DEPENDS ${test}.class)
-# ENDFOREACH(test)
 
 
 ADD_CUSTOM_TARGET(JavaTests DEPENDS ${targets})
