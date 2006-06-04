@@ -182,7 +182,40 @@ IF(WRAP_float AND WRAP_2)
     --compare GradientAnisotropicDiffusionImageFilter.png
               ${WrapITK_SOURCE_DIR}/images/GradientAnisotropicDiffusionImageFilter.png
   )
-					
+
+  ADD_TEST( PythonGeodesicActiveContourLeftVentricleTest
+    ${PYTHON}
+    --compare GeodesicActiveContourLeftVentricleTest.png
+    	      ${WrapITK_SOURCE_DIR}/images/GeodesicActiveContourLeftVentricleTest.png
+    --
+    ${CMAKE_CURRENT_SOURCE_DIR}/GeodesicActiveContourImageFilter.py
+    ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+    GeodesicActiveContourLeftVentricleTest.png
+    81 114 5.0 1.0 -0.5 3.0 2.0
+  )
+
+  ADD_TEST( PythonGeodesicActiveContourWhiteMatterTest
+    ${PYTHON}
+    --compare GeodesicActiveContourWhiteMatterTest.png
+    	      ${WrapITK_SOURCE_DIR}/images/GeodesicActiveContourWhiteMatterTest.png
+    --
+    ${CMAKE_CURRENT_SOURCE_DIR}/GeodesicActiveContourImageFilter.py
+    ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+    GeodesicActiveContourWhiteMatterTest.png
+    56 92 5.0 1.0 -0.3 2.0 10.0
+  )
+
+  ADD_TEST( PythonGeodesicActiveContourGrayMatterTest
+    ${PYTHON}
+    --compare GeodesicActiveContourGrayMatterTest.png
+    	      ${WrapITK_SOURCE_DIR}/images/GeodesicActiveContourGrayMatterTest.png
+    --
+    ${CMAKE_CURRENT_SOURCE_DIR}/GeodesicActiveContourImageFilter.py
+    ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+    GeodesicActiveContourGrayMatterTest.png
+    40 90 5.0 .5 -0.3 2.0 10.0
+  )
+
 
 ENDIF(WRAP_float AND WRAP_2)
 
