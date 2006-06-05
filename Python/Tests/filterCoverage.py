@@ -66,7 +66,9 @@ excluded = set([
 
 
 # get filters from sources
-headers = sum([ f for p,d,f in os.walk(argv[1]) ], [])
+headers = []
+for d in argv[1:]:
+  headers += sum([ f for p,d,f in os.walk(d) ], [])
 filters = set([f[len('itk'):-len('.h')] for f in headers if f.endswith("Filter.h")]) - excluded
 
 # get filter from wrapper files
@@ -75,13 +77,22 @@ wrapped = set([a for a in dir(itk) if a.endswith("Filter")]).intersection(filter
 
 nonWrapped = filters - wrapped
 
+
+# print non wrapped filters without much text to stdout, so they can be easily reused
 for f in sorted(nonWrapped) :
-	print '%s is not wrapped' % f
+	print f
 
-print
+# and print stats in stderr to avoid poluting the list above
+print >>sys.stderr
+print >>sys.stderr, '%i filters' % len(filters)
+print >>sys.stderr, '%i wrapped filters' % len(wrapped)
+print >>sys.stderr, '%i non wrapped filters' % len(nonWrapped)
+print >>sys.stderr, '%f%% covered' % (len(wrapped) / float(len(filters)) * 100)
+print >>sys.stderr
 
-print
-print '%i filters' % len(filters)
-print '%i wrapped filters' % len(wrapped)
-print '%i non wrapped filters' % len(nonWrapped)
-print '%f%% covered' % (len(wrapped) / float(len(filters)) * 100)
+
+# the goal is to return a non zero value if coverage is not 100%
+# but we are not yet at this stage !
+#
+# return len(nonWrapped)
+

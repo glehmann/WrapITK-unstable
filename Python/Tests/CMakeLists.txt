@@ -18,6 +18,9 @@ ADD_TEST(PythonTestDirectory ${PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/TestDirectory
 
 ADD_TEST(PythonTestObject ${PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/TestObject.py)
 
+ADD_TEST(PythonFilterCoverage ${PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/filterCoverage.py ${ITK_INCLUDE_DIRS})
+
+
 # some tests will fail if dim=2 and unsigned short are not wrapped
 INTERSECTION(WRAP_2 2 "${WRAP_ITK_DIMS}")
 IF(WRAP_unsigned_short AND WRAP_2)
