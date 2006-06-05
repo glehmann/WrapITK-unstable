@@ -14,6 +14,10 @@ WRAP_ITK_INSTALL("/Configuration/Python/Tests" "${CMAKE_CURRENT_SOURCE_DIR}/pyth
 
 SET(PYTHON "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/pythonTestDriver.py")
 
+ADD_TEST(PythonTestDirectory ${PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/TestDirectory.py)
+
+ADD_TEST(PythonTestObject ${PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/TestObject.py)
+
 # some tests will fail if dim=2 and unsigned short are not wrapped
 INTERSECTION(WRAP_2 2 "${WRAP_ITK_DIMS}")
 IF(WRAP_unsigned_short AND WRAP_2)
