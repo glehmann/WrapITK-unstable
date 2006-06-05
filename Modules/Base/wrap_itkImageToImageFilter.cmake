@@ -18,25 +18,11 @@ WRAP_CLASS("itk::ImageToImageFilter" POINTER)
   # RGB types
   WRAP_IMAGE_FILTER_RGB(2)
  
-  # int <-> RGB
-  IF(WRAP_rgb_unsigned_char AND WRAP_unsigned_char)
-    WRAP_IMAGE_FILTER_TYPES(RGBUC UC)
-  ENDIF(WRAP_rgb_unsigned_char AND WRAP_unsigned_char)
-
-  IF(WRAP_rgb_unsigned_short AND WRAP_unsigned_short)
-    WRAP_IMAGE_FILTER_TYPES(RGBUS US)
-  ENDIF(WRAP_rgb_unsigned_short AND WRAP_unsigned_short)
-
-  IF(WRAP_rgb_unsigned_char)
-    UNIQUE(types "UL;${WRAP_ITK_SCALAR}")
-    WRAP_IMAGE_FILTER_COMBINATIONS("${types}" "RGBUC")
-  ENDIF(WRAP_rgb_unsigned_char)
-
-  IF(WRAP_rgb_unsigned_short)
-    UNIQUE(types "UL;${WRAP_ITK_SCALAR}")
-    WRAP_IMAGE_FILTER_COMBINATIONS("${types}" "RGBUS")
-  ENDIF(WRAP_rgb_unsigned_short)
-
+  # scalar <-> RGB
+  UNIQUE(stypes "UL;${WRAP_ITK_SCALAR}")
+  WRAP_IMAGE_FILTER_COMBINATIONS("${stypes}" "${WRAP_ITK_RGB}")
+  WRAP_IMAGE_FILTER_COMBINATIONS("${WRAP_ITK_RGB}" "${stypes}")
+ 
   # VectorImage <-> scalar
   UNIQUE(to_types "UC;${WRAP_ITK_SCALAR}")
     FOREACH(d ${WRAP_ITK_DIMS})
