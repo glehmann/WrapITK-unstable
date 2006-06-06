@@ -40,7 +40,7 @@ def main():
     # Software Guide.
 
     # we wan't to know what is happening
-    itk.auto_progress(True)
+    # itk.auto_progress(True)
     
     InternalPixelType = itk.F
     Dimension = 2
