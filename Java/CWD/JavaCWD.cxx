@@ -39,7 +39,7 @@ const char* JavaCWD::GetCWD()
 }
 #endif
 
-#if defined(__linux__)
+#if !defined(_WIN32)
 # include <dlfcn.h>
 
 int JavaCWD::Load(const char* lib)
