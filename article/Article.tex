@@ -84,6 +84,7 @@ in target languages. It become quickly frustrating for the user, especially when
 he has to spend lot of time to extend the current set of classes. Even if it is
 not yet complete, the WrapITK's set of classes have been highly extended. Moreover,
 the user can choose at build time which types and which dimensions he want to wrap.
+With 197 wrapped filters, WrapITK covers 62\% of the available filters.
 
   \item  The template arguments set is poorly chosen, making sometime impossible
 to create a pipeline. In WrapITK, most of the filters have the same input and output
@@ -318,6 +319,22 @@ WrapITK is also available in cooker, the development version of mandriva.
 % TODO: provide more binary packages - for mac and windows.
 
   \subsection{Python usage}
+
+In this section, we detail python usage. Some of the examples shown here are copied
+from the console, and so show the interpreter prompt:
+
+\begin{verbatim}
+2> 12+3
+2> 15
+
+3> result = 12+3
+
+4> 
+\end{verbatim}
+
+In the example above, \verb$12+3$ is what is wrote in the interpreter, and
+\verb$15$ is the result. \verb$2>$, \verb$3>$, \verb$4>$ are the prompt
+of the interpreter.
 
      \subsubsection{Configuring python and importing the libraries}
 
@@ -735,6 +752,43 @@ when a python program is run, only the revelant modules are loaded in memory
 can choose to load the entire library at once with the command \verb$itk.force_load()$.
 \end{itemize}
 
+     \subsubsection{Full python script examples}
+
+This script is the exact transcription to python of the C++ example 
+which can be found at Examples/Filtering/GradientMagnitudeRecursiveGaussianImageFilter.cxx
+in the ITK source tree. More information about the filters used can be found in 
+the ITK Software Guide \cite{{ITKSoftwareGuide}}, section 6.4.2.
+
+\small \begin{verbatim}
+import itk
+from sys import argv
+
+InputPixelType = itk.F
+OutputPixelType = itk.F
+
+InputImageType = itk.Image[InputPixelType, 2]
+OutputImageType = itk.Image[OutputPixelType, 2]
+
+reader = itk.ImageFileReader[InputImageType].New( FileName=argv[1] )
+
+filter = itk.GradientMagnitudeRecursiveGaussianImageFilter[InputImageType, OutputImageType].New(
+                     reader,
+                     Sigma=float(argv[3]) )
+filter.Update();
+
+WritePixelType = itk.UC
+WriteImageType = itk.Image[WritePixelType, 2]
+
+rescaler = itk.RescaleIntensityImageFilter[OutputImageType, WriteImageType].New( filter,
+                     OutputMinimum=0,
+                     OutputMaximum=255 )
+
+writer = itk.ImageFileWriter[WriteImageType].New( rescaler, FileName=argv[2] )
+
+writer.Update();
+\end{verbatim} \normalsize
+
+More examples can be found in the directory \verb$Python/Tests$.
 
     \subsection{TCL usage}
 
@@ -1106,6 +1160,8 @@ more classes to WrapITK}.
 In WrapITK, we used them to avoid managing switches if some dependencies or not
 found: the project must found its dependencies or fail.
 
+External projects are not yet supported for Tcl and Java. See \ref{section:contribute}
+to contribute external project support for those languages.
 
     \subsubsection{Building}
 To build an external project, first ensure that WrapITK has been properly built.
@@ -1159,7 +1215,44 @@ More examples can be found in the contributions to the Insight Journal
 
     \subsubsection{BufferConversion: an example of extension for one language}
 
-Write me.
+This project is a python only project. It requires to have Numeric, Numarray or numpy installed
+on your system, and will let the user convert ITK images to python matrices, and python matrices
+to ITK images. It thus provide a bridge between ITK and other great python tools like SciPy
+\ref{SciPyWebSite} (and a lot of others).
+
+Once installed, the function are directly available in the \verb$itk$ module - there is nothing
+special to import. A \verb$PyBuffer$ template let you choose the type to convert, exactly
+like with the ITK classes. You can then use the \verb$GetArrayFromImage()$ and
+\verb$GetImageFromArray()$ method to convert respectively a array to an ITK image, and an
+ITK image to an array. There is no need to instantiate a \verb$PyBuffer$ object: the methods
+are \verb$static$.
+
+\begin{verbatim}
+1> import itk
+
+2> reader = itk.ImageFileReader.IUS2.New(FileName='cthead1.png')
+
+3> array = itk.PyBuffer.IUS2.GetArrayFromImage(reader.GetOutput())
+
+4> array
+4>
+array([[0, 0, 0, ..., 0, 0, 0],
+       [0, 0, 0, ..., 0, 0, 0],
+       [0, 0, 0, ..., 0, 0, 0],
+       ...,
+       [0, 0, 0, ..., 0, 0, 0],
+       [0, 0, 0, ..., 0, 0, 0],
+       [0, 0, 0, ..., 0, 0, 0]], type=UInt16)
+
+5> image = itk.PyBuffer.IUS2.GetImageFromArray(array)
+
+6> image
+6> <C itk::SmartPointer<(itk::Image<(unsigned short,2)>)> instance at _50684208_p_itk__SmartPointerTitk__ImageTunsigned_short_2_t_t>
+\end{verbatim}
+
+Because PyBuffer is a python only external project, its directory structure is very
+simple - there is no subdirectory. This external project should be used as an example
+for all the languages specific external projects.
 
     \subsubsection{ItkVtkGlue: an example of extension for all languages, including C++}
 
@@ -1183,9 +1276,49 @@ Example:
 4> <libvtkFilteringPython.vtkImageData vtkobject at 0xb7675b60>
 \end{verbatim}
 
-
 The \verb$itk.show3D$ class use the class \verb$ImageToVTKImageFilter$ to create the
 volume rendering shown in Figure \ref{screenshot}.
+
+This project provide new feature for all the languages, including C++.
+Its directory structure reflect that. 
+
+\begin{verbatim}
+|-- CMakeLists.txt
+|-- Wrapping
+|   |-- CMakeLists.txt
+|   |-- Python
+|   |   |-- CMakeLists.txt
+|   |   |-- Tests
+|   |   |   |-- CMakeLists.txt
+|   |   |   |-- CannyEdgeDetectionImageFilter.py
+|   |   |   `-- simpleItkVtkPipeline.py
+|   |   `-- itkvtk.py
+|   |-- itkvtk.swg
+|   |-- wrap_itkImageToVTKImageFilter.cmake
+|   `-- wrap_itkVTKImageToImageFilter.cmake
+|-- images
+|   `-- cthead1.png
+`-- src
+    |-- itkImageToVTKImageFilter.h
+    |-- itkImageToVTKImageFilter.txx
+    |-- itkVTKImageToImageFilter.h
+    `-- itkVTKImageToImageFilter.txx
+\end{verbatim}
+
+The C++ source files are in
+directory src, while the files needed for WrapITK are in Wrapping.
+The CMakeLists.txt file in the root of the project includes the
+Wrapping sub directory only if the user ask for it with the option
+BUILD\_WRAPPERS. Some python specific code can be found in Wrapping/Python
+directory, and some python tests in Wrapping/Python/Tests.
+The itkvtk.swg file contains the typemaps required to return vtk
+objects.
+The images directory contains the images used for the tests. Putting
+the images in this directory rather than in the root of the project
+prevent overriding the reference files during the test, if the build
+is done in the source tree.
+The project should also provide C++ tests - it is not done yet.
+
 
   \subsection{Extending language support and adding more languages}
 
@@ -1200,6 +1333,7 @@ Write me.
 Write me.
 
   \subsection{Contributing to WrapITK}
+\label{section:contribute}
 
 WrapITK is an opensource project, and so all contributions are welcome. Here are
 some points which requires special attention:
