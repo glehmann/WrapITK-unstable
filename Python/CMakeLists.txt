@@ -3,6 +3,7 @@
 
 SUBDIRS(PyUtils)
 SUBDIRS(Tests)
+SUBDIRS(itkExtras)
 
 ###############################################################################
 # Add doxygen support : Experimental
@@ -76,7 +77,7 @@ SET(ITK_PYTHON_FILES
   itkBase
   itkTemplate
   itkTypes
-  itkExtras/__init__
+#  itkExtras/__init__
   itkLazy
   )
 # Done listing files.
@@ -87,8 +88,7 @@ IF ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
   # In source build -- no need to copy Python file. Do need to set up the install.
   FOREACH(file ${ITK_PYTHON_FILES})
     SET(install_tgt "${CMAKE_CURRENT_SOURCE_DIR}/${file}.py")
-    GET_FILENAME_COMPONENT(path "${file}" PATH)
-    INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Python/${path}" FILES ${install_tgt})
+    SET(WRAP_ITK_PYTHON_INSTALL_FILES ${WRAP_ITK_PYTHON_FILES} "${install_tgt}")
   ENDFOREACH(file)
 ELSE ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
   SET(WRAP_ITK_PYTHON_FILES)
@@ -101,9 +101,8 @@ ELSE ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
     SET(copy_tgt "${CMAKE_CURRENT_BINARY_DIR}/${WRAP_ITK_BUILD_INTDIR}${file}.py")
     SET(WRAP_ITK_PYTHON_FILES ${WRAP_ITK_PYTHON_FILES} "${copy_tgt}")
     SET(install_tgt "${CMAKE_CURRENT_BINARY_DIR}/${WRAP_ITK_INSTALL_INTDIR}${file}.py")
-    GET_FILENAME_COMPONENT(path "${file}" PATH)
-    INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Python/${path}" FILES ${install_tgt})
-
+    SET(WRAP_ITK_PYTHON_INSTALL_FILES ${WRAP_ITK_PYTHON_INSTALL_FILES} "${install_tgt}")
+    
     # create the directory to avoid loosing case on windows
     FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${WRAP_ITK_INSTALL_INTDIR}${path})
 
@@ -122,6 +121,8 @@ ELSE ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
     TARGET copy_python_files)
 ENDIF ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
 
+# Install the package python files.
+INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Python" FILES ${WRAP_ITK_PYTHON_INSTALL_FILES})
 
 ###############################################################################
 # Configure and install the custom python .pth files
