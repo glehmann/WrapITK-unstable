@@ -43,8 +43,7 @@ SET(WRAP_ITK_TEST_ROOT "<NO_DEFAULT>")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/pkgIndex.tcl.in"
                "${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/pkgIndex.tcl"
                @ONLY IMMEDIATE)
-INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Tcl" FILES
-              "${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/pkgIndex.tcl")
+WRAP_ITK_INSTALL(/Tcl "${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/pkgIndex.tcl")
 
 SET(ITK_TCL_EXE_DIR_BUILD "${ITK_EXECUTABLE_PATH}")
 SET(ITK_TCL_EXE_NAME_ROOT "itkwish")
@@ -113,7 +112,7 @@ SET(CONFIG_WRAP_ITK_ITKWISH_DIR "${CMAKE_INSTALL_PREFIX}/${WRAP_ITK_INSTALL_PREF
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/itkwish.in
                ${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/itkwish
                @ONLY IMMEDIATE )
-INSTALL_FILES("/bin" FILES ${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/itkwish)
+WRAP_ITK_INSTALL(/bin ${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/itkwish)
 
 # configure a itkwish usable in build tree
 # use WrapITK_BINARY_DIR instead of the current bianry dir because tcl search pkgIndex.tcl in 
