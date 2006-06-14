@@ -138,6 +138,8 @@ IF(WRAP_float AND WRAP_2)
     ${WrapITK_SOURCE_DIR}/images/cthead1.png
     GradientAnisotropicDiffusionImageFilter.png
     5 0.125 1.0
+    --compare GradientAnisotropicDiffusionImageFilter.png
+              ${WrapITK_SOURCE_DIR}/images/GradientAnisotropicDiffusionImageFilter.png
   )
 ENDIF(WRAP_float AND WRAP_2)
 
