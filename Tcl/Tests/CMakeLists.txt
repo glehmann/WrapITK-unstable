@@ -135,7 +135,7 @@ IF(WRAP_float AND WRAP_2)
   ADD_TEST(TclGradientAnisotropicDiffusionImageFilter
     ${TCL_DRIVER}
     ${CMAKE_CURRENT_SOURCE_DIR}/GradientAnisotropicDiffusionImageFilter.tcl
-    ${WrapITK_SOURCE_DIR}/images/cthead1.png
+    ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
     GradientAnisotropicDiffusionImageFilter.png
     5 0.125 1.0
     --compare GradientAnisotropicDiffusionImageFilter.png
