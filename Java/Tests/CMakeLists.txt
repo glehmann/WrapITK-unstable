@@ -4,7 +4,7 @@ SET(targets "")
 
 # configure and build the test driver
 FIND_PROGRAM(IMAGE_COMPARE ImageCompare)
-SET(JAVA_TEST_ITK_JAR "${WrapITK_BINARY_DIR}/Java/InsightToolkit.jar")
+SET(JAVA_TEST_ITK_JAR "${WrapITK_BINARY_DIR}/Java/${CMAKE_CFG_INTDIR}/InsightToolkit.jar")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/javaTestDriver.java.in"
    "${CMAKE_CURRENT_BINARY_DIR}/javaTestDriver.java"
    @ONLY IMMEDIATE
@@ -28,9 +28,9 @@ MACRO(BUILD_JAVA_TEST name)
   # 
   ADD_CUSTOM_COMMAND(
     OUTPUT ${name}.class
-    DEPENDS ${WrapITK_BINARY_DIR}/Java/InsightToolkit.jar
+    DEPENDS ${WrapITK_BINARY_DIR}/Java/${CMAKE_CFG_INTDIR}/InsightToolkit.jar
     COMMAND ${JAVA_COMPILE}
-    ARGS -classpath "${WrapITK_BINARY_DIR}/Java/InsightToolkit.jar"
+    ARGS -classpath "${WrapITK_BINARY_DIR}/Java/${CMAKE_CFG_INTDIR}/InsightToolkit.jar"
     -d "${CMAKE_CURRENT_BINARY_DIR}" ${CMAKE_CURRENT_SOURCE_DIR}/${name}.java
     )
   SET(targets ${targets} ${name}.class)
@@ -167,9 +167,9 @@ FOREACH(JAVA_TEST_IMAGE_DIMENSION ${WRAP_ITK_DIMS})
 
     ADD_CUSTOM_COMMAND(
       OUTPUT ${TEST_FILE_NAME}.class
-      DEPENDS ${WrapITK_BINARY_DIR}/Java/InsightToolkit.jar ${WrapITK_BINARY_DIR}/Java/Tests/${TEST_FILE_NAME}.java
+      DEPENDS ${WrapITK_BINARY_DIR}/Java/${CMAKE_CFG_INTDIR}/InsightToolkit.jar ${WrapITK_BINARY_DIR}/Java/Tests/${TEST_FILE_NAME}.java
       COMMAND ${JAVA_COMPILE}
-      ARGS -classpath "${WrapITK_BINARY_DIR}/Java/InsightToolkit.jar" -d "${CMAKE_CURRENT_BINARY_DIR}" ${CMAKE_CURRENT_BINARY_DIR}/${TEST_FILE_NAME}.java
+      ARGS -classpath "${WrapITK_BINARY_DIR}/Java/${CMAKE_CFG_INTDIR}/InsightToolkit.jar" -d "${CMAKE_CURRENT_BINARY_DIR}" ${CMAKE_CURRENT_BINARY_DIR}/${TEST_FILE_NAME}.java
     )
 
     ADD_TEST(JavaSimplePipeline${JAVA_TEST_PIXEL_TYPE}${JAVA_TEST_IMAGE_DIMENSION}
