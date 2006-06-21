@@ -16,7 +16,7 @@ while ret != 0:
     # find last args (the ones which caused the segfault)
     faultyArgs = None
     for l in reversed(output.splitlines()):
-      if l.startswith('('):
+      if faultyArgs == None and l.startswith('('):
         faultyArgs = l
       if faultyArgs != None :
 	# find the last class
