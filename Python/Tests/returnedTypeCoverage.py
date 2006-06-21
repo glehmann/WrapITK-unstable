@@ -220,7 +220,8 @@ unwrappedTypes = set()
 
 
 for name in attrNameList:
-    attr = itk.__dict__[name]
+    exec "attr = itk."+name
+    # attr = itk.__dict__[name]
     log(name, 1)
     if isinstance(attr, itkTemplate) :
 	exploreTpl(attr)
