@@ -203,6 +203,7 @@ def isUnwrappedTypeString(s):
 
 parser = OptionParser(usage="usage: %prog")
 parser.add_option("--exclude", dest="exclude", default=None, metavar="FILE", help="")
+parser.add_option("--start-from", dest="startFrom", default=None, metavar="CLASS", help="")
 parser.add_option("-v", "--verbose", dest="verbose", default=0, type="int", help="")
 (options, args) = parser.parse_args()
 
@@ -215,6 +216,8 @@ if options.exclude :
 
 attrNameList = sorted(set([i for i in dir(itk) if i[0].isupper() and len(i) > 2]) - set(excludedClasses))
 
+if options.startFrom :
+    attrNameList = attrNameList[attrNameList.index(options.startFrom):]
 
 unwrappedTypes = set()
 
