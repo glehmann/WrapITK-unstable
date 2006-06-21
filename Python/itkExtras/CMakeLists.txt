@@ -23,7 +23,7 @@ ELSE ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
     # recall that WRAP_ITK_BUILD_INTDIR expands to nothing if no config types are set,
     # or to "CMAKE_CONFIG_INTDIR/" if there are such. Likewise, WRAP_ITK_INSTALL_INTDIR
     # expands to ${BUILD_TYPE}/ or nothing.
-    SET(copy_tgt "${CMAKE_CURRENT_BINARY_DIR}/${WRAP_ITK_BUILD_INTDIR}${file}.py")
+    SET(copy_tgt "${CMAKE_CURRENT_BINARY_DIR}/${file}.py")
     SET(WRAP_ITK_PYTHON_EXTRAS_FILES ${WRAP_ITK_PYTHON_EXTRAS_FILES} "${copy_tgt}")
     SET(install_tgt "${CMAKE_CURRENT_BINARY_DIR}/${WRAP_ITK_INSTALL_INTDIR}${file}.py")
     SET(WRAP_ITK_PYTHON_EXTRAS_INSTALL_FILES ${WRAP_ITK_PYTHON_EXTRAS_INSTALL_FILES} "${install_tgt}")
