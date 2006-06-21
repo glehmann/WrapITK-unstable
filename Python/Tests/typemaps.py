@@ -55,6 +55,9 @@ assert repr(median.GetInput().GetPointer()) == repr(im.GetPointer())
 median.SetInput( im.GetPointer() )
 assert repr(median.GetInput().GetPointer()) == repr(im.GetPointer())
 
+median.SetInput( None )
+assert repr(median.GetInput().GetPointer()) == repr(None)
+
 
 
 
