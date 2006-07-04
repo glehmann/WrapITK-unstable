@@ -133,7 +133,7 @@ INCLUDE(${ITK_USE_FILE})
 # we must be sure we have the right ITK version; WrapITK can't build with
 # an old version of ITK because some classes will not be there.
 # newer version should only cause some warnings
-SET(ITK_REQUIRED_VERSION "2.6.0")
+SET(ITK_REQUIRED_VERSION "2.8.0")
 SET(ITK_VERSION "${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}.${ITK_VERSION_PATCH}")
 IF("${ITK_VERSION}" STRLESS "${ITK_REQUIRED_VERSION}")
   MESSAGE(FATAL_ERROR "ITK ${ITK_REQUIRED_VERSION} is required to build this version of WrapITK, and you are trying to use version ${ITK_VERSION}. Set ITK_DIR to point to the directory of ITK ${ITK_REQUIRED_VERSION}.")
