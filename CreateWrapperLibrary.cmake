@@ -484,5 +484,22 @@ MACRO(CREATE_WRAPPER_LIBRARY library_name sources language library_type custom_l
     ${LINK_LIBRARIES_${language}} )
   
   GET_TARGET_PROPERTY(library_location ${library_name} LOCATION)
-  WRAP_ITK_INSTALL("/lib" ${library_location})
+  # Yet another horrible hack. GET_TARGET_PROPERTY() returns a path
+  # with the value of ${CMAKE_CFG_INTDIR} in it (with Xcode on mac os,
+  # $(CONFIGURATION) ), but what we want is \${BUILD_TYPE} for the
+  # install, so we have to replace "${CMAKE_CFG_INTDIR}" by
+  # "\${BUILD_TYPE}" (backslash is not so important, as ${BUILD_TYPE}
+  # is expanded to ${BUILD_TYPE})
+  # Because it can't be simple (otherwise it's not fun), we have to generate
+  # a regular expression with the content of ${CMAKE_CFG_INTDIR},
+  # but this content can contain some special characters for regular expression
+  # like parenthesis. The most logical approach would be to backslash
+  # all the characters, so we are sure to match the exact string,
+  # but  STRING(REGEX REPLACE "(.)" "\\\\1" ...) replace all the
+  # char by \1. The [] are used to woraround that, but will fail if some
+  # [ or ] are in ${CMAKE_CFG_INTDIR}
+
+  STRING(REGEX REPLACE "(.)" "[\\1]" escaped_regexp "${CMAKE_CFG_INTDIR}")
+  STRING(REGEX REPLACE "${escaped_regexp}" "\${BUILD_TYPE}" clean_library_location "${library_location}")
+  WRAP_ITK_INSTALL("/lib" ${clean_library_location})
 ENDMACRO(CREATE_WRAPPER_LIBRARY)

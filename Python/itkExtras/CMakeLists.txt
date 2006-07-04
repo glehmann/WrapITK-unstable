@@ -25,7 +25,7 @@ ELSE ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
     # expands to ${BUILD_TYPE}/ or nothing.
     SET(copy_tgt "${CMAKE_CURRENT_BINARY_DIR}/${file}.py")
     SET(WRAP_ITK_PYTHON_EXTRAS_FILES ${WRAP_ITK_PYTHON_EXTRAS_FILES} "${copy_tgt}")
-    SET(install_tgt "${CMAKE_CURRENT_BINARY_DIR}/${WRAP_ITK_INSTALL_INTDIR}${file}.py")
+    SET(install_tgt "${CMAKE_CURRENT_BINARY_DIR}/${file}.py")
     SET(WRAP_ITK_PYTHON_EXTRAS_INSTALL_FILES ${WRAP_ITK_PYTHON_EXTRAS_INSTALL_FILES} "${install_tgt}")
 
     # create the directory to avoid loosing case on windows

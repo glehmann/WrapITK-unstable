@@ -196,6 +196,13 @@ SET(CMAKE_SKIP_RPATH ON CACHE BOOL "ITK wrappers must not have runtime path info
 IF(CMAKE_CONFIGURATION_TYPES)
   SET(WRAP_ITK_BUILD_INTDIR "${CMAKE_CFG_INTDIR}/")
   SET(WRAP_ITK_INSTALL_INTDIR "\${BUILD_TYPE}/")
+
+  # horrible hack to avoid having ${BUILD_TYPE} expanded to an empty sting
+  # while passing through the macros.
+  # Insitead of expanding to an empty string, it expand to ${BUILD_TYPE}
+  # and so can be reexpanded again and again (and again)
+  SET(BUILD_TYPE "\${BUILD_TYPE}")
+
 ELSE(CMAKE_CONFIGURATION_TYPES)
   SET(WRAP_ITK_BUILD_INTDIR "")
   SET(WRAP_ITK_INSTALL_INTDIR "")
