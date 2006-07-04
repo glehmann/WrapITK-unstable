@@ -120,8 +120,8 @@ MACRO(INSTALL_AT_ABSOLUTE_PATH target path)
   FOREACH(file ${ARGN})
     GET_FILENAME_COMPONENT(filename "${file}" NAME)
     STRING(REGEX REPLACE "/$" "" stripped_path "${path}")
-    FILE(APPEND "${install_file_name}" 
-     "MESSAGE(STATUS \"Installing ${stripped_path}/${filename}\")\n")
+#    FILE(APPEND "${install_file_name}" 
+#     "MESSAGE(STATUS \"Installing ${stripped_path}/${filename}\")\n")
     FILE(APPEND "${install_file_name}" 
      "FILE(INSTALL DESTINATION \"${path}\" TYPE FILE FILES \"${file}\")\n")
   ENDFOREACH(file)
