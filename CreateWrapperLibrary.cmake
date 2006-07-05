@@ -499,7 +499,13 @@ MACRO(CREATE_WRAPPER_LIBRARY library_name sources language library_type custom_l
   # char by \1. The [] are used to woraround that, but will fail if some
   # [ or ] are in ${CMAKE_CFG_INTDIR}
 
-  STRING(REGEX REPLACE "(.)" "[\\1]" escaped_regexp "${CMAKE_CFG_INTDIR}")
-  STRING(REGEX REPLACE "${escaped_regexp}" "\${BUILD_TYPE}" clean_library_location "${library_location}")
+  IF(CMAKE_CONFIGURATION_TYPES)
+    STRING(REGEX REPLACE "(.)" "[\\1]" escaped_regexp "${CMAKE_CFG_INTDIR}")
+    STRING(REGEX REPLACE "${escaped_regexp}" "\${BUILD_TYPE}" clean_library_location "${library_location}")
+  ELSE(CMAKE_CONFIGURATION_TYPES)
+    SET(clean_library_location "${library_location}")
+  ENDIF(CMAKE_CONFIGURATION_TYPES)
+
   WRAP_ITK_INSTALL("/lib" ${clean_library_location})
+
 ENDMACRO(CREATE_WRAPPER_LIBRARY)
