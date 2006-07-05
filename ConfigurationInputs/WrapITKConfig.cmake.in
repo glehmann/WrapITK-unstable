@@ -35,6 +35,8 @@ SET(WRAP_covariant_vector_float @WRAP_covariant_vector_float@ CACHE BOOL "Wrap c
 SET(WRAP_covariant_vector_double @WRAP_covariant_vector_double@ CACHE BOOL "Wrap covariant vector double type")
 SET(WRAP_rgb_unsigned_char @WRAP_rgb_unsigned_char@ CACHE BOOL "Wrap RGB< unsigned char > type")
 SET(WRAP_rgb_unsigned_short @WRAP_rgb_unsigned_short@ CACHE BOOL "Wrap RGB< unsigned short > type")
+SET(WRAP_complex_float @WRAP_complex_float@ CACHE BOOL "Wrap complex<float> type")
+SET(WRAP_complex_double @WRAP_complex_double@ CACHE BOOL "Wrap complex<double> type")
 SET(WRAP_ITK_DIMS "@WRAP_ITK_DIMS@" CACHE STRING "dimensions available separated by semicolons (;)")
 
 FOREACH(var ITK_DIR CableSwig_DIR WRAP_ITK_TCL WRAP_ITK_PYTHON WRAP_ITK_JAVA 
