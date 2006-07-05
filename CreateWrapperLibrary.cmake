@@ -498,6 +498,9 @@ MACRO(CREATE_WRAPPER_LIBRARY library_name sources language library_type custom_l
   # but  STRING(REGEX REPLACE "(.)" "\\\\1" ...) replace all the
   # char by \1. The [] are used to woraround that, but will fail if some
   # [ or ] are in ${CMAKE_CFG_INTDIR}
+  # On linux (without configuration), "${CMAKE_CFG_INTDIR}" is ".", so
+  # we must avoid the REPLACE step on that case, or all the "." are
+  # removed from the path
 
   IF(CMAKE_CONFIGURATION_TYPES)
     STRING(REGEX REPLACE "(.)" "[\\1]" escaped_regexp "${CMAKE_CFG_INTDIR}")
