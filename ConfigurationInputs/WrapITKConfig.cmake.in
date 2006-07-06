@@ -43,7 +43,7 @@ FOREACH(var ITK_DIR CableSwig_DIR WRAP_ITK_TCL WRAP_ITK_PYTHON WRAP_ITK_JAVA
     WRAP_unsigned_char WRAP_unsigned_short WRAP_unsigned_long WRAP_signed_char
     WRAP_signed_short WRAP_signed_long WRAP_float WRAP_double WRAP_vector_float
     WRAP_vector_double WRAP_covariant_vector_float WRAP_covariant_vector_double
-    WRAP_rgb_unsigned_char WRAP_rgb_unsigned_short
+    WRAP_rgb_unsigned_char WRAP_rgb_unsigned_short WRAP_complex_float WRAP_complex_double
     WRAP_ITK_DIMS)
   MARK_AS_ADVANCED(${var})
 ENDFOREACH(var)
