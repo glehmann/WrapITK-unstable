@@ -8,5 +8,11 @@ namespace _cable_
    {
 @CONFIG_WRAPPER_TYPEDEFS@
    }
+void force_instantiate()
+{
+  using namespace _cable_::wrappers;
+@CONFIG_WRAPPER_FORCE_INSTANTIATE@
+}
+@CONFIG_WRAPPER_EXTRAS@
 }
 #endif
