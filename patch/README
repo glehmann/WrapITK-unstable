@@ -1,7 +1,7 @@
-Patches in the 'old_itk_compatibility' directory are *required* for
-WrapITK to work with versions of ITK lower than 2.6. The 
-'old_itk_compatibility' patches have all been incorporated into ITK
-version 2.6.
+The 'required' directory contains some patch required to be able
+to compile or run WrapITK with the last ITK. It should be empty
+for the WrapITK releases, but may contain a few patches if some
+bugs have been found after the ITK release.
 
 Patches in the 'optional' directory provide optional, but useful,
 convenience functionality like renamed operators and easier-to-use
@@ -18,7 +18,7 @@ where you want to install the patches).
 Once you are in that directory, run the following commands,
 depending on which patch sets you wish/need to apply:
 
-cat path/to/patch/old_itk_compatibility/* | patch -p3
+cat path/to/patch/required/* | patch -p1
 cat path/to/patch/optional/* | patch -p1
 
 (where 'path/to' is replaced with the actual path
