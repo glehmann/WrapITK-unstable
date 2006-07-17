@@ -1,14 +1,225 @@
+Index: Code/Common/itkFixedArray.h
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/Common/itkFixedArray.h,v
+retrieving revision 1.38
+diff -u -r1.38 itkFixedArray.h
+--- Code/Common/itkFixedArray.h	20 Apr 2006 14:54:09 -0000	1.38
++++ Code/Common/itkFixedArray.h	15 Jul 2006 14:40:47 -0000
+@@ -206,6 +206,34 @@
+   SizeType      Size() const;
+   void Fill(const ValueType&);
+     
++
++  const ValueType __getitem__(unsigned int dim) const 
++    {
++    if (dim >= VLength)
++      {throw ExceptionObject(__FILE__, __LINE__, "itk::ERROR: FixedArray: index out of range");}
++    return GetElement(dim);
++    }
++   
++  void __setitem__(unsigned int dim, ValueType value)
++    {
++    if (dim >= VLength)
++      {throw ExceptionObject(__FILE__, __LINE__, "itk::ERROR: FixedArray: index out of range");}
++    SetElement(dim, value);
++    }
++  
++  const unsigned int __len__() const
++    {
++    return VLength;
++    }
++  
++  const char * __str__() const
++    {
++    OStringStream msg;
++    msg << "<FixedArray " << *this << ">";
++    return msg.str().c_str();
++    }  
++
++   
+ private:
+   /** Internal C array representation. */
+   CArray  m_InternalArray;
+Index: Code/Common/itkIndex.h
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/Common/itkIndex.h,v
+retrieving revision 1.52
+diff -u -r1.52 itkIndex.h
+--- Code/Common/itkIndex.h	13 Apr 2006 17:57:25 -0000	1.52
++++ Code/Common/itkIndex.h	15 Jul 2006 14:40:47 -0000
+@@ -239,7 +239,7 @@
+    * \warning No bound checking is performed
+    * \sa GetIndex()
+    * \sa SetElement() */
+-  IndexValueType GetElement( unsigned long element )
++  IndexValueType GetElement( unsigned long element ) const
+     { return m_Index[ element ]; }
+ 
+   /** Return a basis vector of the form [0, ..., 0, 1, 0, ... 0] where the "1"
+@@ -259,6 +259,33 @@
+    *    Index<3> index = {5, 2, 7}; */
+   IndexValueType m_Index[VIndexDimension];
+   
++
++  // methods for python interface
++  IndexValueType __getitem__(unsigned long dim) const 
++    {
++    if (dim >= VIndexDimension)
++      {throw ExceptionObject(__FILE__, __LINE__, "itk::ERROR: Index: index out of range");}
++    return m_Index[ dim ];
++    }
++  void __setitem__(unsigned long dim, IndexValueType value)
++    {
++    if (dim >= VIndexDimension)
++      {throw ExceptionObject(__FILE__, __LINE__, "itk::ERROR: Index: index out of range");}
++    m_Index[ dim ] = value;
++    }
++  
++  const unsigned int __len__() const
++    {
++    return VIndexDimension;
++    }
++  
++  const char * __str__() const
++    {
++    OStringStream msg;
++    msg << "<Index " << *this << ">";
++    return msg.str().c_str();
++    }  
++
+ };
+ 
+ namespace Functor
+Index: Code/Common/itkSize.h
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/Common/itkSize.h,v
+retrieving revision 1.20
+diff -u -r1.20 itkSize.h
+--- Code/Common/itkSize.h	13 Apr 2006 17:57:26 -0000	1.20
++++ Code/Common/itkSize.h	15 Jul 2006 14:40:47 -0000
+@@ -18,6 +18,7 @@
+ #define __itkSize_h
+ 
+ #include "itkMacro.h"
++#include "itkExceptionObject.h"
+ 
+ namespace itk
+ {
+@@ -188,6 +189,33 @@
+    * bracketed initializer. */
+   SizeValueType m_Size[VDimension];
+ 
++
++  const SizeValueType __getitem__(unsigned int dim) const 
++    {
++    if (dim >= VDimension)
++      {throw ExceptionObject(__FILE__, __LINE__, "itk::ERROR: Size: index out of range");}
++    return GetElement(dim);
++    }
++  void __setitem__(unsigned int dim, SizeValueType value)
++    {
++    if (dim >= VDimension)
++      {throw ExceptionObject(__FILE__, __LINE__, "itk::ERROR: Size: index out of range");}
++    SetElement(dim, value);
++    }
++  
++  const unsigned int __len__() const
++    {
++    return VDimension;
++    }
++  
++  const char * __str__() const
++    {
++    OStringStream msg;
++    msg << "<Size " << *this << ">";
++    return msg.str().c_str();
++    }  
++
++
+ };
+ 
+ 
+Index: Code/Common/itkImageRegionConstIterator.h
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/Common/itkImageRegionConstIterator.h,v
+retrieving revision 1.20
+diff -u -r1.20 itkImageRegionConstIterator.h
+--- Code/Common/itkImageRegionConstIterator.h	31 Jan 2006 00:48:40 -0000	1.20
++++ Code/Common/itkImageRegionConstIterator.h	15 Jul 2006 14:40:48 -0000
+@@ -281,6 +281,16 @@
+     return *this;
+   }
+ 
++  // rename some operators for wrapping
++  void increment()
++  {
++    this->operator++();
++  }
++  void decrement()
++  {
++    this->operator--();
++  }
++  
+ private:
+   void Increment(); // advance in a direction other than the fastest moving
+   void Decrement(); // go back in a direction other than the fastest moving
+Index: Code/Common/itkImageRegionConstIteratorWithIndex.h
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/Common/itkImageRegionConstIteratorWithIndex.h,v
+retrieving revision 1.10
+diff -u -r1.10 itkImageRegionConstIteratorWithIndex.h
+--- Code/Common/itkImageRegionConstIteratorWithIndex.h	16 Aug 2005 18:04:33 -0000	1.10
++++ Code/Common/itkImageRegionConstIteratorWithIndex.h	15 Jul 2006 14:40:48 -0000
+@@ -186,6 +186,16 @@
+    * will be set to be one pixel past the beginning of the region.
+    * \sa operator++ */
+   Self & operator--();
++
++  // rename some operators for wrapping
++  void increment()
++  {
++    this->operator++();
++  }
++  void decrement()
++  {
++    this->operator--();
++  }
+ };
+ 
+ /** \example itkImageIteratorTest.cpp */
+Index: Code/Common/itkMatrix.h
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/Common/itkMatrix.h,v
+retrieving revision 1.20
+diff -u -r1.20 itkMatrix.h
+--- Code/Common/itkMatrix.h	18 Jul 2005 15:12:10 -0000	1.20
++++ Code/Common/itkMatrix.h	15 Jul 2006 14:40:48 -0000
+@@ -160,6 +160,14 @@
+   /** Copy constructor. */
+   Matrix(const Self & matrix) : m_Matrix( matrix.m_Matrix ) {};
+  
++ // Rename some operators for wrapping
++  inline T& Get( unsigned int row, unsigned int col )
++    { return m_Matrix(row,col); }
++
++  inline void Set( unsigned int row, unsigned int col, T value )
++    { m_Matrix(row,col) = value; }
++  
++  
+ private:
+   InternalMatrixType     m_Matrix;
+ 
 Index: Code/BasicFilters/itkCropImageFilter.h
 ===================================================================
 RCS file: /cvsroot/Insight/Insight/Code/BasicFilters/itkCropImageFilter.h,v
-retrieving revision 1.6
-diff -u -r1.6 itkCropImageFilter.h
---- Code/BasicFilters/itkCropImageFilter.h	10 Sep 2003 14:28:46 -0000	1.6
-+++ Code/BasicFilters/itkCropImageFilter.h	24 Mar 2006 00:03:15 -0000
-@@ -77,6 +77,32 @@
-   itkGetMacro(UpperBoundaryCropSize, SizeType); 
+retrieving revision 1.7
+diff -u -r1.7 itkCropImageFilter.h
+--- Code/BasicFilters/itkCropImageFilter.h	17 Mar 2006 14:22:26 -0000	1.7
++++ Code/BasicFilters/itkCropImageFilter.h	15 Jul 2006 14:40:48 -0000
+@@ -78,6 +78,33 @@
    itkSetMacro(LowerBoundaryCropSize, SizeType);
    itkGetMacro(LowerBoundaryCropSize, SizeType);
+ 
 +  void SetUpperBoundaryCropSize(const unsigned long bound)
 +    {
 +    SizeType s;
@@ -35,16 +246,17 @@ diff -u -r1.6 itkCropImageFilter.h
 +    s.Fill( bound );
 +    this->SetBoundaryCropSize( s );
 +    }
-   
-                  
- protected:
++
+ #ifdef ITK_USE_CONCEPT_CHECKING
+   /** Begin concept checking */
+   itkConceptMacro(InputConvertibleToOutputCheck,
 Index: Code/BasicFilters/itkPadImageFilter.h
 ===================================================================
 RCS file: /cvsroot/Insight/Insight/Code/BasicFilters/itkPadImageFilter.h,v
 retrieving revision 1.13
 diff -u -r1.13 itkPadImageFilter.h
 --- Code/BasicFilters/itkPadImageFilter.h	27 Apr 2005 12:54:57 -0000	1.13
-+++ Code/BasicFilters/itkPadImageFilter.h	23 Mar 2006 07:44:06 -0000
++++ Code/BasicFilters/itkPadImageFilter.h	15 Jul 2006 14:40:48 -0000
 @@ -18,6 +18,7 @@
  #define __itkPadImageFilter_h
  
@@ -104,7 +316,7 @@ RCS file: /cvsroot/Insight/Insight/Code/BasicFilters/itkRescaleIntensityImageFil
 retrieving revision 1.10
 diff -u -r1.10 itkRescaleIntensityImageFilter.txx
 --- Code/BasicFilters/itkRescaleIntensityImageFilter.txx	15 Jun 2005 16:13:48 -0000	1.10
-+++ Code/BasicFilters/itkRescaleIntensityImageFilter.txx	23 Mar 2006 07:44:06 -0000
++++ Code/BasicFilters/itkRescaleIntensityImageFilter.txx	15 Jul 2006 14:40:48 -0000
 @@ -33,11 +33,11 @@
  RescaleIntensityImageFilter<TInputImage, TOutputImage>
  ::RescaleIntensityImageFilter()
@@ -121,89 +333,3 @@ diff -u -r1.10 itkRescaleIntensityImageFilter.txx
    
    m_Scale = 1.0;
    m_Shift = 0.0;
-Index: Code/Common/itkIndex.h
-===================================================================
-RCS file: /cvsroot/Insight/Insight/Code/Common/itkIndex.h,v
-retrieving revision 1.51
-diff -u -r1.51 itkIndex.h
---- Code/Common/itkIndex.h	23 Aug 2005 01:25:37 -0000	1.51
-+++ Code/Common/itkIndex.h	23 Mar 2006 07:44:08 -0000
-@@ -239,7 +239,7 @@
-    * \warning No bound checking is performed
-    * \sa GetIndex()
-    * \sa SetElement() */
--  IndexValueType GetElement( unsigned long element )
-+  IndexValueType GetElement( unsigned long element ) const
-     { return m_Index[ element ]; }
- 
-   /** Return a basis vector of the form [0, ..., 0, 1, 0, ... 0] where the "1"
-Index: Code/Common/itkImageRegionConstIterator.h
-===================================================================
-RCS file: /cvsroot/Insight/Insight/Code/Common/itkImageRegionConstIterator.h,v
-retrieving revision 1.20
-diff -u -r1.20 itkImageRegionConstIterator.h
---- Code/Common/itkImageRegionConstIterator.h	31 Jan 2006 00:48:40 -0000	1.20
-+++ Code/Common/itkImageRegionConstIterator.h	23 Mar 2006 07:44:07 -0000
-@@ -281,6 +281,16 @@
-     return *this;
-   }
- 
-+  // rename some operators for wrapping
-+  void increment()
-+  {
-+    this->operator++();
-+  }
-+  void decrement()
-+  {
-+    this->operator--();
-+  }
-+  
- private:
-   void Increment(); // advance in a direction other than the fastest moving
-   void Decrement(); // go back in a direction other than the fastest moving
-Index: Code/Common/itkImageRegionConstIteratorWithIndex.h
-===================================================================
-RCS file: /cvsroot/Insight/Insight/Code/Common/itkImageRegionConstIteratorWithIndex.h,v
-retrieving revision 1.10
-diff -u -r1.10 itkImageRegionConstIteratorWithIndex.h
---- Code/Common/itkImageRegionConstIteratorWithIndex.h	16 Aug 2005 18:04:33 -0000	1.10
-+++ Code/Common/itkImageRegionConstIteratorWithIndex.h	23 Mar 2006 07:44:07 -0000
-@@ -186,6 +186,16 @@
-    * will be set to be one pixel past the beginning of the region.
-    * \sa operator++ */
-   Self & operator--();
-+
-+  // rename some operators for wrapping
-+  void increment()
-+  {
-+    this->operator++();
-+  }
-+  void decrement()
-+  {
-+    this->operator--();
-+  }
- };
- 
- /** \example itkImageIteratorTest.cpp */
-Index: Code/Common/itkMatrix.h
-===================================================================
-RCS file: /cvsroot/Insight/Insight/Code/Common/itkMatrix.h,v
-retrieving revision 1.20
-diff -u -r1.20 itkMatrix.h
---- Code/Common/itkMatrix.h	18 Jul 2005 15:12:10 -0000	1.20
-+++ Code/Common/itkMatrix.h	23 Mar 2006 07:44:08 -0000
-@@ -160,6 +160,14 @@
-   /** Copy constructor. */
-   Matrix(const Self & matrix) : m_Matrix( matrix.m_Matrix ) {};
-  
-+ // Rename some operators for wrapping
-+  inline T& Get( unsigned int row, unsigned int col )
-+    { return m_Matrix(row,col); }
-+
-+  inline void Set( unsigned int row, unsigned int col, T value )
-+    { m_Matrix(row,col) = value; }
-+  
-+  
- private:
-   InternalMatrixType     m_Matrix;
- 
