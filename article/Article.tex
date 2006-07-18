@@ -680,6 +680,44 @@ Example:
 11> <class 'itkMedianImageFilter.itkMedianImageFilterIF2IF2'>
 \end{verbatim}
 
+  \item \verb$itk.echo(object, file)$ is a convenient function to call the \verb$Print()$
+method of an ITK object without the need to pass a \verb$StringStream$ object.
+This function is less useful with the optional patches: the \verb$__str__()$
+method do a very similar job with a better integration with python.
+
+Example:
+
+\begin{verbatim}
+12> itk.echo(median)
+MedianImageFilter (0x82c5b68)
+  RTTI typeinfo:   itk::MedianImageFilter<itk::Image<unsigned char, 3u>, itk::Image<unsigned char, 3u> >
+  Reference Count: 1
+  Modified Time: 10
+  Debug: Off
+  Observers:
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  No Inputs
+  Output 0: (0x875da68)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader:
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers:
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 0
+  Radius: [1, 1, 1]
+\end{verbatim}
+
+
 
 \end{itemize}
 
