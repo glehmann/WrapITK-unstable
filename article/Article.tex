@@ -718,6 +718,89 @@ MedianImageFilter (0x82c5b68)
 \end{verbatim}
 
 
+  \item \verb$itk.pipeline$ class let the developer easily create
+a custom pipeline which can then be manipulated as a pure ITK filter.
+It provide several methods:
+\begin{itemize}
+  \item \verb$__init__( self, input=None )$ is the constructor of the pipeline.
+The input of the pipeline can be passed as parameter.
+
+  \item \verb$connect( self, filter )$ connect a new filter to the pipeline.
+The output of the last filter in the pipeline will be set as the input of the filter
+passed as parameter, and the filter passed as parameter will be added to the filter
+list.
+
+  \item \verb$append( self, filter )$ add a filter to the pipeline's filters list,
+but don't connect it. The connection must be done by the user. This method is likely
+to be used with filters with several inputs.
+
+  \item \verb$clear( self )$  clear the filter list.
+
+  \item \verb$GetOutput( self )$ return the output of the last filter in the pipeline.
+If another output is needed, use \verb$pipeline[-1].GetAnotherOutput()$ instead of
+this method, or subclass pipeline to implement another \verb$GetOutput()$ method.
+
+  \item \verb$SetInput( self, input )$ set the input of the first filter in the
+pipeline. If another input is needed, use \verb$pipeline[0].SetAnotherIntput()$ instead of
+this method, or subclass pipeline to implement another \verb$SetIntput()$ method.
+
+  \item \verb$GetInput( self )$ return the input of the last filter in the pipeline.
+If another input is needed, use \verb$pipeline[0].GetAnotherInput()$ instead of
+this method, or subclass pipeline to implement another \verb$GetInput()$ method.
+
+  \item \verb$Update( self )$ update the pipeline by calling \verb$Update()$ method
+on the last filter in the pipeline.
+
+  \item \verb$__getitem__( self, i )$ and \verb$__len__( self )$ provide common
+python list manipulation interface to the pipeline object.
+
+\end{itemize}
+
+Example:
+ITK current implementation of morphological dilation, erosion, opening and closing
+can be very inefficient with large structuring elements. Also, WrapITK only give
+access to ball structuring element. The following class illustrate the use of
+\verb$itk.pipeline$ class to implement a efficient opening in 3 dimensions with
+a box structuring element. We here take advantage of structuring element decomposition:
+a dilation (or erosion) by a box can be more efficiently computed by perfoming
+3 dilations (or erosion) with line structuring element oriented on each dimension.
+The \verb$itk.pipeline$ encapsulate the 6 filters needed to perform the efficient
+opening, and take care of setting the structuring element for all the internal
+filters in the \verb$SetKernel(self, x,y,z)$, according to the size wanted by the
+user.
+
+\begin{verbatim}
+class mkOpeningPipe (itk.pipeline):
+  def __init__(self, Input, x=1, y=1, z=1):
+    im = itk.image(Input)
+    itk.pipeline.__init__(self, im)
+    KernelType = itk.class_(itk.strel(3, 0))
+    InType = itk.class_(im)
+    self.connect(itk.GrayscaleErodeImageFilter[InType, InType, KernelType].New())
+    self.connect(itk.GrayscaleErodeImageFilter[InType, InType, KernelType].New())
+    self.connect(itk.GrayscaleErodeImageFilter[InType, InType, KernelType].New())
+    self.connect(itk.GrayscaleDilateImageFilter[InType, InType, KernelType].New())
+    self.connect(itk.GrayscaleDilateImageFilter[InType, InType, KernelType].New())
+    self.connect(itk.GrayscaleDilateImageFilter[InType, InType, KernelType].New())
+    self.SetKernel(x,y,z)
+ 
+  def SetKernel(self, x,y,z):
+    self[0].SetKernel(itk.strel(3, (x,0,0)))
+    self[1].SetKernel(itk.strel(3, (0,y,0)))
+    self[2].SetKernel(itk.strel(3, (0,0,z)))
+    self[3].SetKernel(itk.strel(3, (x,0,0)))
+    self[4].SetKernel(itk.strel(3, (0,y,0)))
+    self[5].SetKernel(itk.strel(3, (0,0,z)))
+\end{verbatim}
+
+The \verb$mkOpeningPipe$ object can be used as a standard ITK filter:
+
+\begin{verbatim}
+reader = itk.ImageFileReader.IUC3.New(FileName='image.tif')
+opening = mkOpeningPipe(reader)
+ws = itk.MorphologicalWatershedImageFilter.IUC3IUC3.New(opening)
+itk.write(ws, "result.tif")
+\end{verbatim}
 
 \end{itemize}
 
