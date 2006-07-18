@@ -1,0 +1,49 @@
+Index: Code/IO/itkGDCMSeriesFileNames.h
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/IO/itkGDCMSeriesFileNames.h,v
+retrieving revision 1.12.2.1
+diff -u -r1.12.2.1 itkGDCMSeriesFileNames.h
+--- Code/IO/itkGDCMSeriesFileNames.h	6 Jun 2006 12:53:07 -0000	1.12.2.1
++++ Code/IO/itkGDCMSeriesFileNames.h	18 Jul 2006 08:37:34 -0000
+@@ -66,16 +66,7 @@
+   /* -------- Define the API for GDCMSeriesFileNames ----------- */
+ 
+   /** Set the directory that contains the DICOM series. */
+-  void SetInputDirectory (const char * name)
+-    {
+-    if( !name )
+-      {
+-      itkExceptionMacro(<<"SetInputDirectory() received a NULL string");
+-      }
+-    std::string fname = name;
+-    this->SetInputDirectory( fname );
+-    }
+-
++  void SetInputDirectory (const char * name);
+   /** Set the directory that contains the DICOM series. */
+   void SetInputDirectory (std::string const &name);
+ 
+Index: Code/IO/itkGDCMSeriesFileNames.cxx
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/IO/itkGDCMSeriesFileNames.cxx,v
+retrieving revision 1.28.2.1
+diff -u -r1.28.2.1 itkGDCMSeriesFileNames.cxx
+--- Code/IO/itkGDCMSeriesFileNames.cxx	6 Jun 2006 12:53:07 -0000	1.28.2.1
++++ Code/IO/itkGDCMSeriesFileNames.cxx	18 Jul 2006 08:37:34 -0000
+@@ -44,6 +44,16 @@
+   delete m_SerieHelper;
+ }
+ 
++void GDCMSeriesFileNames::SetInputDirectory (const char * name)
++{
++   if ( !name )
++     {
++     itkExceptionMacro(<<"SetInputDirectory() received a NULL string");
++     }
++   std::string fname = name;
++   this->SetInputDirectory( fname );
++}
++
+ void GDCMSeriesFileNames::SetInputDirectory (std::string const &name)
+ {
+   if ( name == "" )
