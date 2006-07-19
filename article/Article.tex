@@ -55,7 +55,6 @@ Reproduction, Jouy en Josas, F-78350, France\\
 \chapter*{Front Matter\label{front}}
 \fi
 
-
 \begin{abstract}
 \noindent
 ITK \cite{ITKWebSite} is a huge image analysis library, which contains lots of state of the arts
@@ -67,7 +66,8 @@ languages like Python \cite{PythonWebSite}, Tcl \cite{TclWebSite}, and Java \cit
 
 \tableofcontents
 
-\section{Introduction}
+\newpage
+\part{Introduction}
 
 WrapITK is a project designed to allow classes from ITK (and custom, classes
 that interact with ITK) to be "wrapped" for use with languages like
@@ -132,7 +132,8 @@ The article you're reading is not as nice and complete than what we would have
 done, but it seems important to us to release our work and to get feedbacks
 as soon as possible. The article will continue to evolve with WrapITK.
 
-\section{Supported languages and plateforms}
+\newpage
+\part{Supported languages and plateforms}
 
 Java, Tcl and Python builds properly and are fully usable. However, Java and
 Tcl don't yet have the extended features added to Python\footnote{Any help
@@ -148,13 +149,15 @@ Several tests are available\footnote{There is currently 49 tests with the defaul
 configuration.} for Python, Tcl and Java. They ensure the high quality of WrapITK.
 They can be run with the \verb$ctest$ command.
 
-\section{Performance}
+\newpage
+\part{Performance}
 
-\section{User guide}
+\newpage
+\part{User guide}
 
-  \subsection{Installation}
+  \section{Installation}
 
-    \subsubsection{Get the software sources}
+    \subsection{Get the software sources}
 
 A tarball archive is submitted with the article.
 
@@ -168,7 +171,7 @@ For the user who don't want to use darcs \cite{DarcsWebSite} but still want the 
 a nightly updated archive is available at
 \url{http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/WrapITK.tar.gz}.
 
-    \subsubsection{ITK}
+    \subsection{ITK}
 
 WrapITK will work properly with the ITK 2.8.0 release.
 
@@ -182,7 +185,7 @@ Some required patch may appear in the development version version of WrapITK. Th
 patches are required for the last stable version of ITK, and should be already
 integrated in the last CVS version of ITK.
 
-    \subsubsection{CableSwig}
+    \subsection{CableSwig}
 
 WrapITK requires ITK and CableSwig \cite{ITKWebSite} to have been previously downloaded and built.
 To get a development version of CableSwig, simply run:
@@ -193,24 +196,24 @@ If you check out CableSwig into the \verb$Insight/Utilities$ directory, then it 
 built as a part of ITK, and will be automatically detected by WrapITK when ITK
 is found.
 
-    \subsubsection{Python}
+    \subsection{Python}
 
 Python \cite{PythonWebSite} is required only to build python support.
 WrapITK is reported to work with python 2.3 and python 2.4. However, the test framework
 requires the \verb$subprocess$ module available in standard only in python 2.4 and above.
 To run the python test with python 2.3, you have to install \verb$subprocess$.
 
-    \subsubsection{Tcl}
+    \subsection{Tcl}
 
 Tcl \cite{TclWebSite} is required only to build tcl support.
 WrapITK have been tested with Tcl 8.4.11.
 
-    \subsubsection{Java}
+    \subsection{Java}
 
 Java \cite{JavaWebSite} is required only to build java support.
 WrapITK have been tested with java \verb$1.5.0_06-b05$ and \verb$1.4.2_11$.
 
-    \subsubsection{Build options}
+    \subsection{Build options}
 
 After CableSwig and ITK have been (possibly patched) and built, building WrapITK
 with cmake is simple. Run \verb$ccmake$ in a new directory with the path to the WrapITK
@@ -267,11 +270,11 @@ be created, and each filter is wrapped for some subset of that range.
 Project should always be built outside the source directory, in a \verb$build$
 directory for example.
 
-    \subsubsection{Install WrapITK or use it in the build tree}
+    \subsection{Install WrapITK or use it in the build tree}
 
 Once built, WrapITK can be installed or used in place.
 
-    \subsubsection{Binary packages}
+    \subsection{Binary packages}
 
 RPM packages for Mandriva Linux 2006 are available at \url{http://voxel.jouy.inra.fr/mdk/mima2}.
 To install WrapITK for mandriva linux 2006.0, just add a new media with the
@@ -318,7 +321,7 @@ WrapITK is also available in cooker, the development version of mandriva.
 
 % TODO: provide more binary packages - for mac and windows.
 
-  \subsection{Python usage}
+  \section{Python usage}
 
 In this section, we detail python usage. Some of the examples shown here are copied
 from the console, and so show the interpreter prompt:
@@ -336,7 +339,7 @@ In the example above, \verb$12+3$ is what is wrote in the interpreter, and
 \verb$15$ is the result. \verb$2>$, \verb$3>$, \verb$4>$ are the prompt
 of the interpreter.
 
-     \subsubsection{Configuring python and importing the libraries}
+     \subsection{Configuring python and importing the libraries}
 
 If WrapITK has been installed, then using it from within python is trivial:
 simply issue the command \verb$import itk$, and you are ready to go. This
@@ -354,7 +357,7 @@ If WrapITK has not been installed, then you will either need to set the
 start python from that directory. After this, \verb$import itk$ will work
 properly.
 
-     \subsubsection{Template usage}
+     \subsection{Template usage}
 Most class in the itk python module are "template proxy classes" that
 encapsulate all of the template instantiations that were created at build time.
 If three-dimensional \verb$unsigned char$ and \verb$unsigned short$ image types were created,
@@ -410,7 +413,7 @@ def write( image, fileName ) :
 \end{verbatim}
 
 
-     \subsubsection{The {\em New()} method}
+     \subsection{The {\em New()} method}
 
 Lots of classes have a \verb$New()$ method which returns a smart pointer to an object of
 that class. In python, the \verb$New()$ method has some additional features:
@@ -457,7 +460,7 @@ and, more important, most of classes can be instantiated and parametered in one 
 which make ITK less verbose, and a lots more easy to use in the interpreter.
 
 
-     \subsubsection{Python sequences and ITK}
+     \subsection{Python sequences and ITK}
 
 To set the radius of a \verb$MedianImageFilter$ object, for example, the user have to
 create a \verb$Size$ object and use it as argument of the \verb$SetRadius()$ method.
@@ -551,7 +554,7 @@ Here is the list of itk classes which can currently be substituted by python seq
   \item \verb$Vector$
 \end{itemize}
 
-     \subsubsection{Python specific functions in the {\em itk} module}
+     \subsection{Python specific functions in the {\em itk} module}
 
 Some convenient functions are provided with the itk module. They all begin with a lower
 case character to clearly show they are not part of ITK.
@@ -804,7 +807,7 @@ itk.write(ws, "result.tif")
 
 \end{itemize}
 
-     \subsubsection{Advanced Features}
+     \subsection{Advanced Features}
 
 As an extra bonus, it is possible to view the doxygen documentation for each
 class as the python docstring. This string is available as:
@@ -873,7 +876,7 @@ when a python program is run, only the revelant modules are loaded in memory
 can choose to load the entire library at once with the command \verb$itk.force_load()$.
 \end{itemize}
 
-     \subsubsection{Full python script examples}
+     \subsection{Full python script examples}
 
 This script is the exact transcription to python of the C++ example 
 which can be found at Examples/Filtering/GradientMagnitudeRecursiveGaussianImageFilter.cxx
@@ -911,26 +914,27 @@ writer.Update();
 
 More examples can be found in the directory \verb$Python/Tests$.
 
-    \subsection{TCL usage}
+    \section{TCL usage}
 
 Some examples are available in \verb$Tcl/Tests$ directory.
 
 Write me.
 
-    \subsection{Java usage}
+    \section{Java usage}
 
 Some examples are available in \verb$Java/Tests$ directory.
 
 Write me.
 
-\section{Developer guide}
+\newpage
+\part{Developer guide}
 
 What follows is a brief description of how the WrapITK build system works, how
 it can be extended, and how to write external projects.
 
-  \subsection{WrapITK description}
+  \section{WrapITK description}
 
-     \subsubsection{Creating a CMakeLists.txt file for a wrapper library}
+     \subsection{Creating a CMakeLists.txt file for a wrapper library}
 Each WrapITK sub-library (e.g. \verb$Base$, or \verb$SpatialObject$) lives in a
 sub-directory of the WrapITK project (within the \verb$Modules$ directory) with a
 \verb$CMakeLists.txt$ file that describes how that library  and language support files
@@ -978,7 +982,7 @@ macros from \verb$CreateLanguageSupport.cmake$.
 \end{itemize}
 
 
-     \subsubsection{Creating wrap\_XXX.cmake files to wrap classes}
+     \subsection{Creating wrap\_XXX.cmake files to wrap classes}
 
 A \verb$wrap_XXX.cmake$ file defines a group of classes and/or template instantiations
 to be wrapped. Often one such file is defined for each class wrapped, but this
@@ -1244,7 +1248,7 @@ where \verb$d $is the image dimension, for each selected image dimension.
 \end{itemize}
 
 
-  \subsection{Extending or customizing WrapITK}
+  \section{Extending or customizing WrapITK}
 
 To minimize build times and library size, it is possible to manually prevent
 various classes from being wrapped. WrapITK is divided into several
@@ -1262,9 +1266,9 @@ create additional \verb$wrap_XXX.cmake$ files in the appropriate directory. (Rea
 for instructions as to what to put in these files.)
 
 
-  \subsection{External projects}
+  \section{External projects}
 
-    \subsubsection{Why external projects?}
+    \subsection{Why external projects?}
 
 External projects let the developer access some custom class with the target languages
 and is a powerful way to extend WrapITK, test new wrapper, wrap more types, etc.
@@ -1284,7 +1288,7 @@ found: the project must found its dependencies or fail.
 External projects are not yet supported for Tcl and Java. See \ref{section:contribute}
 to contribute external project support for those languages.
 
-    \subsubsection{Building}
+    \subsection{Building}
 To build an external project, first ensure that WrapITK has been properly built.
 Then use \verb$ccmake$ to configure a build directory for the external project. If
 WrapITK has not been installed, you will have to manually enter the path to the
@@ -1293,7 +1297,7 @@ WrapITK build directory.
 By default, the build options are the same than the one used for building WrapITK,
 but can be modified in the advanced options.
 
-    \subsubsection{Usage}
+    \subsection{Usage}
 Once an external project has been built, it can be tested directly from the
 build tree. Start python in the external project build directory's Python
 subdirectory, and run the command \verb$import ProjectConfig$ (or 
@@ -1303,14 +1307,14 @@ properly so that WrapITK and the newly-created library files can be found. Then
 type \verb$import ...$ (where \verb$...$ is replaced with the name of the external
 project; e.g. \verb$import BufferConversion$), and use the project.
 
-    \subsubsection{Installation}
+    \subsection{Installation}
 Simply type \verb$make install$ (or run your IDE's install step) to install the
 external project into the WrapITK tree (provided WrapITK has already been
 installed). Now the external project can be used just like any of the other
 WrapITK libraries, and it will be imported into the \verb$itk$ namespace when the
 \verb$import itk$ command is issued from Python.
 
-    \subsubsection{Top-level CMakeLists for external projects}
+    \subsection{Top-level CMakeLists for external projects}
 In addition to having a set of \verb$wrap_XXX.cmake$ files and the proper
 commands to read in these files and create a library (all described above), an
 external project's CMakeLists file needs at least one additional command to
@@ -1322,7 +1326,7 @@ Otherwise, you will have to set (within ccmake, or in the CMakeLists if you
 prefer) the variable \verb$WrapITK_DIR$ to contain the path to the WrapITK build
 directory.
 
-    \subsubsection{Examples}
+    \subsection{Examples}
 
 In \verb$WrapITK/ExternalProjects$ there are several sample "External Projects" that
 can be built to provide additional functionality to WrapITK and to serve as a
@@ -1334,7 +1338,7 @@ ITK images (and vice-versa).
 More examples can be found in the contributions to the Insight Journal
 \cite{InsightJournalWebSite}, or directly at \url{http://voxel.jouy.inra.fr/darcs/contrib-itk/}.
 
-    \subsubsection{BufferConversion: an example of extension for one language}
+    \subsection{BufferConversion: an example of extension for one language}
 
 This project is a python only project. It requires to have Numeric, Numarray or numpy installed
 on your system, and will let the user convert ITK images to python matrices, and python matrices
@@ -1375,7 +1379,7 @@ Because PyBuffer is a python only external project, its directory structure is v
 simple - there is no subdirectory. This external project should be used as an example
 for all the languages specific external projects.
 
-    \subsubsection{ItkVtkGlue: an example of extension for all languages, including C++}
+    \subsection{ItkVtkGlue: an example of extension for all languages, including C++}
 
 ItkVtkGlue wrap the classes used to convert data from ITK to VTK \cite{VtkWebSite} and from VTK to ITK.
 Those classes comes from the InsightApplications \cite{ITKWebSite}, and make the conversion
@@ -1441,19 +1445,19 @@ is done in the source tree.
 The project should also provide C++ tests - it is not done yet.
 
 
-  \subsection{Extending language support and adding more languages}
+  \section{Extending language support and adding more languages}
 
 Write me.
 
-    \subsubsection{Generating target language code}
+    \subsection{Generating target language code}
 
 Write me.
 
-    \subsubsection{typemaps}
+    \subsection{typemaps}
 
 Write me.
 
-  \subsection{Contributing to WrapITK}
+  \section{Contributing to WrapITK}
 \label{section:contribute}
 
 WrapITK is an opensource project, and so all contributions are welcome. Here are
@@ -1506,7 +1510,8 @@ A web interface \cite{DarcswebWebSite} for the WrapITK's darcs
 repository is available at \url{http://voxel.jouy.inra.fr/darcsweb/}.
 
 
-\section{Acknowledgments}
+\newpage
+\part{Acknowledgments}
 I thank Dr Pierre Adenot and all the {\em Embryon et Biotechnologie} team for their
 patience during the long development time before getting a tool really usable.
 
@@ -1523,7 +1528,8 @@ Finally, we thank the ITK developers for the great tool which is ITK, and for th
 previous work done on wrapping system - without it WrapITK would not be there.
 
 
-\section{Conclusion}
+\newpage
+\part{Conclusion}
 
 ITK is a great library, with the drawback to be nearly unusable for prototyping,
 and to have a poor support for other languages than C++. WrapITK address those
@@ -1533,6 +1539,7 @@ wrapped classes, and of the increase of consistency in available types and names
 
 
 
+\newpage
 \appendix
 
 
