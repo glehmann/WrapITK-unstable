@@ -17,6 +17,11 @@ IF(EXISTS "${possible_cableswig_dir}")
 SET(CableSwig_DIR "${possible_cableswig_dir}"  CACHE PATH "Path to CableSwig build or install")
 ENDIF(EXISTS "${possible_cableswig_dir}")
 
+# set WrapITK version
+SET(WrapITK_VERSION_MAJOR @WrapITK_VERSION_MAJOR@)
+SET(WrapITK_VERSION_MINOR @WrapITK_VERSION_MINOR@)
+SET(WrapITK_VERSION_PATCH @WrapITK_VERSION_PATCH@)
+
 # Set up the rest of the variables that WrapITK was built with.
 SET(WRAP_ITK_TCL @WRAP_ITK_TCL@ CACHE BOOL "Build cswig Tcl wrapper support (requires CableSwig).")
 SET(WRAP_ITK_PYTHON @WRAP_ITK_PYTHON@ CACHE BOOL "Build cswig Python wrapper support (requires CableSwig).")
