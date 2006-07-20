@@ -37,7 +37,7 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 
 % Increment the release number whenever significant changes are made.
 % The author and/or editor can define 'significant' however they like.
-\release{0.1}
+\release{0.2}
 
 % At minimum, give your name and an email address.  You can include a
 % snail-mail address if you like.
@@ -84,7 +84,7 @@ in target languages. It become quickly frustrating for the user, especially when
 he has to spend lot of time to extend the current set of classes. Even if it is
 not yet complete, the WrapITK's set of classes have been highly extended. Moreover,
 the user can choose at build time which types and which dimensions he want to wrap.
-With 197 wrapped filters, WrapITK covers 62\% of the available filters.
+With 202 wrapped filters, WrapITK covers 63\% of the available filters.
 
   \item  The template arguments set is poorly chosen, making sometime impossible
 to create a pipeline. In WrapITK, most of the filters have the same input and output
@@ -145,12 +145,23 @@ It also builds on windows \cite{WindowsWebSite}, but require more testing
 to be sure everything work as it should. See below for details about how
 to report bugs are contribute patches.
 
-Several tests are available\footnote{There is currently 49 tests with the default
+Several tests are available\footnote{There is currently 67 tests with the default
 configuration.} for Python, Tcl and Java. They ensure the high quality of WrapITK.
 They can be run with the \verb$ctest$ command.
 
 \newpage
-\part{Performance}
+\part{Performance and memory usage}
+
+WrapITK provides an interface to some C++ compiled code, and so, execution time
+are very similar to pure C++ programs in most of cases.
+
+The major difference comes from the memory
+usage: while a C++ program will produce a binary executable containing only
+the required code, WrapITK binary contains all the classes wrapped, and so
+WrapITK can take a significant amount of memory.
+
+Some comvenient features, like sequence management in python, can be quite
+inefficient and should not be used in a loop.
 
 \newpage
 \part{User guide}
@@ -169,15 +180,16 @@ windows or Mac Os X.}.
 
 For the user who don't want to use darcs \cite{DarcsWebSite} but still want the last development version,
 a nightly updated archive is available at
-\url{http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/WrapITK.tar.gz}.
+\url{http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/WrapITK.tar.gz} or
+\url{http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/WrapITK.zip}.
 
     \subsection{ITK}
 
-WrapITK will work properly with the ITK 2.8.0 release.
+WrapITK will work properly with the ITK 2.8.1 release.
 
 There are some optional
 patches to the ITK source in \verb$WrapITK/patches/optional$ which can be applied to
-version 2.6.0. These optional patches provide
+version 2.8.1. These optional patches provide
 better support for python by providing some methods like \verb$__str__$, or methods
 for standard python sequence interface (see below).
 
@@ -1511,6 +1523,10 @@ repository is available at \url{http://voxel.jouy.inra.fr/darcsweb/}.
 
 
 \newpage
+\part{Known bugs}
+See \url{http://voxel.jouy.inra.fr/roundup/wrapitk/}.
+
+\newpage
 \part{Acknowledgments}
 I thank Dr Pierre Adenot and all the {\em Embryon et Biotechnologie} team for their
 patience during the long development time before getting a tool really usable.
@@ -1520,7 +1536,7 @@ plateform, and for the patches he has contributed, as well as Richard Beare for
 his early interest in using itk with python, for his useful feedbacks, and for
 his work on buffer conversion in python.
 
-We thank Andr\'e Bongers.
+We thank Andr\'e Bongers for his help to debug java build on windows plateform.
 
 We thank Brad King for his assistance during the development process.
 
