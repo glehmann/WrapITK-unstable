@@ -209,3 +209,42 @@ diff -u -r1.20 itkMatrix.h
  private:
    InternalMatrixType     m_Matrix;
  
+Index: Code/Common/itkLightObject.cxx
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/Common/itkLightObject.cxx,v
+retrieving revision 1.31
+diff -u -r1.31 itkLightObject.cxx
+--- Code/Common/itkLightObject.cxx	6 Feb 2006 22:01:56 -0000	1.31
++++ Code/Common/itkLightObject.cxx	23 Mar 2006 07:44:08 -0000
+@@ -115,7 +115,14 @@
+   this->PrintTrailer(os, indent);
+ }
+ 
+-
++const std::string LightObject::__str__() const
++{
++  OStringStream msg;
++  this->Print(msg);
++  return msg.str();
++}
++   
++   
+ /**
+  * This method is called when itkExceptionMacro executes. It allows 
+  * the debugger to break on error.
+Index: Code/Common/itkLightObject.h
+===================================================================
+RCS file: /cvsroot/Insight/Insight/Code/Common/itkLightObject.h,v
+retrieving revision 1.33
+diff -u -r1.33 itkLightObject.h
+--- Code/Common/itkLightObject.h	6 Feb 2006 22:01:56 -0000	1.33
++++ Code/Common/itkLightObject.h	23 Mar 2006 07:44:08 -0000
+@@ -101,6 +101,8 @@
+    * method, use it with care. */
+   virtual void SetReferenceCount(int);
+ 
++  const std::string __str__() const;
++  
+ protected:
+   LightObject():m_ReferenceCount(1) {}
+   virtual ~LightObject();
