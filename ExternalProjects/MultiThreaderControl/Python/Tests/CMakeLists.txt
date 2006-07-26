@@ -1,4 +1,7 @@
 
+# configure the test driver
+FIND_PROGRAM(IMAGE_COMPARE ImageCompare)
+
 IF(CMAKE_CONFIGURATION_TYPES)
 
   FOREACH(config ${CMAKE_CONFIGURATION_TYPES})
