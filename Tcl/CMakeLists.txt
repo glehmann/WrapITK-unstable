@@ -112,7 +112,7 @@ SET(CONFIG_WRAP_ITK_ITKWISH_DIR "${CMAKE_INSTALL_PREFIX}/${WRAP_ITK_INSTALL_PREF
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/itkwish.in
                ${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/itkwish
                @ONLY IMMEDIATE )
-WRAP_ITK_INSTALL(/bin ${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/itkwish)
+INSTALL_FILES(/bin FILES ${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/itkwish)
 
 # configure a itkwish usable in build tree
 # use WrapITK_BINARY_DIR instead of the current bianry dir because tcl search pkgIndex.tcl in 
