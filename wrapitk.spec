@@ -1,19 +1,20 @@
 
-%define itkver 2.6
+%define itkver 2.8
 
 Summary:	Extended language support for ITK
 Name:		wrapitk
-Version:	0.1
-Release:	%mkrel 0.20060324.1
+Version:	0.2
+Release:	%mkrel 1
 License:	BSDish
 Group:		Sciences/Other
 URL:		http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK
+#Source0:	http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/WrapITK-%{version}.tar.bz2
 Source0:	http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/WrapITK.tar.bz2
 Patch0:		wrapitk-reconstruction.patch.bz2
 BuildRequires:	cmake >= 2.2
 BuildRequires:	cableswig >= %{itkver}
 BuildRequires:  python-numarray-devel
-BuildRequires:  vtk-devel
+BuildRequires:  itk-devel >= %{itkver}
 BuildRequires:  python-devel
 BuildRequires:  tetex
 BuildRequires:  tetex-latex
@@ -22,8 +23,18 @@ BuildRequires:  ghostscript
 BuildRequires:  ImageMagick
 BuildRequires:	vtk-devel >= 5.0
 BuildRequires:	python-vtk >= 5.0
+BuildRequires:  tcl tk
+# needed for backport to 2006.0
+%if %mdkversion >= 200610
+BuildRequires:  tk-devel
+BuildRequires:  tcl-devel
+%endif
 BuildRequires:	doxygen
+BuildRequires:  tetex-latex
+BuildRequires:  texinfo
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+# for upgrade from package with ITK version
+Epoch:          1
 
 %description
 ITK is an open-source software system to support the Visible Human Project. 
@@ -89,7 +100,7 @@ Summary:	Convert itk buffers to numarray objects
 Group:		Development/Python
 Requires:	python
 Requires:	python-numarray
-Requires:	python-itk = %{version}
+Requires:	python-itk = %{epoch}:%{version}
 
 %description -n python-itk-numarray
 Convert itk buffers to numarray objects
@@ -99,7 +110,7 @@ Convert itk buffers to numarray objects
 Summary:	Convert itk buffers to vtk ones
 Group:		Development/Python
 Requires:	python
-Requires:	python-itk = %{version}
+Requires:	python-itk = %{epoch}:%{version}
 
 
 %description -n python-itkvtk
@@ -116,11 +127,37 @@ Requires:	itk-devel
 Convert itk buffers to vtk ones
 
 
+%package -n tcl-itk
+Summary:	Tcl bindings for ITK
+Group:		Development/Python
+Requires:	tcl
+Requires:	itk >= %{itker}
+Requires(pre):	itk >= %{itker}
+Obsoletes:	itk-tcl
+Provides:	itk-tcl
+
+%description -n tcl-itk
+ITK is an open-source software system to support the Visible Human Project. 
+Currently under active development, ITK employs leading-edge segmentation 
+and registration algorithms in two, three, and more dimensions.
+
+The Insight Toolkit was developed by six principal organizations, three 
+commercial (Kitware, GE Corporate R&D, and Insightful) and three academic 
+(UNC Chapel Hill, University of Utah, and University of Pennsylvania). 
+Additional team members include Harvard Brigham & Women's Hospital, 
+University of Pittsburgh, and Columbia University. The funding for the 
+project is from the National Library of Medicine at the National Institutes 
+of Health. NLM in turn was supported by member institutions of NIH (see 
+sponsors). 
+
+
 %prep
 
+# %setup -q -n WrapITK-%{version}
 %setup -q -n WrapITK
 
-%patch0 -p0
+cd Modules/Morphology/
+%patch0 -p1
 
 %build
 
@@ -130,15 +167,17 @@ cd build
 
 cmake -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
       -DWRAP_ITK_INSTALL_PREFIX:PATH=/%{_lib}/InsightToolkit/WrapITK/ \
+      -DCMAKE_CXX_COMPILER:PATH=%{_bindir}/c++ \
       -DCMAKE_BUILD_TYPE:STRING=Release \
       -DCMAKE_SKIP_RPATH:BOOL=ON \
-      -DCableSwig_DIR:PATH=%{_prefix}/lib/CableSwig \
       -DWRAP_ITK_PYTHON:BOOL=ON \
+      -DWRAP_ITK_TCL:BOOL=ON \
+      -DWRAP_ITK_JAVA:BOOL=OFF \
       -DWRAP_unsigned_char:BOOL=ON \
       -DDOXYGEN_MAN_PATH:PATH=%{_mandir}/ \
       ..
 
-make
+%make
 )
 
 export LD_LIBRARY_PATH=`pwd`/build/bin:$LD_LIBRARY_PATH
@@ -168,11 +207,26 @@ cd build
 cmake -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
       -DCMAKE_BUILD_TYPE:STRING=Release \
       -DCMAKE_SKIP_RPATH:BOOL=ON \
-      -DCableSwig_DIR:PATH=%{_prefix}/lib/CableSwig \
       -DWrapITK_DIR:PATH=`pwd`/../../../build \
       ..
 
-make
+%make
+)
+)
+
+(
+cd ExternalProjects/MultiThreaderControl/
+mkdir build
+(
+cd build
+
+cmake -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
+      -DCMAKE_BUILD_TYPE:STRING=Release \
+      -DCMAKE_SKIP_RPATH:BOOL=ON \
+      -DWrapITK_DIR:PATH=`pwd`/../../../build \
+      ..
+
+%make
 )
 )
 
@@ -182,15 +236,18 @@ mkdir build
 (
 cd build
 
+# disable tcl - it doesn't work yet
+
 cmake -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
       -DCMAKE_BUILD_TYPE:STRING=Release \
       -DCMAKE_SKIP_RPATH:BOOL=ON \
-      -DCableSwig_DIR:PATH=%{_prefix}/lib/CableSwig \
       -DWrapITK_DIR:PATH=`pwd`/../../../build \
       -DBUILD_WRAPPERS:BOOL=ON \
+      -DVTK_DIR:PATH=%{_libdir}/vtk-5.0 \
+      -DWRAP_ITK_TCL:BOOL=OFF \
       ..
 
-make
+%make
 )
 )
 
@@ -206,7 +263,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # workaround not found library
 mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/ld.so.conf.d/
-echo %{_libdir}/InsightToolkit/WrapITK/Python-SWIG >> $RPM_BUILD_ROOT/%{_sysconfdir}/ld.so.conf.d/python-itk.conf
+echo %{_libdir}/InsightToolkit/WrapITK/lib >> $RPM_BUILD_ROOT/%{_sysconfdir}/ld.so.conf.d/python-itk.conf
 
 # install doc
 mkdir -p $RPM_BUILD_ROOT/%{_mandir}
@@ -228,29 +285,23 @@ make install DESTDIR=$RPM_BUILD_ROOT
 )
 
 (
+cd ExternalProjects/MultiThreaderControl/build
+make install DESTDIR=$RPM_BUILD_ROOT
+)
+
+(
 cd ExternalProjects/ItkVtkGlue/build
 make install DESTDIR=$RPM_BUILD_ROOT
 )
 
 %check
-# TODO: run tests with ctest
 
-export PYTHONPATH=`pwd`/build/Python:`pwd`/Python:$PYTHONPATH
-export LD_LIBRARY_PATH=`pwd`/build/bin:$LD_LIBRARY_PATH
-
-python Python/Tests/typemaps.py
-python Python/Tests/template.py
-python Python/Tests/itk-functions.py images/cthead1.png out.png
-python Python/Tests/module2module.py images/cthead1.png
-
-# tests the simple pipeline with differents iamge types
-python Python/Tests/simple_pipeline.py "unsigned char" 2 images/cthead1.png out.png
-python Python/Tests/simple_pipeline.py "unsigned short" 2 images/cthead1.png out.png
-python Python/Tests/simple_pipeline.py "float" 2 images/cthead1.png out.img
-
-python Python/Tests/simple_pipeline.py "unsigned char" 3 images/cthead1.png out.png
-python Python/Tests/simple_pipeline.py "unsigned short" 3 images/cthead1.png out.png
-python Python/Tests/simple_pipeline.py "float" 3 images/cthead1.png out.img
+cd build
+ctest
+cd ../ExternalProjects/ItkVtkGlue/build
+ctest
+cd ../../MultiThreaderControl/build
+ctest
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -263,64 +314,55 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n python-itk
 %defattr(0644,root,root,0755)
-%{_libdir}/InsightToolkit/WrapITK/Python*
+%{_libdir}/InsightToolkit/WrapITK/Python
+%{_libdir}/InsightToolkit/WrapITK/lib/*.py
+%{_libdir}/InsightToolkit/WrapITK/lib/*Python.so
 %{_libdir}/python%{pyver}/site-packages/WrapITK.pth
 %{_sysconfdir}/ld.so.conf.d/python-itk.conf
 %{_mandir}/man*/*
 # exclude numarray files
-%exclude %{_libdir}/InsightToolkit/WrapITK/ClassIndex/BufferConversion.mdx
-%exclude %{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_BufferConversionPython.idx
-%exclude %{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_itkPyBuffer.idx
 %exclude %{_libdir}/InsightToolkit/WrapITK/Python/BufferConversion.py
-%exclude %{_libdir}/InsightToolkit/WrapITK/Python-SWIG/BufferConversionPython.py
-%exclude %{_libdir}/InsightToolkit/WrapITK/Python-SWIG/itkPyBuffer.py
 %exclude %{_libdir}/InsightToolkit/WrapITK/Python/Configuration/BufferConversionConfig.py
-%exclude %{_libdir}/InsightToolkit/WrapITK/SWIG/BufferConversion.swg
-%exclude %{_libdir}/InsightToolkit/WrapITK/Python-SWIG/_BufferConversionPython.so
+%exclude %{_libdir}/InsightToolkit/WrapITK/lib/BufferConversionPython.py
+%exclude %{_libdir}/InsightToolkit/WrapITK/lib/itkPyBuffer.py
+%exclude %{_libdir}/InsightToolkit/WrapITK/lib/_BufferConversionPython.so
 # exclude itkvtk files
-%exclude %{_libdir}/InsightToolkit/WrapITK/ClassIndex/ItkVtkGlue.mdx
-%exclude %{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_ItkVtkGluePython.idx
-%exclude %{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_itkImageToVTKImageFilter.idx
-%exclude %{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_itkVTKImageToImageFilter.idx
 %exclude %{_libdir}/InsightToolkit/WrapITK/Python/ItkVtkGlue.py
-%exclude %{_libdir}/InsightToolkit/WrapITK/Python-SWIG/ItkVtkGluePython.py
-%exclude %{_libdir}/InsightToolkit/WrapITK/Python-SWIG/itkImageToVTKImageFilter.py
-%exclude %{_libdir}/InsightToolkit/WrapITK/Python-SWIG/itkVTKImageToImageFilter.py
 %exclude %{_libdir}/InsightToolkit/WrapITK/Python/Configuration/ItkVtkGlueConfig.py
-%exclude %{_libdir}/InsightToolkit/WrapITK/SWIG/ItkVtkGlue.swg
-%exclude %{_libdir}/InsightToolkit/WrapITK/Python-SWIG/_ItkVtkGluePython.so
+%exclude %{_libdir}/InsightToolkit/WrapITK/lib/ItkVtkGluePython.py
+%exclude %{_libdir}/InsightToolkit/WrapITK/lib/itkImageToVTKImageFilter.py
+%exclude %{_libdir}/InsightToolkit/WrapITK/lib/itkVTKImageToImageFilter.py
+%exclude %{_libdir}/InsightToolkit/WrapITK/lib/_ItkVtkGluePython.so
 
 %doc article/*.pdf
 
 
 %files -n python-itk-numarray
 %defattr(0644,root,root,0755)
-%{_libdir}/InsightToolkit/WrapITK/ClassIndex/BufferConversion.mdx
-%{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_BufferConversionPython.idx
-%{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_itkPyBuffer.idx
 %{_libdir}/InsightToolkit/WrapITK/Python/BufferConversion.py
-%{_libdir}/InsightToolkit/WrapITK/Python-SWIG/BufferConversionPython.py
-%{_libdir}/InsightToolkit/WrapITK/Python-SWIG/itkPyBuffer.py
 %{_libdir}/InsightToolkit/WrapITK/Python/Configuration/BufferConversionConfig.py
-%{_libdir}/InsightToolkit/WrapITK/SWIG/BufferConversion.swg
-%{_libdir}/InsightToolkit/WrapITK/Python-SWIG/_BufferConversionPython.so
+%{_libdir}/InsightToolkit/WrapITK/lib/BufferConversionPython.py
+%{_libdir}/InsightToolkit/WrapITK/lib/itkPyBuffer.py
+%{_libdir}/InsightToolkit/WrapITK/lib/_BufferConversionPython.so
 
 
 %files -n python-itkvtk
 %defattr(0644,root,root,0755)
-%{_libdir}/InsightToolkit/WrapITK/ClassIndex/ItkVtkGlue.mdx
-%{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_ItkVtkGluePython.idx
-%{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_itkImageToVTKImageFilter.idx
-%{_libdir}/InsightToolkit/WrapITK/ClassIndex/wrap_itkVTKImageToImageFilter.idx
 %{_libdir}/InsightToolkit/WrapITK/Python/ItkVtkGlue.py
 %{_libdir}/InsightToolkit/WrapITK/Python/itkvtk.py
-%{_libdir}/InsightToolkit/WrapITK/Python-SWIG/ItkVtkGluePython.py
-%{_libdir}/InsightToolkit/WrapITK/Python-SWIG/itkImageToVTKImageFilter.py
-%{_libdir}/InsightToolkit/WrapITK/Python-SWIG/itkVTKImageToImageFilter.py
 %{_libdir}/InsightToolkit/WrapITK/Python/Configuration/ItkVtkGlueConfig.py
-%{_libdir}/InsightToolkit/WrapITK/SWIG/ItkVtkGlue.swg
-%{_libdir}/InsightToolkit/WrapITK/Python-SWIG/_ItkVtkGluePython.so
+%{_libdir}/InsightToolkit/WrapITK/lib/ItkVtkGluePython.py
+%{_libdir}/InsightToolkit/WrapITK/lib/itkImageToVTKImageFilter.py
+%{_libdir}/InsightToolkit/WrapITK/lib/itkVTKImageToImageFilter.py
+%{_libdir}/InsightToolkit/WrapITK/lib/_ItkVtkGluePython.so
 
+
+%files -n tcl-itk
+%defattr(0644,root,root,0755)
+%attr(0755,root,root) %{_bindir}/itkwish
+%{_libdir}/InsightToolkit/WrapITK/Tcl
+%{_libdir}/InsightToolkit/WrapITK/bin/itkwish
+%{_libdir}/InsightToolkit/WrapITK/lib/*Tcl.so
 
 %files devel
 %defattr(0644,root,root,0755)
@@ -333,9 +375,4 @@ rm -rf $RPM_BUILD_ROOT
 %files -n itkvtk-devel
 %defattr(0644,root,root,0755)
 %{_includedir}/InsightToolkit/BasicFilters/*
-
-
-%changelog
-* Fri Mar 24 2006 Gaetan Lehmann <gaetan.lehmann@jouy.inra.fr> 0.1-0.20060324.1mdk
-- first package
 
