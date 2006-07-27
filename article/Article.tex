@@ -57,9 +57,9 @@ Reproduction, Jouy en Josas, F-78350, France\\
 
 \begin{abstract}
 \noindent
-ITK \cite{ITKWebSite} is a huge image analysis library, which contains lots of state of the arts
+ITK \cite{ITKWebSite} is a huge image analysis library, which contains lots of state of the art
 algorithms implementations. However, using it in C++ can be difficult and is
-definitively bad suited for prototyping. WrapITK aims to allow classes from ITK
+poorly suited for prototyping. WrapITK aims to allow classes from ITK
 (and custom, classes that interact with ITK) to be "wrapped" for use with
 languages like Python \cite{PythonWebSite}, Tcl \cite{TclWebSite}, and Java \cite{JavaWebSite}.
 \end{abstract}
@@ -69,7 +69,7 @@ languages like Python \cite{PythonWebSite}, Tcl \cite{TclWebSite}, and Java \cit
 \newpage
 \part{Introduction}
 
-WrapITK is a project designed to allow classes from ITK (and custom, classes
+WrapITK is a project designed to allow classes from ITK (and custom classes
 that interact with ITK) to be "wrapped" for use with languages like
 Python \cite{PythonWebSite}, Tcl \cite{TclWebSite}, and Java \cite{JavaWebSite}.
 
@@ -80,24 +80,24 @@ and CableSwig\footnote{CableSwig is based on a now quite old version of SWIG
 address the following deficits of the existing wrappers (and others):
 \begin{itemize}
   \item  ITK is a huge library, but only a small number of classes are available
-in target languages. It become quickly frustrating for the user, especially when
+in target languages. This quickly becomes frustrating for the user, especially when
 he has to spend lot of time to extend the current set of classes. Even if it is
 not yet complete, the WrapITK's set of classes have been highly extended. Moreover,
-the user can choose at build time which types and which dimensions he want to wrap.
+the user can choose at build time which types and which dimensions he wants to wrap.
 With 202 wrapped filters, WrapITK covers 63\% of the available filters.
 
-  \item  The template arguments set is poorly chosen, making sometime impossible
+  \item  The template argument set is poorly chosen, sometimes making it impossible
 to create a pipeline. In WrapITK, most of the filters have the same input and output
-types, and only a few filters allow to change type. This make the types manipulated 
+types, and only a few filters are allowed to change type. This make the types manipulated 
 by filters more consistent, and the user should always be able to build his pipeline.
 
-  \item  Lots of types returned by ITK object's methods are not usable in target
+  \item  Many types returned by ITK object's methods are not usable in target
 languages. For example, the \verb$GetPixel()$ method of the class \verb$itk::Image$
-returns a string describing a pointer, but don't return the pixel value. In WrapITK,
-most types used in classes are available in target languages.
+returns a string describing a pointer, but does not return the pixel value. In WrapITK,
+most types used in the classes are available in target languages.
 
-  \item  Names in target languages are inconsistent. WrapITK use a strict naming
-convention which should make easier to identify the template arguments.
+  \item  Names in target languages are inconsistent. WrapITK uses a strict naming
+convention which should make it easier to identify the template arguments.
 
   \item  The ITK wrapping system is difficult to understand and maintain. WrapITK was
 written - and thoroughly documented - to be as easy as possible to understand,
@@ -110,12 +110,12 @@ few well-documented cmake macros.
   \item  It is difficult if not impossible to add original-style ITK wrappers for
 external C++ classes that interact with ITK. WrapITK provides explicit hooks for
 external C++ classes to be wrapped and even installed in the WrapITK tree so
-that they interact seamlessly with the other wrapped classes.
+they interact seamlessly with the other wrapped classes.
 
   \item  The python's \verb$InsightToolkit$ module is only structured as a big
-list of names. It make it nearly unusable in the python interpreter. WrapITK
-comes with a new well designed python module easy to use in interpreter, and
-providing run-time lookup of templated types - thing which can't be easily done
+list of names which makes it nearly unusable in the python interpreter. WrapITK
+comes with a new, well-designed python module that is easy to use with the interpreter, and
+which provides run-time lookup of templated types - things which can't be easily done
 in C++. Additionally, WrapITK ensures that \verb$SmartPointer$s are always
 returned and acceptable as input, so no bare pointers are ever exposed to
 Python. This is not the case in the standard ITK wrappers.
@@ -123,27 +123,27 @@ Python. This is not the case in the standard ITK wrappers.
   \item ITK was broken on MacOS X \cite{MacOsXWebSite} with python.
 
   \item  Loading python modules can take lot of time. With WrapITK, by default,
-only the modules really used are loaded, and so the loading time is higly shorter
+only the modules really used are loaded, so the loading time is much shorter
 in common situations.
 
 \end{itemize}
 
-The article you're reading is not as nice and complete than what we would have
-done, but it seems important to us to release our work and to get feedbacks
+The article you're reading is not yet complete,
+but it seems important for us to release our work and to get feedback
 as soon as possible. The article will continue to evolve with WrapITK.
 
 \newpage
 \part{Supported languages and plateforms}
 
-Java, Tcl and Python builds properly and are fully usable. However, Java and
+Java, Tcl and Python build properly and are fully usable. However, Java and
 Tcl don't yet have the extended features added to Python\footnote{Any help
 to extend Java and Tcl support would be higly appreciated.}.
 
 WrapITK is mainly developed on Mandriva Linux \cite{MandrivaWebSite} and 
-MacOS X \cite{MacOsXWebSite} and so is well tested on this palteforms.
-It also builds on windows \cite{WindowsWebSite}, but require more testing
-to be sure everything work as it should. See below for details about how
-to report bugs are contribute patches.
+MacOS X \cite{MacOsXWebSite} and therefore is well tested on these platforms.
+It also builds on windows \cite{WindowsWebSite}, but more testing is required
+to be sure everything works as it should. See below for details about how
+to report bugs and contribute patches.
 
 Several tests are available\footnote{There is currently 67 tests with the default
 configuration.} for Python, Tcl and Java. They ensure the high quality of WrapITK.
@@ -152,15 +152,15 @@ They can be run with the \verb$ctest$ command.
 \newpage
 \part{Performance and memory usage}
 
-WrapITK provides an interface to some C++ compiled code, and so, execution time
+WrapITK provides an interface to some C++ compiled code, so execution times
 are very similar to pure C++ programs in most of cases.
 
 The major difference comes from the memory
 usage: while a C++ program will produce a binary executable containing only
-the required code, WrapITK binary contains all the classes wrapped, and so
+the required code, the WrapITK binary contains all the wrapped classes. So,
 WrapITK can take a significant amount of memory.
 
-Some comvenient features, like sequence management in python, can be quite
+Some convenient features, like sequence management in python, can be quite
 inefficient and should not be used in a loop.
 
 \newpage
@@ -172,13 +172,13 @@ inefficient and should not be used in a loop.
 
 A tarball archive is submitted with the article.
 
-The last version can be obtained from the development repository with darcs \cite{DarcsWebSite}.
+The latest version can be obtained from the development repository with darcs \cite{DarcsWebSite}.
 The command is
 \verb$darcs get --partial http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/$\footnote{Note
-that the {\em --partial} option is required on systems with case insensitive filesystem like
-windows or Mac Os X.}.
+that the {\em --partial} option is required on systems with case insensitive filesystems like
+windows or Mac OS X.}.
 
-For the user who don't want to use darcs \cite{DarcsWebSite} but still want the last development version,
+For the user who does not want to use darcs \cite{DarcsWebSite} but still wants the last development version,
 a nightly updated archive is available at
 \url{http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/WrapITK.tar.gz} or
 \url{http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/WrapITK.zip}.
@@ -193,7 +193,7 @@ version 2.8.1. These optional patches provide
 better support for python by providing some methods like \verb$__str__$, or methods
 for standard python sequence interface (see below).
 
-Some required patch may appear in the development version version of WrapITK. Those
+Some required patches may appear in the development version of WrapITK. Those
 patches are required for the last stable version of ITK, and should be already
 integrated in the last CVS version of ITK.
 
@@ -212,18 +212,18 @@ is found.
 
 Python \cite{PythonWebSite} is required only to build python support.
 WrapITK is reported to work with python 2.3 and python 2.4. However, the test framework
-requires the \verb$subprocess$ module available in standard only in python 2.4 and above.
+requires the \verb$subprocess$ module to be available, which is standard only in python 2.4 and above.
 To run the python test with python 2.3, you have to install \verb$subprocess$.
 
     \subsection{Tcl}
 
 Tcl \cite{TclWebSite} is required only to build tcl support.
-WrapITK have been tested with Tcl 8.4.11.
+WrapITK has been tested with Tcl 8.4.11.
 
     \subsection{Java}
 
 Java \cite{JavaWebSite} is required only to build java support.
-WrapITK have been tested with java \verb$1.5.0_06-b05$ and \verb$1.4.2_11$.
+WrapITK has been tested with java \verb$1.5.0_06-b05$ and \verb$1.4.2_11$.
 
     \subsection{Build options}
 
@@ -233,8 +233,8 @@ source tree as the first argument, and provide the locations of the ITK and
 CableSwig build trees if ccmake so requests. Build options are relatively
 self-explanatory.
 
-The project is provided with defaults build option which should OK for most of
-users. However, for specific needs, you might want to change those options:
+The project is provided with default build options which should be OK for most
+users. However, for specific needs, you might want to change these options:
 \begin{itemize}
   \item \verb$WRAP_TEMPLATE_IF_DIMS$ is the list of dimensions which will be available in the
 target languages. The dimensions must be separated by a semicolon (\verb$;$).
@@ -242,7 +242,7 @@ By default dimensions 2 and 3 are available.
   \item \verb$WRAP_covariant_vector_double$, \verb$OFF$ by default.
   \item \verb$WRAP_covariant_vector_float$, \verb$ON$ by default.
   \item \verb$WRAP_double$ \verb$OFF$, by default.
-  \item \verb$WRAP_float$ \verb$ON$, by default. Note that it is the only signed
+  \item \verb$WRAP_float$ \verb$ON$, by default. Note that float is the only signed
 type selected by default, so you will have to use floats to manipulate signed
 values.
   \item \verb$WRAP_rgb_unsigned_char$, \verb$ON$ by default.
@@ -256,7 +256,7 @@ values.
 wrapped type from \verb$unsigned long$ are provided, even if this option is
 set to \verb$OFF$.
   \item \verb$WRAP_unsigned_short$, \verb$ON$ by default. \verb$unsigned short$
-is the only integer type available by default. This type have been choose rather
+is the only integer type available by default. This type has been choosen rather
 than \verb$unsigned char$ to be able to manipulate 8-bits as well as 16-bits images,
 and to be able to manipulate labeled images more than 255 labels. It is still
 possible to save images with the \verb$unsigned char$ type, even if
@@ -266,20 +266,20 @@ possible to save images with the \verb$unsigned char$ type, even if
 
 \end{itemize}
 
-The user should modify those options carefully: activate all the types, and/or
-add lots of dimensions will produce very large binary files which will take lots
+The user should modify these options carefully: activate all the types, and/or
+adding many dimensions will produce very large binary files which will take a lot
 of memory once loaded.
 
 Note that each individual filter that is wrapped can declare which dimensions it
 should be wrapped for, and what image types it can accept. For example, a filter
 could declare that it should only be wrapped for 3D images with floating-point
-typed pixels. In this case, then wrappers will only be created if the user has
-selected to build 3-dimensional image wrappers and has selected one or more
+typed pixels. In this case, the wrappers will only be created if the user has
+chosen to build 3-dimensional image wrappers and has selected one or more
 floating point types (e.g. double or float) in ccmake. Thus, the ccmake
 configuration specifies the maximum possible range of image and filter types to
 be created, and each filter is wrapped for some subset of that range. 
 
-Project should always be built outside the source directory, in a \verb$build$
+Projects should always be built outside the source directory, in a \verb$build$
 directory for example.
 
     \subsection{Install WrapITK or use it in the build tree}
@@ -289,7 +289,7 @@ Once built, WrapITK can be installed or used in place.
     \subsection{Binary packages}
 
 RPM packages for Mandriva Linux 2006 are available at \url{http://voxel.jouy.inra.fr/mdk/mima2}.
-To install WrapITK for mandriva linux 2006.0, just add a new media with the
+To install WrapITK for Mandriva Linux 2006.0, just add a new media with the
 command
 
 \begin{verbatim}
@@ -302,7 +302,7 @@ and install the package you want with
 urpmi python-itk
 \end{verbatim}
 
-This media also contain several packages which may be useful to use WrapITK,
+This media also contains several packages which may be useful to use WrapITK,
 and which are not available in mandriva linux 2006.0. Here is the full list:
 \begin{itemize}
   \item \verb$cmake$
@@ -336,7 +336,7 @@ WrapITK is also available in cooker, the development version of mandriva.
   \section{Python usage}
 
 In this section, we detail python usage. Some of the examples shown here are copied
-from the console, and so show the interpreter prompt:
+from the console which shows the interpreter prompt:
 
 \begin{verbatim}
 2> 12+3
@@ -347,8 +347,8 @@ from the console, and so show the interpreter prompt:
 4> 
 \end{verbatim}
 
-In the example above, \verb$12+3$ is what is wrote in the interpreter, and
-\verb$15$ is the result. \verb$2>$, \verb$3>$, \verb$4>$ are the prompt
+In the example above, \verb$12+3$ is what is written in the interpreter, and
+\verb$15$ is the result. \verb$2>$, \verb$3>$, \verb$4>$ are the prompts
 of the interpreter.
 
      \subsection{Configuring python and importing the libraries}
@@ -358,7 +358,7 @@ simply issue the command \verb$import itk$, and you are ready to go. This
 is because WrapITK installs a \verb$.pth$ file in the python \verb$site-packages$ directory so
 that python knows where to find the itk scripts.
 
-On linux boxes however, the user have to set the \verb$LD_LIBRARY_PATH$ to
+On linux boxes however, the user must set the \verb$LD_LIBRARY_PATH$ to
 point to libSwigRuntime.so. For example
 \verb$export LD_LIBRARY_PATH=/usr/lib/InsightToolkit/WrapITK/Python-SWIG$.
 This step is not required with the mandriva's package.
@@ -390,20 +390,20 @@ imageType = itk.Image[pixelType, dim]
 
 image = imageType.New()
 \end{verbatim}
-This construction is similar to what is done in C++, and make it easy to change
-the dimension used for example - it can even be changed at run-time.
+This construction is similar to what is done in C++, and makes it easy to change
+the dimension used. For example - it can even be changed at run-time.
 
-A more convenient syntax for usage in interpreter is also available:
+A more convenient syntax for usage in the interpreter is also available:
 \begin{itemize}
   \item \verb$itk.Image.UC3$
   \item \verb$itk.Image.US3$
 \end{itemize}
-\verb$itk.Image.UC3$ refere to the same class than \verb$itk.Image[itk.UC, 3]$
-but have the advantage to allow to use the tab-completion in the interpreter,
-and so let the user easily know which template arguments he can use.
+\verb$itk.Image.UC3$ refers to the same class as \verb$itk.Image[itk.UC, 3]$
+but has the advantage of allowing the use of tab-completion in the interpreter,
+and lets the user easily know which template arguments he can use.
 However, this notation is more rigid than the one above and won't let the user
-specify the type and the dimension used in a single place, and thus,
-should be use only in interpreter.
+specify the type and the dimension used in a single place. Therefor, this syntax
+should be used only in interpreter.
 
 Filters templated on images can be similarly accessed:
 \begin{itemize}
@@ -411,11 +411,11 @@ Filters templated on images can be similarly accessed:
   \item or \verb$itk.ImageFileReader[itk.Image.UC3]$
   \item or \verb$itk.ImageFileReader.IUC3$
   \item or \verb$itk.ImageFileReader[imageType]$
-  \item or even with an instance of the class used as template parameter: \verb$itk.ImageFileReader[image]$.
+  \item or even with an instance of the class used as a template parameter: \verb$itk.ImageFileReader[image]$.
 \end{itemize}
 This makes it easy to write generic routines which
-can deal with any input image type. For example, a function which take an image
-as parameter and write it to a file without having to give the image type can be:
+can deal with any input image type. For example, a function which takes an image
+as parameter and writes it to a file without having to give the image type can be:
 \begin{verbatim}
 def write( image, fileName ) :
     writer = itk.ImageFileWriter[ image ].New()
@@ -427,7 +427,7 @@ def write( image, fileName ) :
 
      \subsection{The {\em New()} method}
 
-Lots of classes have a \verb$New()$ method which returns a smart pointer to an object of
+Many classes have a \verb$New()$ method which returns a smart pointer to an object of
 that class. In python, the \verb$New()$ method has some additional features:
 \begin{itemize}
   \item Arguments to the new method are assumed to be filter inputs. So you could
@@ -446,9 +446,9 @@ or even
 adder = itk.AddImageFilter[...].New( readerA, readerB )
 \end{verbatim}
 In that case, \verb$New()$ will use the \verb$GetOutput()$ method of the object, if it
-exist, to get the image and set the inputs of the new filter.
+exists, to get the image and set the inputs of the new filter.
 
-  \item Additionally, keyword arguments are allowed as well. Keyword arguments cause
+  \item Additionally, keyword arguments are allowed . Keyword arguments cause
 the corresponding \verb$Set...$ method to be called, so you could write the
 following:
 \begin{verbatim}
@@ -468,14 +468,14 @@ def write( image, fileName ) :
     writer.Update()
 \end{verbatim}
 
-and, more important, most of classes can be instantiated and parametered in one line,
-which make ITK less verbose, and a lots more easy to use in the interpreter.
+and, more importantly, most of the classes can be instantiated and parameterized in one line,
+which make ITK less verbose, and a lot more easy to use in the interpreter.
 
 
      \subsection{Python sequences and ITK}
 
-To set the radius of a \verb$MedianImageFilter$ object, for example, the user have to
-create a \verb$Size$ object and use it as argument of the \verb$SetRadius()$ method.
+To set the radius of a \verb$MedianImageFilter$ object, for example, the user has to
+create a \verb$Size$ object and use it as an argument of the \verb$SetRadius()$ method.
 \begin{verbatim}
 12> radius = itk.Size[2]()
 
@@ -486,7 +486,7 @@ create a \verb$Size$ object and use it as argument of the \verb$SetRadius()$ met
 15> median.SetRadius(radius)
 \end{verbatim}.
 
-Note that the \verb$SetElement()$ method doesn't check the bound of the object, and thus
+Note that the \verb$SetElement()$ method doesn't check the bounds of the object, and thus
 is unsafe. The following code is executed, and can lead to a segmentation fault.
 
 \begin{verbatim}
@@ -502,7 +502,7 @@ is to use the standard python list interface.
 18> radius[1] = 5
 \end{verbatim}.
 
-This time, a bound check is performed, and the user is not able to use an invalid index.
+This time, a bounds check is performed, and the user is not able to use an invalid index.
 
 \begin{verbatim}
 20> radius[2] = 1
@@ -517,7 +517,7 @@ IndexError: /usr/include/InsightToolkit/Common/itkSize.h:202:
 itk::ERROR: Size: index out of range
 \end{verbatim}.
 
-Even if it's a safe method, it is still not really convenient.
+Even if it is a safe method, it is still not really convenient.
 
 Instead of using \verb$Size$ object, it is possible to use python sequences, like lists
 and tuples.
@@ -528,7 +528,7 @@ and tuples.
 22> median.SetRadius((3, 5))
 \end{verbatim}.
 
-Also, with the optional patches, some itk object can be converted to python sequences.
+Also, with the optional patches, some itk objects can be converted to python sequences.
 
 \begin{verbatim}
 22> median.GetRadius()
@@ -568,22 +568,22 @@ Here is the list of itk classes which can currently be substituted by python seq
 
      \subsection{Python specific functions in the {\em itk} module}
 
-Some convenient functions are provided with the itk module. They all begin with a lower
+Some convenience functions are provided with the itk module. They all begin with a lower
 case character to clearly show they are not part of ITK.
 \begin{itemize}
   \item \verb$itk.image(object)$ try to return an image from the object given in
 parameter. If the object is an image, it is returned without changes. If the object
 is a filter, the object returned by \verb$GetOutput()$ method is returned.
-This function is used in most of the next functions to allow the user to
+This function is used in most of the following functions to allow the user to
 pass an image or a filter, and is available here for the same usage in some custom
 fuctions.
 
-  \item \verb$itk.range(object)$ return the range of values of an image in a tuple.
+  \item \verb$itk.range(object)$ returns the range of values of an image in a tuple.
 \verb$object$ can be an image or a filter. In case of a filter, \verb$itk.image()$ is used
-to get the output image of the filter. The function update the pipeline by calling
+to get the output image of the filter. The function updates the pipeline by calling
 \verb$UpdateOutputInformation()$ and \verb$Update()$.
 
-This function is only a convenient function for a common task while prototyping.
+This function is only a convenience function for a common task while prototyping.
 
 Example:
 \begin{verbatim}
@@ -597,12 +597,12 @@ Example:
 
 
   \item \verb$itk.size(object)$ return the size of an image.
-\verb$object$ can be an image or a filter. In case of a filter, \verb$itk.image()$ is used
-to get the output image of the filter. The function update only the information of the
-pipeline, by calling \verb$UpdateOutputInformation()$, but don't trigger a full update
+\verb$object$ can be an image or a filter. In the case of a filter, \verb$itk.image()$ is used
+to get the output image of the filter. The function updates only the information of the
+pipeline, by calling \verb$UpdateOutputInformation()$, but does not trigger a full update
 of the pipeline.
 
-This function is only a convenient function for a common task while prototyping.
+This function is only a convenience function for a common task while prototyping.
 
 Example:
 \begin{verbatim}
@@ -626,13 +626,13 @@ Example:
 7> (<itkTemplate itk::ImageFileReader>, (<class 'itkImage.itkImageUC2'>,))
 \end{verbatim}
 
-  \item \verb$itk.write(object, fileName)$ write an image in a file, without
+  \item \verb$itk.write(object, fileName)$ write an image to a file, without
 having to pass the image type.
-\verb$object$ can be an image or a filter. In case of a filter, \verb$itk.image()$ is used
-to get the output image of the filter. The function update the pipeline by calling
+\verb$object$ can be an image or a filter. In the case of a filter, \verb$itk.image()$ is used
+to get the output image of the filter. The function updates the pipeline by calling
 \verb$UpdateOutputInformation()$ and \verb$Update()$.
 
-This function is only a convenient function for a common task while prototyping.
+This function is only a convenience function for a common task while prototyping.
 
 Example:
 \begin{verbatim}
@@ -640,17 +640,17 @@ Example:
 \end{verbatim}
 
   \item \verb$itk.show()$, \verb$itk.show2D()$ and \verb$itk.show3D()$ are used to
-display images. \verb$itk.show2D()$ requires to have imview \cite{ImviewWebSite} installed.
-\verb$itk.show3D()$ requires to have Vtk for python, ItkVtkGlue\footnote{ItkVtkGlue can be found in
+display images. \verb$itk.show2D()$ requires that imview \cite{ImviewWebSite} be installed.
+\verb$itk.show3D()$ requires Vtk for python, ItkVtkGlue\footnote{ItkVtkGlue can be found in
 the {\em ExternalProject} directory of WrapITK} for python, PyQt \cite{PyQtWebSite}, and iPython
-\cite{IPythonWebSite} installed, and to use iPython with the \verb$-qthread$ option.
+\cite{IPythonWebSite} with the \verb$-qthread$ option.
 
 \verb$itk.show()$ call the best viewer according to the image type.
 
 \verb$itk.show2D()$
 can be called with a 3D image as parameter to show the image slice by slice.
 
-\verb$itk.show3D()$ display a volumic rendering of the image. See Figure~\ref{screenshot}.
+\verb$itk.show3D()$ display a volumetric rendering of the image. See Figure~\ref{screenshot}.
 
 \begin{figure}[htbp]
 \centering
@@ -662,7 +662,7 @@ can be called with a 3D image as parameter to show the image slice by slice.
 \verb$d$ and size \verb$s$. Structuring element support is quite bad currently in WrapITK
 and should change in the future. Using \verb$itk.strel$ rather than creating a
 \verb$BinaryBallStructuringElement$ directly is recommended to have backward compatibility
-when the structuring element type will be changed.
+when the structuring element type changes.
 
   \item \verb$itk.auto_progress(b)$ is used to automatically add a progress report
 to all the newly created filters. \verb$b$ must be \verb$True$ or \verb$False$. If
@@ -676,11 +676,11 @@ While prototyping, it is a convenient way for the user to know if
 the execution time will be short or if he can do something more useful
 \footnote{like having a cup of tea} than waiting for the filter to complete.
 
-\verb$itk.auto_progress(True)$ also set an import callback which show the module name when
+\verb$itk.auto_progress(True)$ also sets an import callback which show the module name when
 the module are imported.
 
-  \item \verb$itk.class_(object)$ return the class of an object. The \verb$__class__$
-attribute is often not what the user want with ITK. \verb$itk.class_$ is a convenient
+  \item \verb$itk.class_(object)$ returns the class of an object. The \verb$__class__$
+attribute is often not what the user wants with ITK. \verb$itk.class_$ is a convenience
 function to get the class of an ITK object.
 
 Note that it is called \verb$class_$ and not \verb$class$, because \verb$class$ is a
@@ -695,10 +695,10 @@ Example:
 11> <class 'itkMedianImageFilter.itkMedianImageFilterIF2IF2'>
 \end{verbatim}
 
-  \item \verb$itk.echo(object, file)$ is a convenient function to call the \verb$Print()$
+  \item \verb$itk.echo(object, file)$ is a convenience function to call the \verb$Print()$
 method of an ITK object without the need to pass a \verb$StringStream$ object.
 This function is less useful with the optional patches: the \verb$__str__()$
-method do a very similar job with a better integration with python.
+method does a very similar job with better integration with python.
 
 Example:
 
@@ -735,14 +735,14 @@ MedianImageFilter (0x82c5b68)
 
   \item \verb$itk.pipeline$ class let the developer easily create
 a custom pipeline which can then be manipulated as a pure ITK filter.
-It provide several methods:
+It provides several methods:
 \begin{itemize}
   \item \verb$__init__( self, input=None )$ is the constructor of the pipeline.
 The input of the pipeline can be passed as parameter.
 
   \item \verb$connect( self, filter )$ connect a new filter to the pipeline.
 The output of the last filter in the pipeline will be set as the input of the filter
-passed as parameter, and the filter passed as parameter will be added to the filter
+passed as a parameter, and the filter passed as a parameter will be added to the filter
 list.
 
   \item \verb$append( self, filter )$ add a filter to the pipeline's filters list,
@@ -761,26 +761,26 @@ this method, or subclass pipeline to implement another \verb$SetIntput()$ method
 
   \item \verb$GetInput( self )$ return the input of the last filter in the pipeline.
 If another input is needed, use \verb$pipeline[0].GetAnotherInput()$ instead of
-this method, or subclass pipeline to implement another \verb$GetInput()$ method.
+this method, or subclass the pipeline to implement another \verb$GetInput()$ method.
 
   \item \verb$Update( self )$ update the pipeline by calling \verb$Update()$ method
 on the last filter in the pipeline.
 
-  \item \verb$__getitem__( self, i )$ and \verb$__len__( self )$ provide common
+  \item \verb$__getitem__( self, i )$ and \verb$__len__( self )$ provide the common
 python list manipulation interface to the pipeline object.
 
 \end{itemize}
 
 Example:
-ITK current implementation of morphological dilation, erosion, opening and closing
-can be very inefficient with large structuring elements. Also, WrapITK only give
-access to ball structuring element. The following class illustrate the use of
-\verb$itk.pipeline$ class to implement a efficient opening in 3 dimensions with
-a box structuring element. We here take advantage of structuring element decomposition:
+ITK's current implementation of morphological dilation, erosion, opening and closing
+can be very inefficient with large structuring elements. Also, WrapITK only gives
+access to ball structuring element. The following class illustrates the use of the 
+\verb$itk.pipeline$ class to implement an efficient opening in 3 dimensions with
+a box structuring element. We take advantage of structuring element decomposition:
 a dilation (or erosion) by a box can be more efficiently computed by perfoming
 3 dilations (or erosion) with line structuring element oriented on each dimension.
-The \verb$itk.pipeline$ encapsulate the 6 filters needed to perform the efficient
-opening, and take care of setting the structuring element for all the internal
+The \verb$itk.pipeline$ encapsulates the 6 filters needed to perform the efficient
+opening, and takes care of setting the structuring elements for all the internal
 filters in the \verb$SetKernel(self, x,y,z)$, according to the size wanted by the
 user.
 
@@ -843,7 +843,7 @@ support the python \verb$commands$ module, and which have \verb$groff$ in the pa
 basically means anything but windows \cite{WindowsWebSite} will work. (Cygwin should work too.)
 
 In addition (as mentioned above), WrapITK by default ensures that no bare
-pointers are ever returned to python: instead reference-counting \verb$SmartPointer$s
+pointers are ever returned to python: instead, reference-counting \verb$SmartPointer$s
 are used. However, there may be times when extracting a bare pointer or creating
 a new \verb$SmartPointer$ is necessary. To get a bare pointer from a smart pointer, use
 the \verb$GetPointer()$ method, as in ITK proper. To create a new smart pointer, the
@@ -856,12 +856,12 @@ or just
 smartPtr = itk.SmartPointer[image](image.GetPointer())
 \end{verbatim} \normalsize
 
-WrapITK modules can be very long to import. The \verb$itkConfig$ module define
+WrapITK modules can take very long to import. The \verb$itkConfig$ module defines
 a \verb$ImportCallback$ method which will be called when each sub module is
 imported in the import process. \verb$ImportCallback$ can be customized to report the
 progress status of the import process. It must be a function that can take
 the name of the library being imported as a parameter. Here is an example of a very
-basic callback function which display the name of the submodule being imported on
+basic callback function which displays the name of the submodule being imported on
 the standard error output.
 \small \begin{verbatim}
 import sys, itkConfig
@@ -874,11 +874,11 @@ itkConfig.ImportCallback = stderr_callback
 import itk
 \end{verbatim} \normalsize
 
-\verb$progress$ take only the value $0$ and $1$, but may take values between $0$ and $1$
+\verb$progress$ takes only the values $0$ and $1$, but may take values between $0$ and $1$
 in the future.
 
-It must be noticed that using \verb$import itk$ load only python code, and doesn't load
-any C++ compiled code. This feature is called {\em lazy loading}. It imply some specific
+It must be noted that using \verb$import itk$ loads only python code, and doesn't load
+any C++ compiled code. This feature is called {\em lazy loading}. It implies some specific
 behaviors:
 \begin{itemize}
  \item \verb$import itk$ is done in a very short time
@@ -893,7 +893,7 @@ can choose to load the entire library at once with the command \verb$itk.force_l
 This script is the exact transcription to python of the C++ example 
 which can be found at Examples/Filtering/GradientMagnitudeRecursiveGaussianImageFilter.cxx
 in the ITK source tree. More information about the filters used can be found in 
-the ITK Software Guide \cite{{ITKSoftwareGuide}}, section 6.4.2.
+the ITK Software Guide \cite{ITKSoftwareGuide}, section 6.4.2.
 
 \small \begin{verbatim}
 import itk
@@ -949,7 +949,7 @@ it can be extended, and how to write external projects.
      \subsection{Creating a CMakeLists.txt file for a wrapper library}
 Each WrapITK sub-library (e.g. \verb$Base$, or \verb$SpatialObject$) lives in a
 sub-directory of the WrapITK project (within the \verb$Modules$ directory) with a
-\verb$CMakeLists.txt$ file that describes how that library  and language support files
+\verb$CMakeLists.txt$ file that describes how that library and its language support files
 (e.g. python template definitions) is to be created. Moreover, any external
 project will need a similar file to describe how to create that library.
 
@@ -967,16 +967,16 @@ WRAPPER_LIBRARY_CREATE_LIBRARY()
 
 \begin{itemize}
   \item \verb$BEGIN_WRAPPER_LIBRARY()$ sets up the environment to wrap a set of classes into a
-library with a given name. This macro is defined in \verb$ConfigureWrapping.cmake$
+library with a given name. This macro is defined in \verb$ConfigureWrapping.cmake$.
 \verb$WRAPPER_LIBRARY_DEPENDS$ stores the list of WrapITK libraries on which the
 current library depends (e.g. which libraries wrap classes like \verb$Image$ or
 \verb$SpatialObject$, that are going to be used in the current library). Every project
 should at least depend on \verb$Base$.
 
   \item \verb$WRAPPER_LIBRARY_LINK_LIBRARIES$ stores a set of other libraries to add at link
-time. This can be 3rd party libraries that you will use (be sure to properly set
+time. These can be 3rd party libraries that you will use (be sure to properly set
 \verb$LINK_DIRECTORIES$ in this case), or more commonly, the ITK libraries that need to
-be linked in, like \verb$ITKCommon$, \verb$ITKIO$, or other. 
+be linked in, like \verb$ITKCommon$, \verb$ITKIO$, etc.
 
   \item \verb$WRAPPER_LIBRARY_CREATE_WRAP_FILES()$ scans all of the \verb$wrap_XXX.cmake$ files in the
 current directory and uses the directives within to create CableSwig input files
@@ -987,8 +987,8 @@ for the language support files that are created next. This macro is defined in
 
   \item Finally, \verb$WRAPPER_LIBRARY_CREATE_LIBRARY()$ creates rules to parse the CableSwig
 inputs and compile a wrapper library. This macro also causes various language
-support files to be created (python only currently) which make it easy to load
-that library in python, and which know about the template instances defined.
+support files to be created (currently only python) which makes it easy to load
+that library in python, and which knows about the template instances defined.
 This macro is defined in \verb$CreateWrapperLibrary.cmake$, and calls language support
 macros from \verb$CreateLanguageSupport.cmake$.
 \end{itemize}
@@ -1003,16 +1003,16 @@ is not strictly necessary.
 Within such a file, directives are issued to wrap classes and particular
 template instances. 
 
-WrapITK define several macros and variable designed to:
+WrapITK define several macros and variables designed to:
 \begin{itemize}
-  \item make creation of wrappers easy. The syntax is simple enough to get in quickly.
-  \item make choice of template arguments explicit. It should be easy to understand
+  \item make creation of wrappers easy. The syntax is simple enough start quickly.
+  \item make the choice of template arguments explicit. It should be easy to understand
 the idea of the author of a wrapper by reading the file.
   \item support mostly transparently the dimensions and types chosen by the user.
 \end{itemize}
 
 The most common case should be to create a new wrapper for a simple image filter, like 
-\verb$MedianImageFilter$. Let see that example in details.
+\verb$MedianImageFilter$. Let's see that example in detail.
 
 Here is the \verb$BasicFiltersB/wrap_itkMedianImageFilter.cmake$ file:
 
@@ -1026,8 +1026,8 @@ END_WRAP_CLASS()
 
 The file contains a \verb$WRAP_CLASS$ - \verb$END_WRAP_CLASS$ block, which itself contains
 some \verb$WRAP_IMAGE_FILTER_*$ macros. \verb$WRAP_CLASS("itk::MedianImageFilter" POINTER)$
-begin the wrapping of the \verb$itk::MedianImageFilter$ templated class. The name of the class
-must be fully qualified. The option \verb$POINTER$ indicate that the object of the class can be
+begins the wrapping of the \verb$itk::MedianImageFilter$ templated class. The name of the class
+must be fully qualified. The option \verb$POINTER$ indicates that the object of the class can be
 manipulated with a \verb$SmartPointer$, and that the \verb$SmartPointer$ specialization for
 the class \verb$itk::MedianImageFilter$ must be created.
 
@@ -1060,15 +1060,15 @@ things won't work. This is always the case for ITK-style code.) If
 ITK-style code where the class has a typedef'd \verb$Superclass$, and the superclass
 has \verb$Self$ and \verb$Pointer$ typedefs). \verb$POINTER_WITH_SUPERCLASS$ is especially
 useful for wrapping classes whose superclasses depend on the template definitions of the given
-filter. E.g. any of the functor image filters, which define  totally different superclass
+filter. E.g. any of the functor image filters, which define totally different superclass
 template parameters depending on which functor is used.
 
   \item \verb$END_WRAP_CLASS()$ -- end a block of template instantiations for a particular
 class.
 
   \item \verb$WRAP_INCLUDE("header.h")$. By default, \verb$itkMedianImageFilter.h$ is included
-when the  causes the \verb$itk::MedianImageFilter$ is wrapped, and this behavior is most of the
-time enough. If it not enough, this macro can be used to include some specific files.
+when \verb$itk::MedianImageFilter$ is wrapped, and this behavior is usually
+enough. If it not enough, this macro can be used to include some specific files.
 
   \item \verb$WRAPPER_AUTO_INCLUDE_HEADERS$. This variable is set to \verb$ON$ by default, but can
 be set to \verb$OFF$ to disable the auto include feature. This feature should be used when several
@@ -1091,7 +1091,7 @@ because there is no block of template instantiating commands to close.
 
 \end{itemize}
 
-WrapITK define some lists which group the types and dimensions. Those list can be used
+WrapITK defines some lists which group the types and dimensions. Those lists can be used
 by the developer to create a wrappers but must {\em never} be modified.
 
 \begin{itemize}
@@ -1139,32 +1139,32 @@ selected by the user.
 
 \end{itemize}
 
-WrapITK provides some macros to manipulate those list and use them
+WrapITK provides some macros to manipulate those list and uses them
 to create the wrappers. Most of those macros are there to fill a lack
-of feature to manipulate lists in CMake, and should be replaced by
+of features to manipulate lists in CMake, and should be replaced by
 some CMake native commands in the future.
 
 \begin{itemize}
-  \item \verb$UNIQUE(var list)$ create a new list called \verb$var$ composed of the same
-element than the ones in \verb$list$ without duplicate. This macro is useful to impose
+  \item \verb$UNIQUE(var list)$ creates a new list called \verb$var$ composed of the same
+elements as the ones in \verb$list$ without duplicates. This macro is useful to impose
 a type even if it hasn't been selected by the user. The following line for example, from
-\verb$Modules/IO/wrap_itkImageFileReader.cmake$, force the unsigned char type to be
+\verb$Modules/IO/wrap_itkImageFileReader.cmake$, forces the unsigned char type to be
 wrapped:
 
 \small \begin{verbatim}
   UNIQUE(image_types "UC;${WRAP_ITK_ALL_TYPES}")
 \end{verbatim} \normalsize
 
-  \item \verb$SORT(var list)$ create a new list called \verb$var$ which contains the
-same elements than \verb$list$ sorted lexicographically
+  \item \verb$SORT(var list)$ creates a new list called \verb$var$ which contains the
+same elements as \verb$list$, sorted lexicographically
 
-  \item \verb$INTERSECTION(var list1 list2)$ create a new list called \verb$var$ which
+  \item \verb$INTERSECTION(var list1 list2)$ creates a new list called \verb$var$ which
 is the intersection of lists \verb$list1$ and \verb$list2$
 
-  \item \verb$REMOVE(var list1 list2)$ Remove elements in \verb$list2$ from \verb$list1$
+  \item \verb$REMOVE(var list1 list2)$ removes elements in \verb$list2$ from \verb$list1$
 and store the result in \verb$var$
 
-  \item \verb$INCREMENT(var number)$ increment \verb$number$ by one an store the result
+  \item \verb$INCREMENT(var number)$ increments \verb$number$ by one and stores the result
 in \verb$var$
 
   \item \verb$DECREMENT(var number)$ decrement \verb$number$ by one an store the result
@@ -1212,7 +1212,7 @@ pixel types selected by the user
     \item \verb$ALL$ to select all the image types selected by the user.
   \end{itemize}
 
- This macro create a template instantiation with \verb$size$
+ This macro creates a template instantiation with \verb$size$
 \verb$itk::Image$ parameters of the given pixel type. So if you are wrapping a filter
 which should take two images with integral pixel types, write \verb$WRAP_IMAGE_FILTER_USIGN_INT(2)$. The
 specific integral data type(s) (\verb$char$, \verb$long$, or \verb$short$ in the \verb$WRAP_IMAGE_FILTER_USIGN_INT$ case) will
@@ -1231,11 +1231,11 @@ of the filter for every pixel type that the user has selected.
 
 
   \item \verb$WRAP_IMAGE_FILTER_TYPES()$. Creates template instantiations of the
-current image filter, for all the dimensions selected by the user (or dimensions
+current image filter for all the dimensions selected by the user (or dimensions
 selected by the user that meet the optional dimensionality condition). This
 macro takes a variable number of arguments, which should correspond to the image
 pixel types of the images in the filter's template parameter list. The optional
-dimensionality condition should be  placed in the last parameter.
+dimensionality condition should be placed as the last parameter.
 
   \item \verb$WRAP_IMAGE_FILTER_COMBINATIONS()$ takes a variable number of
 parameters. Each parameter is a list of image pixel types. Filter instantiations
@@ -1290,12 +1290,12 @@ template code to build wrappers is available at
 \url{http://voxel.jouy.inra.fr/darcs/contrib-itk/template/}. Just use the command
 {\em darcs get http://voxel.jouy.inra.fr/darcs/contrib-itk/template/ contribName}
 and edit the project name in the {\em CMakeLists.txt} file to
-begin your new contribution.} for example, is to build {\em all}
+begin your new contribution.}, for example, to build {\em all}
 the methods of the wrapped classes, and so to be sure everything builds as it should
-\footnote{We have found and fixed numbers of bug in ITK while adding
+\footnote{We have found and fixed  a number of bugs in ITK while adding
 more classes to WrapITK}.
-In WrapITK, we used them to avoid managing switches if some dependencies or not
-found: the project must found its dependencies or fail.
+In WrapITK, we used them to avoid managing switches if some dependencies are not
+found: the project must find its dependencies or fail.
 
 External projects are not yet supported for Tcl and Java. See \ref{section:contribute}
 to contribute external project support for those languages.
@@ -1313,7 +1313,7 @@ but can be modified in the advanced options.
 Once an external project has been built, it can be tested directly from the
 build tree. Start python in the external project build directory's Python
 subdirectory, and run the command \verb$import ProjectConfig$ (or 
-\verb$import ProjectConfig-[Debug|Release|...]$ if you were using an IDE, depending on which
+\verb$import ProjectConfig-[Debug|Release|...]$ if you are using an IDE, depending on which
 build configuration was set from the IDE). This command sets up the search paths
 properly so that WrapITK and the newly-created library files can be found. Then
 type \verb$import ...$ (where \verb$...$ is replaced with the name of the external
@@ -1352,7 +1352,7 @@ More examples can be found in the contributions to the Insight Journal
 
     \subsection{BufferConversion: an example of extension for one language}
 
-This project is a python only project. It requires to have Numeric, Numarray or numpy installed
+This project is a python only project. It requires you to have Numeric, Numarray or numpy installed
 on your system, and will let the user convert ITK images to python matrices, and python matrices
 to ITK images. It thus provide a bridge between ITK and other great python tools like SciPy
 \ref{SciPyWebSite} (and a lot of others).
@@ -1360,8 +1360,8 @@ to ITK images. It thus provide a bridge between ITK and other great python tools
 Once installed, the function are directly available in the \verb$itk$ module - there is nothing
 special to import. A \verb$PyBuffer$ template let you choose the type to convert, exactly
 like with the ITK classes. You can then use the \verb$GetArrayFromImage()$ and
-\verb$GetImageFromArray()$ method to convert respectively a array to an ITK image, and an
-ITK image to an array. There is no need to instantiate a \verb$PyBuffer$ object: the methods
+\verb$GetImageFromArray()$ method to convert an array to an ITK image, and an
+ITK image to an array respectively. There is no need to instantiate a \verb$PyBuffer$ object: the methods
 are \verb$static$.
 
 \begin{verbatim}
@@ -1393,13 +1393,13 @@ for all the languages specific external projects.
 
     \subsection{ItkVtkGlue: an example of extension for all languages, including C++}
 
-ItkVtkGlue wrap the classes used to convert data from ITK to VTK \cite{VtkWebSite} and from VTK to ITK.
+ItkVtkGlue wraps the classes used to convert data from ITK to VTK \cite{VtkWebSite} and from VTK to ITK.
 Those classes comes from the InsightApplications \cite{ITKWebSite}, and make the conversion
 as simple in python as in C++. It has been tested with VTK 5.0.0.
 
-With the python lazy loading, the classes are not loaded by default, and thus avoid
+With python lazy loading, the classes are not loaded by default, and thus avoid
 loading the entire vtk code in memory. The classes are directly available in the
-\verb$itk$ module, and the underlaying code is loaded only when those classes are used.
+\verb$itk$ module, and the underlying code is loaded only when those classes are used.
 
 Example:
 \begin{verbatim}
@@ -1413,11 +1413,11 @@ Example:
 4> <libvtkFilteringPython.vtkImageData vtkobject at 0xb7675b60>
 \end{verbatim}
 
-The \verb$itk.show3D$ class use the class \verb$ImageToVTKImageFilter$ to create the
+The \verb$itk.show3D$ class uses the class \verb$ImageToVTKImageFilter$ to create the
 volume rendering shown in Figure \ref{screenshot}.
 
-This project provide new feature for all the languages, including C++.
-Its directory structure reflect that. 
+This project provides new features for all the languages, including C++.
+Its directory structure reflects this. 
 
 \begin{verbatim}
 |-- CMakeLists.txt
@@ -1452,7 +1452,7 @@ The itkvtk.swg file contains the typemaps required to return vtk
 objects.
 The images directory contains the images used for the tests. Putting
 the images in this directory rather than in the root of the project
-prevent overriding the reference files during the test, if the build
+prevents overriding the reference files during the test, which might occur if the build
 is done in the source tree.
 The project should also provide C++ tests - it is not done yet.
 
@@ -1472,24 +1472,24 @@ Write me.
   \section{Contributing to WrapITK}
 \label{section:contribute}
 
-WrapITK is an opensource project, and so all contributions are welcome. Here are
+WrapITK is an open source project, so all contributions are welcome. Here are
 some points which requires special attention:
 \begin{itemize}
-  \item Test it and report problem. That's the more important thing to do:
-we need feedbacks to enhance WrapITK quality ! Report all bugs you may found
+  \item Test it and report problem. That's the most important thing to do:
+we need feedback to enhance WrapITK quality! Report all bugs you may find
 to \url{http://voxel.jouy.inra.fr/roundup/wrapitk/} \cite{RoundupWebSite}.
   \item Work on tcl, java, and others. We are not tcl or java developers, and so
 are not able to complete the work for those languages. Any help from tcl and
 java expert would be highly appreciated. Also, there is no reason to be limited
 to python, tcl and java, and WrapITK can be extended to other languages supported
 by swig like perl \cite{PerlWebSite}, ruby \cite{RubyWebSite}, ocaml \cite{OcamlWebSite} and others.
-  \item Add more classes. WrapITK add lots of new classes compared to the current
-wrapping system, but there is still lots of work to do, especially to support more
-filter dedicated to \verb$Vector$ pixels.
+  \item Add more classes. WrapITK adds many new classes compared to the current
+wrapping system, but there is still a lot of work to do, especially to support more
+filters dedicated to \verb$Vector$ pixels.
 \end{itemize}
 
-\verb$darcs$ \cite{DarcsWebSite} allow to easily contribute to WrapITK, by sending
-patch by email, while keeping credits for the work done.
+\verb$darcs$ \cite{DarcsWebSite} allows you to easily contribute to WrapITK, by sending
+patches by email, while keeping credits for the work you have done.
 Feel free to send patches; they will be tested and integrated in the project.
 
 The basic commands to know are:
@@ -1498,20 +1498,20 @@ The basic commands to know are:
   \item \verb$darcs get --partial http://voxel.jouy.inra.fr/darcs/contrib-itk/WrapITK/$
 to get a copy of WrapITK repository.
 
-  \item \verb$darcs whatsnew$ to display the changes you have done in
+  \item \verb$darcs whatsnew$ to display the changes you have made in
 your copy of the repository.
 
   \item \verb$darcs record$ to record the changes you have made in your
-copy of the repository. darcs will propose you to select some changes
+copy of the repository. darcs will ask you to select some changes
 to record. It is better to create one patch for each feature or bug
 fix, rather than one big patch for all your current changes.
 
-  \item \verb$darcs send$ to send by email the patches you have recorded with
-\verb$darcs record$. Please send your patches to the WrapITK bugtracker
+  \item \verb$darcs send$ to send the patches you have recorded with
+\verb$darcs record$ by email. Please send your patches to the WrapITK bugtracker
 (wrapitk-bugmaster@jouy.inra.fr\footnote{Note that you must have an account to
 be able to send something to the bug tracker. Visit
 \url{http://voxel.jouy.inra.fr/roundup/wrapitk/} to create one.}) so everyone
-would be able to find it easily.
+will be able to find it easily.
 
 \end{itemize}
 
@@ -1529,28 +1529,28 @@ See \url{http://voxel.jouy.inra.fr/roundup/wrapitk/}.
 \newpage
 \part{Acknowledgments}
 I thank Dr Pierre Adenot and all the {\em Embryon et Biotechnologie} team for their
-patience during the long development time before getting a tool really usable.
+patience during the long development time before getting the tool really usable.
 
-We would like to thank Charl P. Botha for is help to debug WrapITK on windows
-plateform, and for the patches he has contributed, as well as Richard Beare for
-his early interest in using itk with python, for his useful feedbacks, and for
-his work on buffer conversion in python.
+We would like to thank Charl P. Botha for is help to debug WrapITK on the windows
+platform, and for the patches he has contributed, as well as Richard Beare for
+his early interest in using itk with python, for his useful feedback, and for
+his work on buffer conversions in python.
 
-We thank Andr\'e Bongers for his help to debug java build on windows plateform.
+We thank Andr\'e Bongers for his help debugging the java build on windows.
 
 We thank Brad King for his assistance during the development process.
 
 Finally, we thank the ITK developers for the great tool which is ITK, and for the
-previous work done on wrapping system - without it WrapITK would not be there.
+previous work done on the wrapping system - without it WrapITK would not exist.
 
 
 \newpage
 \part{Conclusion}
 
-ITK is a great library, with the drawback to be nearly unusable for prototyping,
-and to have a poor support for other languages than C++. WrapITK address those
-issue and finally give to ITK a good support for python. Java and Tcl, while
-not as much tweaked than python part, also take benefit of the higher number of
+ITK is a great library, with the drawback of being nearly unusable for prototyping,
+and having poor support for other languages than C++. WrapITK addresses those
+issue and finally gives ITK a good support for python. Java and Tcl, while
+not as complete as python, also benefit from the larger number of
 wrapped classes, and of the increase of consistency in available types and names.
 
 
