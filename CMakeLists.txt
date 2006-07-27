@@ -4,6 +4,9 @@ PROJECT(WrapITK)
 # TODO: add the FATAL_ERROR option when we will switch to cmake 2.4 - 2.2 does not support it
 CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
 
+# needed for the insight journal
+INCLUDE(IJMacros.txt)
+
 ENABLE_TESTING()
 
 ###############################################################################
