@@ -161,6 +161,7 @@ def exploreTpl(tpl):
     
 def exploreMethods(obj, cl):
     attrNameList = [i for i in dir(obj) if isinstance(i, str) and i[0].isupper() and i not in excludedMethodsList]
+    attrNameList.sort()
 	    
     for attrName in attrNameList:
 	log(" + " + attrName, 2)
