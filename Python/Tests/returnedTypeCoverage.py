@@ -124,13 +124,14 @@ excludedClasses = [
   #'ImageRegionIteratorWithIndex',
   #'InterpolateImageFilter',
   #'IsolatedConnectedImageFilter',
-  'SmartPointer'
+  'SmartPointer',
+  'BMPImageIO',
 ]
 
 def log(s, level):
   if level <= options.verbose:
-    print s
-    sys.stdout.flush()
+    print >> logFile, s
+    logFile.flush()
 
 
 def cleanType(s):
@@ -204,10 +205,16 @@ def isUnwrappedTypeString(s):
 
 parser = OptionParser(usage="usage: %prog")
 parser.add_option("--exclude", dest="exclude", default=None, metavar="FILE", help="")
+parser.add_option("--log-file", dest="logFile", default="-", metavar="FILE", help="")
 parser.add_option("--start-from", dest="startFrom", default=None, metavar="CLASS", help="")
 parser.add_option("-v", "--verbose", dest="verbose", default=0, type="int", help="")
 (options, args) = parser.parse_args()
 
+if options.logFile == "-":
+  logFile = sys.stdout
+else:
+  logFile = file(options.logFile, "w")
+  
 
 exclude = set()
 if options.exclude :
