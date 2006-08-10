@@ -93,6 +93,20 @@ EXEC_PROGRAM(${CMAKE_COMMAND} ARGS -E copy_if_different "\"${src}\"" "\"${tgt}\"
 SUBDIRS(SwigRuntime)
 
 ###############################################################################
+# Configure CPack
+###############################################################################
+
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Enhanced languages support for the Insight Toolkit")
+SET(CPACK_PACKAGE_VENDOR "Gaetan Lehmann, Zachary Pincus")
+SET(CPACK_PACKAGE_VERSION_MAJOR "${WrapITK_VERSION_MAJOR}")
+SET(CPACK_PACKAGE_VERSION_MINOR "${WrapITK_VERSION_MINOR}")
+SET(CPACK_PACKAGE_VERSION_PATCH "${WrapITK_VERSION_PATCH}")
+# SET(CPACK_PACKAGE_INSTALL_DIRECTORY "WrapITK-${WrapITK_VERSION_MAJOR}.${WrapITK_VERSION_MINOR}")
+# SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
+SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/Documentation/Copyright/ITKCopyright.txt")
+INCLUDE(CPack)
+
+###############################################################################
 # Configure specific wrapper modules
 ###############################################################################
 
