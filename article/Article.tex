@@ -282,6 +282,10 @@ be created, and each filter is wrapped for some subset of that range.
 Projects should always be built outside the source directory, in a \verb$build$
 directory for example.
 
+Solaris users may have so problem to build WrapITK if they have a recent version of
+gcc. A workaround can be activated in WrapITK to fix that problem, by passing the
+option \verb$-DSUNOS_STDCXX_FIX:BOOL=ON$ to \verb$cmake$ or \verb$ccmake$.
+
     \subsection{Install WrapITK or use it in the build tree}
 
 Once built, WrapITK can be installed or used in place.
