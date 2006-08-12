@@ -67,6 +67,23 @@ FOREACH(Kit ${WRAP_ITK_MODULES})
     COMMENT "Java Class")
   SET(ITK_JAVA_KITS_FILES ${ITK_JAVA_KITS_FILES} ${KIT_FILE_NAME}.class)
   SET(ORDERING_DEP ${KIT_FILE_NAME}.class)
+  
+  IF(APPLE)
+    # on mac os x, java files must have the name .jnilib
+    # just link them with std lib file, and install the link
+    # STRING(REGEX REPLACE ".dylib\$" ".jnilib" tgt "${clean_library_location}")
+    SET(src ${PROJECT_BINARY_DIR}/lib/lib${Kit}Java.dynlib)
+    SET(tgt ${PROJECT_BINARY_DIR}/lib/lib${Kit}Java.jnilib)
+    ADD_CUSTOM_COMMAND(
+                      OUTPUT ${tgt}
+                      DEPENDS ${Kit}Java
+                      COMMAND ln
+                      ARGS -sf ${src} ${tgt}
+                      COMMENT "Creating symbolic link for ${Kit}Java")
+    WRAP_ITK_INSTALL("/lib" ${tgt})
+    SET(ITK_JAVA_KITS_FILES ${ITK_JAVA_KITS_FILES} ${tgt})
+  ENDIF(APPLE)
+  
 ENDFOREACH(Kit)
 
 IF(CMAKE_CONFIGURATION_TYPES)
@@ -85,7 +102,7 @@ IF(CMAKE_CONFIGURATION_TYPES)
 ELSE(CMAKE_CONFIGURATION_TYPES)
   ADD_CUSTOM_COMMAND(
     OUTPUT ${WRAP_ITK_JAVA_DIR}/InsightToolkit.jar
-    DEPENDS ${ITK_JAVA_KITS_FILES} ${FULL_JAVACLASS_DEP_FILES} ${FULL_JAVA_DEP_FILES}
+    DEPENDS ${ITK_JAVA_KITS_FILES} ${FULL_JAVACLASS_DEP_FILES} ${FULL_JAVA_DEP_FILES} ${WRAP_ITK_JNILIB}
     COMMAND ${JAVA_ARCHIVE}
     ARGS -cf ${WRAP_ITK_JAVA_DIR}/InsightToolkit.jar
     InsightToolkit
@@ -94,7 +111,8 @@ ELSE(CMAKE_CONFIGURATION_TYPES)
   ADD_CUSTOM_TARGET(ITKJavaJar ALL DEPENDS ${WRAP_ITK_JAVA_DIR}/InsightToolkit.jar)
   WRAP_ITK_INSTALL(/Java ${WRAP_ITK_JAVA_DIR}/InsightToolkit.jar)
 ENDIF(CMAKE_CONFIGURATION_TYPES)
-ADD_DEPENDENCIES(ITKJavaJar ${ITK_JAVA_KIT_LIBS} ${WRAP_ITK_JNILIB} SwigRuntimeJava)
+
+ADD_DEPENDENCIES(ITKJavaJar ${ITK_JAVA_KIT_LIBS}  SwigRuntimeJava)
 FOREACH(Kit ${WRAP_ITK_MODULES})
   ADD_DEPENDENCIES(ITKJavaJar "${Kit}Java")
 ENDFOREACH(Kit)

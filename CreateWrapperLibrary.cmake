@@ -511,15 +511,5 @@ MACRO(CREATE_WRAPPER_LIBRARY library_name sources language library_type custom_l
 
   WRAP_ITK_INSTALL("/lib" ${clean_library_location})
   
-  IF("${language}" STREQUAL "Java" AND APPLE)
-    STRING(REGEX REPLACE ".dylib\$" ".jnilib" tgt "${clean_library_location}")
-    SET(tgt ${LIBRARY_OUTPUT_PATH}/libvtk${kit}Java.jnilib)                                                                                                         
-    ADD_CUSTOM_COMMAND(SOURCE ${src}                                                                                                                                
-                         COMMAND ln                                                                                                                                 
-                         ARGS -sf ${clean_library_location} ${tgt}                                                                                                                     
-                         OUTPUTS ${tgt}                                                                                                                             
-                         TARGET VTKJava)                                                                                                                            
-    SET(WRAP_ITK_JNILIB ${WRAP_ITK_JNILIB} ${tgt})                                                                                                                    
-  ENDIF("${language}" STREQUAL "Java" AND APPLE)
-  
 ENDMACRO(CREATE_WRAPPER_LIBRARY)
+
