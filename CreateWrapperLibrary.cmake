@@ -181,7 +181,7 @@ MACRO(WRAPPER_LIBRARY_CREATE_LIBRARY)
     # .java files are placed in InsightToolkit.jar - there is no need to install
     # so pass an empty extension for the "created file type" variable, so we know
     # not to try to install the .java files
-    SET(library_type "MODULE")
+    SET(library_type "SHARED")
     SET(custom_library_prefix "")
     CREATE_WRAPPER_FILES_AND_LIBRARY("Java" "" "${wrap_java_sources}"
       "${master_index_files}" "${library_idx_files}" "${gccxml_inc_file}" 
@@ -510,5 +510,16 @@ MACRO(CREATE_WRAPPER_LIBRARY library_name sources language library_type custom_l
   ENDIF(CMAKE_CONFIGURATION_TYPES)
 
   WRAP_ITK_INSTALL("/lib" ${clean_library_location})
-
+  
+  IF("${language}" STREQUAL "Java" AND APPLE)
+    STRING(REGEX REPLACE ".dylib\$" ".jnilib" tgt "${clean_library_location}")
+    SET(tgt ${LIBRARY_OUTPUT_PATH}/libvtk${kit}Java.jnilib)                                                                                                         
+    ADD_CUSTOM_COMMAND(SOURCE ${src}                                                                                                                                
+                         COMMAND ln                                                                                                                                 
+                         ARGS -sf ${clean_library_location} ${tgt}                                                                                                                     
+                         OUTPUTS ${tgt}                                                                                                                             
+                         TARGET VTKJava)                                                                                                                            
+    SET(WRAP_ITK_JNILIB ${WRAP_ITK_JNILIB} ${tgt})                                                                                                                    
+  ENDIF("${language}" STREQUAL "Java" AND APPLE)
+  
 ENDMACRO(CREATE_WRAPPER_LIBRARY)
