@@ -8,6 +8,28 @@ SET(ITK_JAVA_OUTPATH ${WRAP_ITK_JAVA_DIR})
 # Relative path from InsightToolkit.jar installation to dlls.
 SET(ITK_JAVA_INSTALL_DIR "/../Java-SWIG")
 
+# a macro to create sym links on apple
+MACRO(APPLE_SYMLINK Kit)
+  IF(APPLE)
+    # on mac os x, java files must have the name .jnilib
+    # just link them with std lib file, and install the link
+    # STRING(REGEX REPLACE ".dylib\$" ".jnilib" tgt "${clean_library_location}")
+    SET(src ${PROJECT_BINARY_DIR}/lib/lib${Kit}Java.dylib)
+    SET(tgt ${PROJECT_BINARY_DIR}/lib/lib${Kit}Java.jnilib)
+    ADD_CUSTOM_COMMAND(
+                      OUTPUT ${tgt}
+                      DEPENDS ${Kit}Java
+                      COMMAND ln
+                      ARGS -sf ${src} ${tgt}
+                      COMMENT "Creating symbolic link for ${Kit}Java")
+    # installing the symlink will copy the regular file, not a symlink
+    # so in the install tree, we don't need to have the .dylib
+    WRAP_ITK_INSTALL("/lib" ${tgt})
+    SET(ITK_JAVA_KITS_FILES ${ITK_JAVA_KITS_FILES} ${tgt})
+  ENDIF(APPLE)
+ENDMACRO(APPLE_SYMLINK)
+
+
 IF(CMAKE_CONFIGURATION_TYPES)
   SET(ITK_BASE_JAVA_FILE ${WRAP_ITK_JAVA_DIR}/${CMAKE_CFG_INTDIR}/InsightToolkit/itkbase.java)
   FOREACH(config ${CMAKE_CONFIGURATION_TYPES})
@@ -68,23 +90,13 @@ FOREACH(Kit ${WRAP_ITK_MODULES})
   SET(ITK_JAVA_KITS_FILES ${ITK_JAVA_KITS_FILES} ${KIT_FILE_NAME}.class)
   SET(ORDERING_DEP ${KIT_FILE_NAME}.class)
   
-  IF(APPLE)
-    # on mac os x, java files must have the name .jnilib
-    # just link them with std lib file, and install the link
-    # STRING(REGEX REPLACE ".dylib\$" ".jnilib" tgt "${clean_library_location}")
-    SET(src ${PROJECT_BINARY_DIR}/lib/lib${Kit}Java.dynlib)
-    SET(tgt ${PROJECT_BINARY_DIR}/lib/lib${Kit}Java.jnilib)
-    ADD_CUSTOM_COMMAND(
-                      OUTPUT ${tgt}
-                      DEPENDS ${Kit}Java
-                      COMMAND ln
-                      ARGS -sf ${src} ${tgt}
-                      COMMENT "Creating symbolic link for ${Kit}Java")
-    WRAP_ITK_INSTALL("/lib" ${tgt})
-    SET(ITK_JAVA_KITS_FILES ${ITK_JAVA_KITS_FILES} ${tgt})
-  ENDIF(APPLE)
+  APPLE_SYMLINK("${Kit}")
   
 ENDFOREACH(Kit)
+
+# symlink SwigRuntime
+APPLE_SYMLINK(SwigRuntime)
+
 
 IF(CMAKE_CONFIGURATION_TYPES)
   ADD_CUSTOM_COMMAND(

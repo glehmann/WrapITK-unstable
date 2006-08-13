@@ -509,7 +509,12 @@ MACRO(CREATE_WRAPPER_LIBRARY library_name sources language library_type custom_l
     SET(clean_library_location "${library_location}")
   ENDIF(CMAKE_CONFIGURATION_TYPES)
 
-  WRAP_ITK_INSTALL("/lib" ${clean_library_location})
+  IF("${language}" STREQUAL "Java" AND APPLE)
+    # we don't want to install this file in that case, but the file called
+    # *.jnilib.
+  ELSE("${language}" STREQUAL "Java" AND APPLE)
+    WRAP_ITK_INSTALL("/lib" ${clean_library_location})
+  ENDIF("${language}" STREQUAL "Java" AND APPLE)
   
 ENDMACRO(CREATE_WRAPPER_LIBRARY)
 
