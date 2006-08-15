@@ -21,6 +21,13 @@ package InsightToolkit;
 
 import java.util.StringTokenizer;
 
+/**
+ * A class used to load shared libs. It must be used to be able to pass
+ * options to dlopen() on some systems.
+ * I will first search in the build tree, then in the install treee, and finally
+ * in the the standard paths of the system (PATH on windows, LD_LIBRARY_PATH on
+ * linux, DYDL_LYBRARY_PATH on mac os x, ...)
+ */
 public class itkbase
 {
   private static String buildDir = "@ITK_JAVA_BUILD_DIR@";
@@ -57,7 +64,16 @@ public class itkbase
     // Load JavaCWD helper code.
     sep = System.getProperty("file.separator");
     String lib = System.mapLibraryName("SwigRuntimeJava");
-    Runtime.getRuntime().load(libDir + sep + lib);
+    String libPath = libDir + sep + lib;
+    if( (new java.io.File(libPath)).exists() )
+      {
+      System.load(libPath);
+      }
+    else
+      {
+      // must use the name for System.loadLibrary()
+      System.loadLibrary("SwigRuntimeJava");
+      }
     }
 
   // Method called by wrapper code to load native libraries.
@@ -68,8 +84,19 @@ public class itkbase
     JavaCWD.SetCWD(libDir);
     String sep = System.getProperty("file.separator");
     String lib = System.mapLibraryName(name);
-    JavaCWD.Load(libDir + sep + lib);
-    Runtime.getRuntime().load(libDir + sep + lib);
+    String libPath = libDir + sep + lib;
+    if( (new java.io.File(libPath)).exists() )
+      {
+      JavaCWD.Load(libPath);
+      System.load(libPath);
+      }
+    else
+      {
+      // System.loadLibrary() create the lib name by itself, but not JavaCWD.Load()
+      // so one must get lib and the other name
+      JavaCWD.Load(lib);
+      System.loadLibrary(name);
+      }
     JavaCWD.SetCWD(old);
     }
 }
