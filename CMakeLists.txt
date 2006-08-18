@@ -1,8 +1,9 @@
 PROJECT(WrapITK)
 
 # check cmake version
-# TODO: add the FATAL_ERROR option when we will switch to cmake 2.4 - 2.2 does not support it
-CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
+# Require 2.4.2 for MATH and LIST commands (REMOVE_ITEM is not the same in
+# 2.4.1)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4.2 FATAL_ERROR)
 
 # needed for the insight journal
 INCLUDE(IJMacros.txt)

@@ -8,6 +8,12 @@
 
 MACRO(SORT var_name list)
   # Sort the given list and store it in var_name.
+  
+  # should be the following 2 lines, but SORT is documented
+  # but not implemented in cmake 2.4.3
+  # SET(${var_name} ${list})
+  # LIST(SORT ${var_name})
+  
   SET(sort_tmp1 "")
   FOREACH(l ${list})
     SET(sort_inserted 0)
@@ -54,13 +60,8 @@ ENDMACRO(INTERSECTION)
 
 MACRO(REMOVE var_name list1 list2)
   # Remove elements in list2 from list1 and store the result in var_name.
-  SET(filter_tmp "")
-  FOREACH(l ${list1})
-    IF(NOT "${list2}" MATCHES "(^|;)${l}(;|$)")
-      SET(filter_tmp ${filter_tmp} ${l})
-    ENDIF(NOT "${list2}" MATCHES "(^|;)${l}(;|$)")
-  ENDFOREACH(l)
-  SET(${var_name} ${filter_tmp})
+  SET(${var_name} ${list1})
+  LIST(REMOVE_ITEM ${var_name} list1 ${list2})
 ENDMACRO(REMOVE)
 
 
@@ -69,40 +70,14 @@ ENDMACRO(REMOVE)
 ################################################################################
 
 MACRO(INCREMENT var_name input)
-  # Increment the input variable (must be in [0,8]) and store the result in var_name.
-  SET(${var_name} ${increment${input}})
-  IF(NOT DEFINED ${var_name})
-    MESSAGE(FATAL_ERROR "Could not increment. Input ${input} out of range 0-8?")
-  ENDIF(NOT DEFINED ${var_name})
+  # Increment the input variable and store the result in var_name.
+  MATH(EXPR ${var_name} "${input} - 1")
 ENDMACRO(INCREMENT)
 
 MACRO(DECREMENT var_name input)
-  # Decrement the input variable (must be in [1,9]) and store the result in var_name.
-  SET(${var_name} ${decrement${input}})
-  IF(NOT DEFINED ${var_name})
-    MESSAGE(FATAL_ERROR "Could not decrement. Input ${input} out of range 1-9?")
-  ENDIF(NOT DEFINED ${var_name})
+  # Decrement the input variable and store the result in var_name.
+  MATH(EXPR ${var_name} "${input} - 1")
 ENDMACRO(DECREMENT)
-
-SET(increment0 1)
-SET(increment1 2)
-SET(increment2 3)
-SET(increment3 4)
-SET(increment4 5)
-SET(increment5 6)
-SET(increment6 7)
-SET(increment7 8)
-SET(increment8 9)
-
-SET(decrement1 0)
-SET(decrement2 1)
-SET(decrement3 2)
-SET(decrement4 3)
-SET(decrement5 4)
-SET(decrement6 5)
-SET(decrement7 6)
-SET(decrement8 7)
-SET(decrement9 8)
 
 ################################################################################
 # Macros to install files at absolute locations.
