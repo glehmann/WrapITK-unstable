@@ -150,13 +150,13 @@ MACRO(WRAPPER_LIBRARY_CREATE_LIBRARY)
   # STEP 4
   # Generate the XML, index, and CXX files from the Cable input files, and add
   # the wrapper library.
-#   IF(WRAP_ITK_PERL)
-#     SET(library_type "SHARED")
-#     SET(custom_library_prefix "")
-#     CREATE_WRAPPER_FILES_AND_LIBRARY("Perl" "pl" "${wrap_perl_sources}"
-#       "${master_index_files}" "${library_idx_files}" "${gccxml_inc_file}" 
-#       "${swig_library_files}" "${library_type}" "${custom_library_prefix}")
-#   ENDIF(WRAP_ITK_PERL)
+  IF(WRAP_ITK_PERL)
+    SET(library_type "SHARED")
+    SET(custom_library_prefix "")
+    CREATE_WRAPPER_FILES_AND_LIBRARY("Perl" "pl" "${wrap_perl_sources}"
+      "${master_index_files}" "${library_idx_files}" "${gccxml_inc_file}" 
+      "${swig_library_files}" "${library_type}" "${custom_library_prefix}")
+  ENDIF(WRAP_ITK_PERL)
   
   IF(WRAP_ITK_TCL AND WRAPPER_LIBRARY_TCL)
     SET(library_type "SHARED")

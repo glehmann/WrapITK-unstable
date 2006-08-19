@@ -181,6 +181,10 @@ IF(WRAP_ITK_JAVA)
   INCLUDE("${WRAP_ITK_CMAKE_DIR}/Java/ConfigureWrapping.cmake")
 ENDIF(WRAP_ITK_JAVA)
 
+IF(WRAP_ITK_PERL)
+  INCLUDE("${WRAP_ITK_CMAKE_DIR}/Perl/ConfigureWrapping.cmake")
+ENDIF(WRAP_ITK_PERL)
+
 
 ###############################################################################
 # Set various variables in order
