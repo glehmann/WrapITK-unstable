@@ -353,6 +353,11 @@ MACRO(END_WRAP_CLASS)
   # Global vars used: WRAPPER_CLASS WRAPPER_WRAP_METHOD WRAPPER_TEMPLATES WRAPPER_SWIG_NAME
   # Global vars modified: WRAPPER_TYPEDEFS
   
+  IF("${WRAPPER_TEMPLATES}" STREQUAL "")
+    # display a warning if the class is empty
+    MESSAGE("Warning: No template declared for ${WRAPPER_CLASS}. Perhaps should you turn on more WRAP_* options?")
+  ENDIF("${WRAPPER_TEMPLATES}" STREQUAL "")
+
   # the regexp used to get the values separated by a #
   SET(sharp_regexp "([0-9A-Za-z_]*)[ ]*#[ ]*(.*)")
   FOREACH(wrap ${WRAPPER_TEMPLATES})
