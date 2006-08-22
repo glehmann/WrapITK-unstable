@@ -336,6 +336,15 @@ IF(WRAP_float AND WRAP_2)
           9
   )
 
+  ADD_TEST(PythonWatershedSegmentation1
+    ${PYTHON_DRIVER}
+    --compare WatershedSegmentation1.png
+              ${WrapITK_SOURCE_DIR}/images/WatershedSegmentation1.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/WatershedSegmentation1.py
+          ${WrapITK_SOURCE_DIR}/images/VisibleWomanEyeSlice.png
+          WatershedSegmentation1.png
+  )
+
 ENDIF(WRAP_float AND WRAP_2)
 
 
