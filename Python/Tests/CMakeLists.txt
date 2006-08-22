@@ -326,6 +326,16 @@ IF(WRAP_float AND WRAP_2)
           .001 50
   )
 
+  ADD_TEST(PythonCannyEdgeDetectionImageFilterTest
+    ${PYTHON_DRIVER}
+    --compare CannyEdgeDetectionImageFilter.png
+              ${WrapITK_SOURCE_DIR}/images/CannyEdgeDetectionImageFilter.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/CannyEdgeDetectionImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/cthead1.png
+          CannyEdgeDetectionImageFilter.png
+          9
+  )
+
 ENDIF(WRAP_float AND WRAP_2)
 
 
