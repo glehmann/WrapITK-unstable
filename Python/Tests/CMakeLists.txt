@@ -316,6 +316,16 @@ IF(WRAP_float AND WRAP_2)
           107 69 5 180 210
   )
 
+  ADD_TEST(PythonAntiAliasBinaryImageFilterTest
+    ${PYTHON_DRIVER}
+    --compare AntiAliasBinaryImageFilter.png
+              ${WrapITK_SOURCE_DIR}/images/AntiAliasBinaryImageFilter.png
+     ${CMAKE_CURRENT_SOURCE_DIR}/AntiAliasBinaryImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/VentricleModel.png
+          AntiAliasBinaryImageFilter.png
+          .001 50
+  )
+
 ENDIF(WRAP_float AND WRAP_2)
 
 
