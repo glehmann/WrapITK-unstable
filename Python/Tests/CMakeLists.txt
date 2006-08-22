@@ -242,7 +242,7 @@ IF(WRAP_float AND WRAP_2)
 #   )
 
 
-  ADD_TEST(PythonFastMarchingLeftVentricleTest ${SEGMENTATION_EXAMPLES}
+  ADD_TEST(PythonFastMarchingLeftVentricleTest
     ${PYTHON_DRIVER}
     --compare FastMarchingLeftVentricleTest.png
               ${WrapITK_SOURCE_DIR}/images/FastMarchingLeftVentricleTest.png
@@ -253,7 +253,7 @@ IF(WRAP_float AND WRAP_2)
           81 114 1.0 -0.5 3.0 100 100
   )
   
-  ADD_TEST(PythonFastMarchingRightVentricleTest ${SEGMENTATION_EXAMPLES}
+  ADD_TEST(PythonFastMarchingRightVentricleTest
     ${PYTHON_DRIVER}
     --compare FastMarchingRightVentricleTest.png
               ${WrapITK_SOURCE_DIR}/images/FastMarchingRightVentricleTest.png
@@ -264,7 +264,7 @@ IF(WRAP_float AND WRAP_2)
           99 114 1.0 -0.5 3.0 100 100
   )
   
-  ADD_TEST(PythonFastMarchingWhiteMatterTest ${SEGMENTATION_EXAMPLES}
+  ADD_TEST(PythonFastMarchingWhiteMatterTest
     ${PYTHON_DRIVER}
     --compare FastMarchingWhiteMatterTest.png
               ${WrapITK_SOURCE_DIR}/images/FastMarchingWhiteMatterTest.png
@@ -275,7 +275,7 @@ IF(WRAP_float AND WRAP_2)
           56 92 1.0 -0.3 2.0 200 100
   )
   
-  ADD_TEST(PythonFastMarchingGrayMatterTest ${SEGMENTATION_EXAMPLES}
+  ADD_TEST(PythonFastMarchingGrayMatterTest
     ${PYTHON_DRIVER}
     --compare FastMarchingGrayMatterTest.png
               ${WrapITK_SOURCE_DIR}/images/FastMarchingGrayMatterTest.png
@@ -284,6 +284,36 @@ IF(WRAP_float AND WRAP_2)
           ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
           FastMarchingGrayMatterTest.png
           40 90 .5 -0.3 2.0 200 100
+  )
+
+  ADD_TEST(PythonThresholdSegmentationLevelSetVentricleTest
+    ${PYTHON_DRIVER}
+    --compare ThresholdSegmentationLevelSetVentricleTest.png
+              ${WrapITK_SOURCE_DIR}/images/ThresholdSegmentationLevelSetVentricleTest.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThresholdSegmentationLevelSetImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          ThresholdSegmentationLevelSetVentricleTest.png
+          81 112 5 210 250
+  )
+  
+  ADD_TEST(PythonThresholdSegmentationLevelSetWhiteMatterTest
+    ${PYTHON_DRIVER}
+    --compare ThresholdSegmentationLevelSetWhiteMatterTest.png
+              ${WrapITK_SOURCE_DIR}/images/ThresholdSegmentationLevelSetWhiteMatterTest.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThresholdSegmentationLevelSetImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          ThresholdSegmentationLevelSetWhiteMatterTest.png
+          60 116 5 150 180
+  )
+  
+  ADD_TEST(PythonThresholdSegmentationLevelSetGrayMatterTest
+    ${PYTHON_DRIVER}
+    --compare ThresholdSegmentationLevelSetGrayMatterTest.png
+              ${WrapITK_SOURCE_DIR}/images/ThresholdSegmentationLevelSetGrayMatterTest.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThresholdSegmentationLevelSetImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          ThresholdSegmentationLevelSetGrayMatterTest.png
+          107 69 5 180 210
   )
 
 ENDIF(WRAP_float AND WRAP_2)
