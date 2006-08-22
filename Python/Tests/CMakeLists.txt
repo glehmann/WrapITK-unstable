@@ -137,6 +137,46 @@ IF(WRAP_unsigned_short AND WRAP_2)
     --compare ThresholdImageFilter.png ${WrapITK_SOURCE_DIR}/images/ThresholdImageFilter.png
   )
 
+  ADD_TEST(PythonResampleImageFilterTest1
+    ${PYTHON_DRIVER}
+    --compare ResampleImageFilterTest1.png
+              ${WrapITK_SOURCE_DIR}/images/ResampleImageFilterTest1.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/ResampleImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          ResampleImageFilterTest1.png
+          0
+  )
+
+  ADD_TEST(PythonResampleImageFilterTest2
+    ${PYTHON_DRIVER}
+    --compare ResampleImageFilterTest2.png
+              ${WrapITK_SOURCE_DIR}/images/ResampleImageFilterTest2.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/ResampleImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          ResampleImageFilterTest2.png
+          1
+  )
+
+  ADD_TEST(PythonResampleImageFilterTest3
+    ${PYTHON_DRIVER}
+    --compare ResampleImageFilterTest3.png
+              ${WrapITK_SOURCE_DIR}/images/ResampleImageFilterTest3.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/ResampleImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          ResampleImageFilterTest3.png
+          2
+  )
+
+  ADD_TEST(PythonResampleImageFilterTest4
+    ${PYTHON_DRIVER}
+    --compare ResampleImageFilterTest4.png
+              ${WrapITK_SOURCE_DIR}/images/ResampleImageFilterTest4.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/ResampleImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          ResampleImageFilterTest4.png
+          3
+  )
+
 ENDIF(WRAP_unsigned_short AND WRAP_2)
 
 
