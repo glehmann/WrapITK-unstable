@@ -242,6 +242,50 @@ IF(WRAP_float AND WRAP_2)
 #   )
 
 
+  ADD_TEST(PythonFastMarchingLeftVentricleTest ${SEGMENTATION_EXAMPLES}
+    ${PYTHON_DRIVER}
+    --compare FastMarchingLeftVentricleTest.png
+              ${WrapITK_SOURCE_DIR}/images/FastMarchingLeftVentricleTest.png
+    --
+    ${CMAKE_CURRENT_SOURCE_DIR}/FastMarchingImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          FastMarchingLeftVentricleTest.png
+          81 114 1.0 -0.5 3.0 100 100
+  )
+  
+  ADD_TEST(PythonFastMarchingRightVentricleTest ${SEGMENTATION_EXAMPLES}
+    ${PYTHON_DRIVER}
+    --compare FastMarchingRightVentricleTest.png
+              ${WrapITK_SOURCE_DIR}/images/FastMarchingRightVentricleTest.png
+    --
+    ${CMAKE_CURRENT_SOURCE_DIR}/FastMarchingImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          FastMarchingRightVentricleTest.png
+          99 114 1.0 -0.5 3.0 100 100
+  )
+  
+  ADD_TEST(PythonFastMarchingWhiteMatterTest ${SEGMENTATION_EXAMPLES}
+    ${PYTHON_DRIVER}
+    --compare FastMarchingWhiteMatterTest.png
+              ${WrapITK_SOURCE_DIR}/images/FastMarchingWhiteMatterTest.png
+    --
+    ${CMAKE_CURRENT_SOURCE_DIR}/FastMarchingImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          FastMarchingWhiteMatterTest.png
+          56 92 1.0 -0.3 2.0 200 100
+  )
+  
+  ADD_TEST(PythonFastMarchingGrayMatterTest ${SEGMENTATION_EXAMPLES}
+    ${PYTHON_DRIVER}
+    --compare FastMarchingGrayMatterTest.png
+              ${WrapITK_SOURCE_DIR}/images/FastMarchingGrayMatterTest.png
+    --
+    ${CMAKE_CURRENT_SOURCE_DIR}/FastMarchingImageFilter.py
+          ${WrapITK_SOURCE_DIR}/images/BrainProtonDensitySlice.png
+          FastMarchingGrayMatterTest.png
+          40 90 .5 -0.3 2.0 200 100
+  )
+
 ENDIF(WRAP_float AND WRAP_2)
 
 
