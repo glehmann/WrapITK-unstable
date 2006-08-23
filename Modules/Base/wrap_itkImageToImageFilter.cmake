@@ -17,6 +17,9 @@ WRAP_CLASS("itk::ImageToImageFilter" POINTER)
   
   # RGB types
   WRAP_IMAGE_FILTER_RGB(2)
+
+  # complex types
+  WRAP_IMAGE_FILTER_COMPLEX_REAL(2)
  
   # scalar <-> RGB
   UNIQUE(stypes "UL;${WRAP_ITK_SCALAR}")
