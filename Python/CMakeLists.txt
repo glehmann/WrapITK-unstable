@@ -111,7 +111,7 @@ ELSE ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
       ARGS -E copy ${src} ${copy_tgt}
       OUTPUTS ${copy_tgt}
       TARGET copy_python_files
-      COMMENT "source copy")
+      COMMENT "Copying ${file}.py to build dir.")
   ENDFOREACH(file)
   
   # driver command to make the copy happen.
