@@ -474,9 +474,9 @@ ENDMACRO(WRAP_TEMPLATE)
 # and
 # filter<itk::Image<unsigned char, 3>, itk::Image<unsigned char, 3> >
 
-MACRO(WRAP_IMAGE_FILTER_ALL param_count)
-  WRAP_IMAGE_FILTER("${WRAP_ITK_ALL}" ${param_count} "${ARGN}")
-ENDMACRO(WRAP_IMAGE_FILTER_ALL)
+MACRO(WRAP_IMAGE_FILTER_ALL_TYPES param_count)
+  WRAP_IMAGE_FILTER("${WRAP_ITK_ALL_TYPES}" ${param_count} "${ARGN}")
+ENDMACRO(WRAP_IMAGE_FILTER_ALL_TYPES)
 
 MACRO(WRAP_IMAGE_FILTER_SCALAR param_count)
   WRAP_IMAGE_FILTER("${WRAP_ITK_SCALAR}" ${param_count} "${ARGN}")
