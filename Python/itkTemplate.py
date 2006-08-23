@@ -337,8 +337,16 @@ def New(self, *args, **kargs) :
     # but before, check the number of inputs
     if len(args) > 1 :
       raise TypeError('Object accept only 1 input.')
-    newItkObject.SetImage(args[0])
-          
+    methodList = ['SetImage', 'SetInputImage']
+    methodName = None
+    for m in methodList:
+      if m in dir(newItkObject):
+        methodName = m
+    if methodName :
+      getattr(newItkObject, methodName)(args[0])
+    else:
+      raise AttributeError('No method found to set the input.')
+    
   # named args : name is the function name, value is argument(s)
   for attribName, value in kargs.iteritems() :
     # use Set as prefix. It allow to use a shorter and more intuitive
