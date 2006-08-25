@@ -163,3 +163,56 @@ class show3D :
     self.AdaptColorAndOpacity()
 
 
+
+try:
+  from vtk import vtkLSMReader
+  import itkExtras
+  import Base
+
+  class lsm( itkExtras.pipeline ):
+    """ Use vtk to import LSM image in ITK.
+    """
+    def __init__(self, fileName, channel=0, IType=Base.Image.UC3 ):
+      itkExtras.pipeline.__init__(self)
+      import itk
+      self.connect( vtkLSMReader() )
+      self.connect( itk.VTKImageToImageFilter[IType].New() )
+      self.connect( itk.ChangeInformationImageFilter[IType].New( ChangeSpacing=True ) )
+      self.SetFileName( fileName )
+      self.SetChannel( channel )
+  
+    def SetFileName( self, fileName ):
+      self[0].SetFileName( fileName )
+      self[0].Update()
+      self.UpdateSpacing()
+  
+    def SetChannel( self, channel ):
+      self[0].SetUpdateChannel( channel )
+      self[0].Update()
+      self.UpdateSpacing()
+      self.__channel__ = channel
+      return self.GetChannelName( channel )
+  
+    def UpdateSpacing(self):
+      self[-1].SetOutputSpacing( self[0].GetVoxelSizes() )
+  
+    def GetFileName(self):
+      return self[0].GetFileName()
+    
+    def GetChannel(self):
+      return self.__channel__
+    
+    def GetNumberOfChannels(self):
+      return self[0].GetNumberOfChannels()
+    
+    def GetChannelName(self, channel=None):
+      if channel == None:
+        channel = self.GetChannel()
+      return self[0].GetChannelName( channel )
+  
+  
+except ImportError:
+  import sys
+  print >> sys.stderr, "Warning: Can't import vtkLSMReader. lsm class will not be usable."
+  
+  
