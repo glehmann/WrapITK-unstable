@@ -353,7 +353,13 @@ class pipeline:
     """
     if len(self) > 0:
       return self[-1].Update()
-
+  
+  def UpdateOutputInformation( self ):
+    if "UpdateOutputInformation" in dir(self[-1]):
+      self[-1].UpdateOutputInformation()
+    else:	
+      self.Update()
+      
   def __getitem__( self, i ):
      return self.filter_list[i]
 
