@@ -48,6 +48,23 @@ def size(imageOrFilter) :
   img = image(imageOrFilter)
   return img.GetLargestPossibleRegion().GetSize()
   
+# return the pyhsical size of an image
+def physical_size(imageOrFilter) :
+  from __builtin__ import range # required because range is overladed in this module
+  spacing_ = spacing(imageOrFilter)
+  size_ = size(imageOrFilter)
+  result = []
+  for i in range(0, spacing_.Size()):
+    result.append( spacing_.GetElement(i) * size_.GetElement(i) )
+  return result
+
+# return the spacing of an image
+def spacing(imageOrFilter) :
+  # we don't need the entire output, only its size
+  imageOrFilter.UpdateOutputInformation()
+  img = image(imageOrFilter)
+  return img.GetSpacing()
+  
 # return the index of an imageClass
 def index(imageOrFilter) :
   # we don't need the entire output, only its size
