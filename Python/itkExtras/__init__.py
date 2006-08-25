@@ -158,7 +158,7 @@ class show2D :
 
 # display scalar images in volume
 class show3D :
-  def __init__(self, input=None, MinOpacity=0.0, MaxOpacity=0.2) :
+  def __init__(self, input=None, MinOpacity=0.0, MaxOpacity=0.1) :
     import qt
     import vtk
     from vtk.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
@@ -213,6 +213,7 @@ class show3D :
     self.__widget__.hide()
     
   def SetInput(self, input) :
+    from __builtin__ import range # required because range is overladed in this module
     img = image(input)
     self.__input__ = img
     if img :
@@ -222,11 +223,20 @@ class show3D :
       img.UpdateOutputInformation()
       img.Update()
       import itk
+      # flip the image to get the same representation than the vtk one
       self.__flipper__ = itk.FlipImageFilter[img].New(Input=img)
       axes = self.__flipper__.GetFlipAxes()
       axes.SetElement(1, True)
       self.__flipper__.SetFlipAxes(axes)
-      self.__itkvtkConverter__ = itk.ImageToVTKImageFilter[img].New(self.__flipper__)
+      # change the spacing while still keeping the ratio to workaround vtk bug
+      # when spacing is very small
+      spacing_ = spacing(img)
+      normSpacing = []
+      for i in range(0, spacing_.Size()):
+        normSpacing.append( spacing_.GetElement(i) / spacing_.GetElement(0) )
+      self.__changeInfo__ = itk.ChangeInformationImageFilter[img].New(self.__flipper__, OutputSpacing=normSpacing, ChangeSpacing=True)
+      # now really convert the data
+      self.__itkvtkConverter__ = itk.ImageToVTKImageFilter[img].New(self.__changeInfo__)
       self.__volumeMapper__.SetInput(self.__itkvtkConverter__.GetOutput())
       # needed to avoid warnings
       # self.__itkvtkConverter__.GetOutput() must be callable
