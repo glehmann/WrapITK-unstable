@@ -404,7 +404,6 @@ MACRO(ADD_ONE_TYPEDEF wrap_method wrap_class swig_name)
   ELSE("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
     SET(typedefs "typedef ${full_class_name}::${base_name} ${swig_name}")
   ENDIF("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
-  MESSAGE("/// ${typedefs} ///")
 
   IF("${wrap_method}" MATCHES "POINTER")
     # add a pointer typedef if we are so asked
