@@ -90,6 +90,7 @@ MACRO(INCLUDE_WRAP_CMAKE module)
   # preset the vars before include the file
   SET(WRAPPER_MODULE_NAME "${module}")
   SET(WRAPPER_TYPEDEFS)
+  SET(WRAPPER_FORCE_INSTANTIATE)
   SET(WRAPPER_INCLUDE_FILES ${WRAPPER_DEFAULT_INCLUDE})
   SET(WRAPPER_AUTO_INCLUDE_HEADERS ON)
   SET(WRAPPER_DO_NOT_CREATE_CXX OFF)
@@ -127,6 +128,7 @@ MACRO(WRITE_WRAP_CXX file_name)
   ENDFOREACH(inc)
   SET(CONFIG_WRAPPER_MODULE_NAME "${WRAPPER_MODULE_NAME}")
   SET(CONFIG_WRAPPER_TYPEDEFS "${WRAPPER_TYPEDEFS}")
+  SET(CONFIG_WRAPPER_FORCE_INSTANTIATE "${WRAPPER_FORCE_INSTANTIATE}")
 
   # Create the cxx file.
   SET(cxx_file "${WRAPPER_LIBRARY_OUTPUT_DIR}/${file_name}")
@@ -273,13 +275,13 @@ MACRO(WRAP_NAMED_CLASS class swig_name)
   IF("${ARGC}" EQUAL 3)
     SET(WRAPPER_WRAP_METHOD "${ARGV2}")
     SET(ok 0)
-    FOREACH(opt POINTER POINTER_WITH_SUPERCLASS)
+    FOREACH(opt POINTER POINTER_WITH_SUPERCLASS FORCE_INSTANTIATE)
       IF("${opt}" STREQUAL "${WRAPPER_WRAP_METHOD}")
         SET(ok 1)
       ENDIF("${opt}" STREQUAL "${WRAPPER_WRAP_METHOD}")
     ENDFOREACH(opt)
     IF(ok EQUAL 0)
-      MESSAGE(SEND_ERROR "WRAP_CLASS: Invalid option '${WRAPPER_WRAP_METHOD}'. Possible values are POINTER and POINTER_WITH_SUPERCLASS")
+      MESSAGE(SEND_ERROR "WRAP_CLASS: Invalid option '${WRAPPER_WRAP_METHOD}'. Possible values are POINTER, POINTER_WITH_SUPERCLASS and FORCE_INSTANTIATE")
     ENDIF(ok EQUAL 0)
   ENDIF("${ARGC}" EQUAL 3)
 
@@ -395,7 +397,14 @@ MACRO(ADD_ONE_TYPEDEF wrap_method wrap_class swig_name)
   # trick gcc_xml into creating code for the class. If we left off the trailing
   # base_name, then gcc_xml wouldn't see the typedef as a class instantiation,
   # and thus wouldn't create XML for any of the methods, etc.
-  SET(typedefs "typedef ${full_class_name}::${base_name} ${swig_name}")
+  IF("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
+    SET(typedefs "typedef ${full_class_name} ${swig_name}")
+    # add a peace of code to for type instantiation
+    SET(WRAPPER_FORCE_INSTANTIATE "${WRAPPER_FORCE_INSTANTIATE}  sizeof(${swig_name});\n")
+  ELSE("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
+    SET(typedefs "typedef ${full_class_name}::${base_name} ${swig_name}")
+  ENDIF("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
+  MESSAGE("/// ${typedefs} ///")
 
   IF("${wrap_method}" MATCHES "POINTER")
     # add a pointer typedef if we are so asked
