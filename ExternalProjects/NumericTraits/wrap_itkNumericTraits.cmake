@@ -14,7 +14,16 @@ WRAP_CLASS("itk::NumericTraits")
   ENDFOREACH(t)
   
   # the ITK types
-#  SET(WRAPPER_TEMPLATES ${WRAPPER_TEMPLATES} ${itk_Wrap_Vector} ${itk_Wrap_CovariantVector} ${itk_Wrap_RGBPixel})
+  # TODO: Get why build fail with RBG and vectors types and wrap them 
+  FOREACH(t ${WRAP_ITK_COMPLEX_REAL})   # ${WRAP_ITK_RGB} 
+    WRAP_TEMPLATE("${ITKM_${t}}" "${ITKT_${t}}")
+  ENDFOREACH(t)
+  
+#  FOREACH(d ${WRAP_ITK_DIMS})
+#    FOREACH(t ${WRAP_ITK_VECTOR_REAL} ${WRAP_ITK_COV_VECTOR_REAL})
+#      WRAP_TEMPLATE("${ITKM_${t}${d}}" "${ITKT_${t}${d}}")
+#    ENDFOREACH(t)
+#  ENDFOREACH(d)
   
   # TODO: the VariableLengthVectorPixel, which is not defined in WraITKTypes.cmake
   
