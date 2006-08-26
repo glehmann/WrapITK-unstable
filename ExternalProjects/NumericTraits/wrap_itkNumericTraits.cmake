@@ -18,4 +18,16 @@ WRAP_CLASS("itk::NumericTraits")
   
   # TODO: the VariableLengthVectorPixel, which is not defined in WraITKTypes.cmake
   
+  # save the template parameters declared here to reuse them for the superclass
+  SET(param_set ${WRAPPER_TEMPLATES})
+  
+END_WRAP_CLASS()
+
+
+# disable auto include at that point. vcl_numeric_limits is defined in
+# vcl_limits.h, and already included in itkNumericTraits.h
+SET(WRAPPER_AUTO_INCLUDE_HEADERS OFF)
+
+WRAP_CLASS(vcl_numeric_limits FORCE_INSTANTIATE)
+  SET(WRAPPER_TEMPLATES ${param_set})
 END_WRAP_CLASS()
