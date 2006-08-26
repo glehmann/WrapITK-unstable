@@ -163,8 +163,8 @@ FOREACH(TCL_TEST_IMAGE_DIMENSION ${WRAP_ITK_DIMS})
       ${TCL_DRIVER}
       ${TEST_FILE_NAME}.tcl
       ${WrapITK_SOURCE_DIR}/images/cthead1.png
-      ${TEST_FILE_NAME}.img
-      --compare ${TEST_FILE_NAME}.img ${WrapITK_SOURCE_DIR}/images/cthead1.png
+      ${TEST_FILE_NAME}.nrrd
+      --compare ${TEST_FILE_NAME}.nrrd ${WrapITK_SOURCE_DIR}/images/cthead1.png
     )
 
   ENDFOREACH(TCL_TEST_PIXEL_TYPE)

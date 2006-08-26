@@ -176,8 +176,8 @@ FOREACH(JAVA_TEST_IMAGE_DIMENSION ${WRAP_ITK_DIMS})
       ${JAVA_DRIVER}
       ${TEST_FILE_NAME}
       ${WrapITK_SOURCE_DIR}/images/cthead1.png
-      ${TEST_FILE_NAME}.img
-      --compare ${TEST_FILE_NAME}.img ${WrapITK_SOURCE_DIR}/images/cthead1.png
+      ${TEST_FILE_NAME}.nrrd
+      --compare ${TEST_FILE_NAME}.nrrd ${WrapITK_SOURCE_DIR}/images/cthead1.png
     )
     
     SET(targets ${targets} ${TEST_FILE_NAME}.class)
