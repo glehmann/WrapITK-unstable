@@ -1,6 +1,6 @@
 WRAP_CLASS("itk::ImageFileWriter" POINTER)
   # Force uchar image IO 
-  UNIQUE(image_types "UC;${WRAP_ITK_ALL_TYPES}")
+  UNIQUE(image_types "UC;RGBUC;${WRAP_ITK_ALL_TYPES}")
   WRAP_IMAGE_FILTER("${image_types}" 1)
 
   UNIQUE(to_types "${WRAP_ITK_SCALAR};UC")

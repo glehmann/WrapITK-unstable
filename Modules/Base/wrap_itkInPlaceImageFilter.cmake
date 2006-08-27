@@ -10,11 +10,11 @@ WRAP_CLASS("itk::InPlaceImageFilter" POINTER)
   ENDIF(NOT WRAP_unsigned_long)
   
   # Vector types
-  WRAP_IMAGE_FILTER_VECTOR_REAL(2)
-  WRAP_IMAGE_FILTER_COV_VECTOR_REAL(2)
+  WRAP_IMAGE_FILTER_COMBINATIONS("${WRAP_ITK_VECTOR}" "${WRAP_ITK_VECTOR}")
   
   # RGB types
-  WRAP_IMAGE_FILTER_RGB(2)
+  UNIQUE(rgb "RGBUC;${WRAP_ITK_RGB}")
+  WRAP_IMAGE_FILTER_COMBINATIONS("${rgb}" "${rgb}")
  
   # int <-> RGB
   IF(WRAP_rgb_unsigned_char AND WRAP_unsigned_char)

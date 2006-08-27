@@ -91,9 +91,7 @@ END_WRAP_TYPE()
 SET(itk_Wrap_FixedArray ${WRAPPER_TEMPLATES})
 
 WRAP_TYPE("itk::RGBPixel" "RGB")
-  IF(WRAP_rgb_unsigned_char)
-    WRAP_TEMPLATE("${ITKM_UC}" "${ITKT_UC}")
-  ENDIF(WRAP_rgb_unsigned_char)
+  WRAP_TEMPLATE("${ITKM_UC}" "${ITKT_UC}")
   
   IF(WRAP_rgb_unsigned_short)
     WRAP_TEMPLATE("${ITKM_US}" "${ITKT_US}")
@@ -115,7 +113,7 @@ WRAP_TYPE("itk::Image" "I")
   # Make a list of all of the selected image pixel types and also double (for
   # BSplineDeformableTransform), uchar (for 8-bit image output), and ulong
   # (for the watershed and relabel filters).
-  UNIQUE(wrap_image_types "${WRAP_ITK_ALL_TYPES};D;UC;UL")
+  UNIQUE(wrap_image_types "${WRAP_ITK_ALL_TYPES};D;UC;UL;RGBUC")
   
   FOREACH(d ${WRAP_ITK_DIMS})
     FOREACH(type ${wrap_image_types})
