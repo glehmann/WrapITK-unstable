@@ -333,9 +333,9 @@ MACRO(WRAP_INCLUDE include_file)
   # Global vars modified: WRAPPER_INCLUDE_FILES
   SET(already_included 0)
   FOREACH(included ${WRAPPER_INCLUDE_FILES})
-    IF("${include_file}" STREQUAL "${already_included}")
+    IF("${include_file}" STREQUAL "${included}")
       SET(already_included 1)
-    ENDIF("${include_file}" STREQUAL "${already_included}")
+    ENDIF("${include_file}" STREQUAL "${included}")
   ENDFOREACH(included)
   
   IF(NOT already_included)
