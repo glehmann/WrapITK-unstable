@@ -38,11 +38,8 @@ SET(PYTHON_DRIVER "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/\${CTEST_C
     ${PYTHON_DRIVER}
     ${CMAKE_CURRENT_SOURCE_DIR}/FFTWImageFilter.py
     ${PROJECT_SOURCE_DIR}/images/cthead1.png
-    FFTImageFilterReal.png
-    FFTImageFilterImaginary.png
-    --compare FFTImageFilterReal.png ${PROJECT_SOURCE_DIR}/images/FFTImageFilterReal.png
-    --compare FFTImageFilterImaginary.png ${PROJECT_SOURCE_DIR}/images/FFTImageFilterImaginary.png
-#     --compare complexImage.mhd ${WrapITK_SOURCE_DIR}/images/complexImage.mhd
+    FFTWImageFilter.png
+    --compare FFTWImageFilter.png ${PROJECT_SOURCE_DIR}/images/cthead1.png
   )
 
 # some tests will fail if dim=2 and unsigned short are not wrapped

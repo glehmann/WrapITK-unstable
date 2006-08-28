@@ -10,25 +10,11 @@ PixelType = itk.F
 ImageType = itk.Image[PixelType, dim]
 
 reader = itk.ImageFileReader[ImageType].New( FileName=argv[1] )
+
 fftFilter = itk.FFTWRealToComplexConjugateImageFilter[PixelType, dim].New(reader)
+fftFilter2 = itk.FFTWComplexConjugateToRealImageFilter[PixelType, dim].New(fftFilter)
 
-# why this Update() ?
-fftFilter.Update()
+cast = itk.CastImageFilter[ImageType, itk.Image[itk.UC, dim]].New( fftFilter2 )
+itk.write(cast, argv[2])
 
-ComplexImageType  = itk.Image[itk.complex[PixelType], dim]
-
-complexWriter = itk.ImageFileWriter[ComplexImageType].New( fftFilter, FileName="complexImage.mhd" )
-complexWriter.Update()
-
-realFilter = itk.ComplexToRealImageFilter[ComplexImageType, ImageType].New( fftFilter )
-
-WritePixelType = itk.UC
-WriteImageType = itk.Image[WritePixelType, dim]
-intensityRescaler = itk.RescaleIntensityImageFilter[ImageType, WriteImageType].New( realFilter, OutputMinimum=0, OutputMaximum=255 )
-writer = itk.ImageFileWriter[WriteImageType].New( intensityRescaler, FileName=argv[2] )
-writer.Update()
-
-imaginaryFilter = itk.ComplexToImaginaryImageFilter[ComplexImageType, ImageType].New( fftFilter )
-intensityRescaler.SetInput( imaginaryFilter.GetOutput() )
-writer.SetFileName( argv[3] )
-writer.Update()
+print itk.size(fftFilter).GetElement(0), itk.size(fftFilter).GetElement(1)
