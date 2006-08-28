@@ -1,7 +1,7 @@
 
 import itk
 from sys import argv, exit
-itk.auto_progress(1)
+# itk.auto_progress(1)
 
 if argv[2] == "Ball":
   print "Ball"
