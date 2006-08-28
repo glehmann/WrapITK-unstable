@@ -360,7 +360,7 @@ def New(self, *args, **kargs) :
     import ITKPyUtils, Base
     try :
       def progress() :
-        clrLine = "\033[2000D\033[K"
+        clrLine = "\033[2K\033E\033[1A"
         # newItkObject is kept referenced with a closure
         p = newItkObject.GetProgress()
         print >> sys.stderr, clrLine+"%s: %f" % (self.__name__, p),

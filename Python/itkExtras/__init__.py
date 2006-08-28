@@ -9,7 +9,7 @@ def auto_progress( b ):
   if b :
     def loadingCallback(name, p):
       import sys
-      clrLine = "\033[2000D\033[K"
+      clrLine = "\033[2K\033E\033[1A"
       print >> sys.stderr, clrLine+"Loading %s..." % name,
       if p == 1 :
         print >> sys.stderr, clrLine,
