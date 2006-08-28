@@ -93,6 +93,14 @@ IF(WRAP_unsigned_short AND WRAP_2)
     --compare GrayscaleDilateImageFilter.png ${WrapITK_SOURCE_DIR}/images/GrayscaleDilateImageFilter.png
   )
 
+  ADD_TEST(PythonBoxGrayscaleDilateImageFilter
+    ${PYTHON_DRIVER}
+    ${CMAKE_CURRENT_SOURCE_DIR}/BoxGrayscaleDilateImageFilter.py
+    ${WrapITK_SOURCE_DIR}/images/cthead1.png
+    BoxGrayscaleDilateImageFilter.png
+    --compare BoxGrayscaleDilateImageFilter.png ${WrapITK_SOURCE_DIR}/images/BoxGrayscaleDilateImageFilter.png
+  )
+
   ADD_TEST(PythonGrayscaleErodeImageFilter
     ${PYTHON_DRIVER}
     ${CMAKE_CURRENT_SOURCE_DIR}/GrayscaleErodeImageFilter.py
