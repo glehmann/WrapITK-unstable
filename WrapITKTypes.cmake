@@ -171,13 +171,9 @@ WRAP_TYPE("itk::LevelSetNode" "LSN")
 END_WRAP_TYPE()
 SET(itk_Wrap_LevelSetNode ${WRAPPER_TEMPLATES})
 
-WRAP_TYPE("itk::BinaryBallStructuringElement" "SE")
-  # Only make structuring elements for the selected image pixel types
+WRAP_TYPE("itk::FlatStructuringElement" "SE")
   FOREACH(d ${WRAP_ITK_DIMS})
-    FOREACH(type ${WRAP_ITK_SCALAR})
-      WRAP_TEMPLATE("${ITKM_${type}}${d}"  "${ITKT_${type}},${d}")
-    ENDFOREACH(type)
-    WRAP_TEMPLATE("${ITKM_B}${d}"  "${ITKT_B},${d}")
+    WRAP_TEMPLATE("${d}"  "${d}")
   ENDFOREACH(d)
 END_WRAP_TYPE()
 SET(itk_Wrap_StructuringElement ${WRAPPER_TEMPLATES})
@@ -205,9 +201,12 @@ SET(WRAPPER_DEFAULT_INCLUDE
   "itkVariableLengthVector.h"
   "itkPoint.h"
   "itkLevelSet.h"
-  "itkBinaryBallStructuringElement.h"
+  "itkFlatStructuringElement.h"
   "itkSpatialObject.h"
   "itkCommand.h"
   "vcl_complex.h"
 )
 
+# for the FlatStructuringElement
+# TODO remove that once included in ITK
+INCLUDE_DIRECTORIES("${WrapITK_SOURCE_DIR}")

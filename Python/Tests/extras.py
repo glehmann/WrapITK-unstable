@@ -66,9 +66,8 @@ for s in [2, (2, 2), [2, 2], itk.Size[2](2)] :
   st = itk.strel(dim, s)
   
   (tpl, param) = itk.template(st)
-  assert tpl == itk.BinaryBallStructuringElement
-  assert param[0] == itk.B
-  assert param[1] == dim
+  assert tpl == itk.FlatStructuringElement
+  assert param[0] == dim
   assert st.GetRadius().GetElement(0) == st.GetRadius().GetElement(1) == 2
 
 # test size

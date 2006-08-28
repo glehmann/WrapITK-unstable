@@ -5,7 +5,7 @@ package require InsightToolkit
 
 set reader [ itkImageFileReaderIUS2_New ]
 
-set filter [ itkBinaryDilateImageFilterIUS2IUS2_New ]
+set filter [ itkBinaryDilateImageFilterIUS2IUS2SE2_New ]
 
 set cast [ itkCastImageFilterIUS2IUC2_New ]
 
@@ -18,12 +18,11 @@ $writer     SetInput [ $cast  GetOutput ]
 $reader SetFileName [lindex $argv 0]
 $writer SetFileName [lindex $argv 1]
 
-itkBinaryBallStructuringElementB2  element 
+itkSize2 radius
+radius Fill 5
+set element [ itkFlatStructuringElement2_Ball radius ]
 
-element  SetRadius 5
-element  CreateStructuringElement
-
-$filter SetKernel  element 
+$filter SetKernel $element 
 $filter SetDilateValue 200
 
 $writer Update

@@ -15,7 +15,7 @@ public class BinaryErodeImageFilter
     itkImageFileWriterIUC2_Pointer writer = itkImageFileWriterIUC2.itkImageFileWriterIUC2_New();
     itkCastImageFilterIUS2IUC2_Pointer caster = itkCastImageFilterIUS2IUC2.itkCastImageFilterIUS2IUC2_New();
 
-    itkBinaryErodeImageFilterIUS2IUS2_Pointer filter = itkBinaryErodeImageFilterIUS2IUS2.itkBinaryErodeImageFilterIUS2IUS2_New();
+    itkBinaryErodeImageFilterIUS2IUS2SE2_Pointer filter = itkBinaryErodeImageFilterIUS2IUS2SE2.itkBinaryErodeImageFilterIUS2IUS2SE2_New();
 
     filter.SetInput( reader.GetOutput() );
     caster.SetInput( filter.GetOutput() );
@@ -24,11 +24,9 @@ public class BinaryErodeImageFilter
     reader.SetFileName( argv[0] );
     writer.SetFileName( argv[1] );
 
-
-    itkBinaryBallStructuringElementB2 element = new itkBinaryBallStructuringElementB2();
-
-    element.SetRadius( 5 );
-    element.CreateStructuringElement();
+    itkSize2 radius = new itkSize2();
+    radius.Fill( 5 );
+    itkFlatStructuringElement2 element = itkFlatStructuringElement2.Ball( radius );
 
     filter.SetKernel( element );
 

@@ -75,11 +75,7 @@ def index(imageOrFilter) :
 # return a structuring elt
 def strel(dim, radius=1) :
   import itk
-  st = itk.BinaryBallStructuringElement[itk.B, dim]()
-  st.SetRadius(radius)
-  # call the boring CreateStructuringElement() method
-  st.CreateStructuringElement()
-  return st
+  return itk.FlatStructuringElement[dim].Ball(radius)
   
 # return an image
 from itkTemplate import image
