@@ -269,3 +269,7 @@ INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Tcl" FILES "${WRAP_ITK_C
 
 INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Inputs/LanguageSupport" FILES "${WRAP_ITK_CMAKE_DIR}/ConfigurationInputs/LanguageSupport/ExternalProjectConfig.pth.in")
 
+
+# for the FlatStructuringElement
+# TODO remove that once included in ITK
+INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}")

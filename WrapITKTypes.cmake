@@ -206,7 +206,3 @@ SET(WRAPPER_DEFAULT_INCLUDE
   "itkCommand.h"
   "vcl_complex.h"
 )
-
-# for the FlatStructuringElement
-# TODO remove that once included in ITK
-INCLUDE_DIRECTORIES("${WrapITK_SOURCE_DIR}")
