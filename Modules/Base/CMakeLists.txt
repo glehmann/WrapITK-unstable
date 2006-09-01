@@ -4,6 +4,7 @@ SET(WRAPPER_LIBRARY_GROUPS
     itkOffset
     itkArray
     itkContinuousIndex
+    itkCovariantVector
     itkVector
     itkPoint
     itkRGBPixel
