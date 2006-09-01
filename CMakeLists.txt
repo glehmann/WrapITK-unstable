@@ -123,6 +123,12 @@ SET(WRAP_ITK_MODULES
   BaseTransforms
   BaseSpatialObject)
   
+# set Iterators module to OFF by default
+# it is currently usable only when applying patches to ITK, and will only
+# take place and time to build
+# TODO: remove this line when iterators will be usable without patch
+OPTION(WRAP_Iterators "Build Iterators module." OFF)
+  
 SET(optional_modules 
   BinaryMorphology
   Calculators
