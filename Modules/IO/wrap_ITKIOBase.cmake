@@ -8,6 +8,8 @@ END_WRAP_CLASS()
 # non templated IO classes and factories
 WRAP_NON_TEMPLATE_CLASS("itk::ImageIOBase" POINTER)
 WRAP_NON_TEMPLATE_CLASS("itk::IPLCommonImageIO" POINTER)
+WRAP_NON_TEMPLATE_CLASS("itk::TransformFileReader" POINTER)
+WRAP_NON_TEMPLATE_CLASS("itk::TransformFileWriter" POINTER)
 
 SET(io_classes
   AnalyzeImageIO
