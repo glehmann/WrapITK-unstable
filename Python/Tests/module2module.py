@@ -23,7 +23,7 @@ import Filtering
 import IntensityFilters
 import Interpolators
 import IO
-import Iterators
+# import Iterators
 import LevelSet
 import Morphology
 # import Patented
