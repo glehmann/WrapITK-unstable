@@ -1,23 +1,56 @@
 # new features introduced by itk module
 # each new feature use a name in lower case
+clrLine = "\033[2K\033E\033[1A"
 
-def auto_progress( b ):
-  import itkTemplate
-  itkTemplate.auto_progress = b
+def auto_progress( progressType = 1 ):
+  """Set up auto progress report
   
+  progressType:
+    1 or True  -> auto progress be used in a terminal
+    2          -> simple auto progress (without special characters)
+    0 or False -> disable auto progress
+  """
   import itkConfig
-  if b :
-    def loadingCallback(name, p):
-      import sys
-      clrLine = "\033[2K\033E\033[1A"
-      print >> sys.stderr, clrLine+"Loading %s..." % name,
-      if p == 1 :
-        print >> sys.stderr, clrLine,
-    
-    itkConfig.ImportCallback = loadingCallback
-  else:
-    itkConfig.ImportCallback = None
   
+  if progressType == True or progressType == 1 :
+    itkConfig.ImportCallback = terminal_import_callback
+    itkConfig.ProgressCallback = terminal_progress_callback
+    
+  elif progressType == 2 :
+    itkConfig.ImportCallback = simple_import_callback
+    itkConfig.ProgressCallback = simple_progress_callback
+    
+  elif progressType == False or progressType == 0 :
+    itkConfig.ImportCallback = None
+    itkConfig.ProgressCallback = None
+    
+  else:
+    raise ValueError("Invalid auto progress type: "+repr(progressType))
+  
+def terminal_progress_callback(name, p):
+  import sys
+  print >> sys.stderr, clrLine+"%s: %f" % (name, p),
+  if p == 1 :
+    print >> sys.stderr, clrLine,
+  
+def terminal_import_callback(name, p):
+  import sys
+  print >> sys.stderr, clrLine+"Loading %s..." % name,
+  if p == 1 :
+    print >> sys.stderr, clrLine,
+  
+def simple_import_callback(name, p):
+  import sys
+  print >> sys.stderr, clrLine+"Loading %s..." % name,
+  if p == 1 :
+    print >> sys.stderr, "done"
+
+def simple_progress_callback(name, p):
+  import sys
+  print >> sys.stderr, clrLine+"Running %s..." % name,
+  if p == 1 :
+    print >> sys.stderr, "done"
+
 
 def force_load():
   """force itk to load all the submodules"""

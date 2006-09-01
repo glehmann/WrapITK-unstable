@@ -19,6 +19,7 @@
 
 import itk
 from sys import argv, stderr
+itk.auto_progress(2)
 
 def main():
     if len(argv) < 10:

@@ -18,7 +18,7 @@
 import itk
 from sys import argv, stderr, exit
 
-# itk.auto_progress(True)
+itk.auto_progress(2)
 
 # if( len(argv) < 3 ):
 #   print >> stderr, """Missing Parameters

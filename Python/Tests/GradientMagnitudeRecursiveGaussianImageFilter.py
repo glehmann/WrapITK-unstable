@@ -1,6 +1,7 @@
 
 import itk
 from sys import argv
+itk.auto_progress(2)
 
 InputPixelType = itk.F
 OutputPixelType = itk.F

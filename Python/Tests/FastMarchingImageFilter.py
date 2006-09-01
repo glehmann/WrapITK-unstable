@@ -27,7 +27,7 @@ if( len(argv) < 10 ):
 Usage: FastMarchingImageFilter.py inputImage  outputImage seedX seedY Sigma SigmoidAlpha SigmoidBeta TimeThreshold StoppingValue"""
   exit(1)
   
-# itk.auto_progress(1)
+itk.auto_progress(2)
 
 
 InternalPixelType = itk.F

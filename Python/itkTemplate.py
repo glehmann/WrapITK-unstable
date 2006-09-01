@@ -356,16 +356,15 @@ def New(self, *args, **kargs) :
     attrib(value)
 
   # now, try to add observer to display progress
-  if auto_progress :
+  if itkConfig.ProgressCallback :
     import ITKPyUtils, Base
+    # copy the callback so it can be reset to None in itkConfig
+    # without pb
+    callback = itkConfig.ProgressCallback
     try :
       def progress() :
-        clrLine = "\033[2K\033E\033[1A"
-        # newItkObject is kept referenced with a closure
-        p = newItkObject.GetProgress()
-        print >> sys.stderr, clrLine+"%s: %f" % (self.__name__, p),
-        if p == 1 :
-          print >> sys.stderr, clrLine,
+        # newItkObject and callback are kept referenced with a closure
+        callback(self.__name__, newItkObject.GetProgress())
 
       command = ITKPyUtils.PyCommand.New()
       command.SetCommandCallable(progress)
@@ -377,11 +376,6 @@ def New(self, *args, **kargs) :
       pass
 
   return newItkObject
-
-
-# set this variable to True to automatically add an progress display to the newly created
-# filter.
-auto_progress = False
 
 
 def image(input) :

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import itk, sys
+itk.auto_progress(2)
 
 # first argument is the pixel type
 PType = getattr(itk, sys.argv[1])

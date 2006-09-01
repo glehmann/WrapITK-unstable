@@ -13,6 +13,7 @@
 
 import itk
 from sys import argv, stderr, exit
+itk.auto_progress(2)
 
 # itk.auto_progress(1)
 

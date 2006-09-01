@@ -1,6 +1,7 @@
 
 import itk
 import sys
+itk.auto_progress(2)
 
 reader = itk.ImageFileReader.IF2.New()
 reader.SetFileName( sys.argv[1] )

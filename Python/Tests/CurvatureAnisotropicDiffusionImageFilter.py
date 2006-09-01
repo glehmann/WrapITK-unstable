@@ -5,6 +5,7 @@
 
 import itk
 from sys import argv
+itk.auto_progress(2)
 
 dim = 2
 IType = itk.Image[itk.F, dim]

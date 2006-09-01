@@ -1,4 +1,5 @@
 import itk
+itk.auto_progress(2)
 
 d = itk.Directory.New()
 d.Load(".")
