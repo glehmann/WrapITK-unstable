@@ -429,6 +429,14 @@ IF(WRAP_float AND WRAP_2)
           WatershedSegmentation1.png
   )
 
+  ADD_TEST(PythonSpatialObject
+    ${PYTHON_DRIVER}
+    --compare SpatialObject.png
+              ${WrapITK_SOURCE_DIR}/images/SpatialObject.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/SpatialObject.py
+          SpatialObject.png
+  )
+
 ENDIF(WRAP_float AND WRAP_2)
 
 
