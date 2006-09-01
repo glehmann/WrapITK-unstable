@@ -12,6 +12,8 @@ WRAP_NON_TEMPLATE_CLASS("itk::Version"            POINTER)
 WRAP_NON_TEMPLATE_CLASS("itk::TimeStamp")
 WRAP_NON_TEMPLATE_CLASS("itk::Indent")
 WRAP_NON_TEMPLATE_CLASS("itk::StringStream")
+WRAP_NON_TEMPLATE_CLASS("itk::SimpleFilterWatcher")
+WRAP_NON_TEMPLATE_CLASS("itk::XMLFilterWatcher")
 
 #
 # disabled to fix too long name on some systems with java
