@@ -34,9 +34,9 @@ MACRO(ADD_PYTHON_TYPEMAP simple_name cpp_name swig_name template_params)
     ADD_PYTHON_VEC_TYPEMAP("${cpp_name}" "${template_params}")
   ENDIF("${cpp_name}" STREQUAL "itk::CovariantVector")
 
-#   IF("${cpp_name}" STREQUAL "itk::Point")
-#     ADD_PYTHON_VEC_TYPEMAP("${cpp_name}" "${template_params}")
-#   ENDIF("${cpp_name}" STREQUAL "itk::Point")
+  IF("${cpp_name}" STREQUAL "itk::Point")
+    ADD_PYTHON_VEC_TYPEMAP("${cpp_name}" "${template_params}")
+  ENDIF("${cpp_name}" STREQUAL "itk::Point")
 
   IF("${cpp_name}" STREQUAL "itk::ContinuousIndex")
     ADD_PYTHON_VEC_TYPEMAP("${cpp_name}" "${template_params}")

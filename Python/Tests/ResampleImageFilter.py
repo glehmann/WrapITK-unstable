@@ -68,12 +68,11 @@ filter.SetDefaultPixelValue( 0 )
 # filter.SetOutputSpacing( spacing )
 filter.SetOutputSpacing( 1.0 )
 
-origin = itk.Point[itk.D, Dimension]()
-origin.SetElement(0, 0.0)
-origin.SetElement(1, 0.0)
-filter.SetOutputOrigin( origin )
-# typemap is not yet available for Point class
-# filter.SetOutputOrigin( 0.0 )
+# origin = itk.Point[itk.D, Dimension]()
+# origin.SetElement(0, 0.0)
+# origin.SetElement(1, 0.0)
+# filter.SetOutputOrigin( origin )
+filter.SetOutputOrigin( [0.0, 0.0] )
 
 # size = itk.Size[Dimension]()
 # size.SetElement(0, 300)
