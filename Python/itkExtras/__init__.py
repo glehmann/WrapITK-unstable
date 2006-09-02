@@ -28,24 +28,40 @@ def auto_progress( progressType = 1 ):
     raise ValueError("Invalid auto progress type: "+repr(progressType))
   
 def terminal_progress_callback(name, p):
+  """Display the progress of an object and clean the display once complete
+  
+  This function can be used with itkConfig.ProgressCallback
+  """
   import sys
   print >> sys.stderr, clrLine+"%s: %f" % (name, p),
   if p == 1 :
     print >> sys.stderr, clrLine,
   
 def terminal_import_callback(name, p):
+  """Display the loading of a module and clean the display once complete
+  
+  This function can be used with itkConfig.ImportCallback
+  """
   import sys
   print >> sys.stderr, clrLine+"Loading %s..." % name,
   if p == 1 :
     print >> sys.stderr, clrLine,
   
 def simple_import_callback(name, p):
+  """Print a message when a module is loading
+  
+  This function can be used with itkConfig.ImportCallback
+  """
   import sys
   print >> sys.stderr, clrLine+"Loading %s..." % name,
   if p == 1 :
     print >> sys.stderr, "done"
 
 def simple_progress_callback(name, p):
+  """Print a message when an object is running
+  
+  This function can be used with itkConfig.ProgressCallback
+  """
   import sys
   print >> sys.stderr, clrLine+"Running %s..." % name,
   if p == 1 :
@@ -58,9 +74,14 @@ def force_load():
   for k in dir(itk):
     getattr(itk, k)
 
-# Function to print itk object info
+
 import sys
 def echo(object, f=sys.stderr) :
+   """Print an object is f
+   
+   If the object has a method Print(), this method is used.
+   repr(object) is used otherwise
+   """
    import itk
    ss = itk.StringStream()
    try :
@@ -74,15 +95,23 @@ def echo(object, f=sys.stderr) :
       print >> f, ss.GetString()
 del sys
 
-# return the size of an imageClass
+
 def size(imageOrFilter) :
+  """Return the size of an image, or of the output image of a filter
+  
+  This method take care of updating the needed informations
+  """
   # we don't need the entire output, only its size
   imageOrFilter.UpdateOutputInformation()
   img = image(imageOrFilter)
   return img.GetLargestPossibleRegion().GetSize()
   
-# return the pyhsical size of an image
+
 def physical_size(imageOrFilter) :
+  """Return the physical size of an image, or of the output image of a filter
+  
+  This method take care of updating the needed informations
+  """
   from __builtin__ import range # required because range is overladed in this module
   spacing_ = spacing(imageOrFilter)
   size_ = size(imageOrFilter)
@@ -91,43 +120,71 @@ def physical_size(imageOrFilter) :
     result.append( spacing_.GetElement(i) * size_.GetElement(i) )
   return result
 
-# return the spacing of an image
+
 def spacing(imageOrFilter) :
+  """Return the spacing of an image, or of the output image of a filter
+  
+  This method take care of updating the needed informations
+  """
   # we don't need the entire output, only its size
   imageOrFilter.UpdateOutputInformation()
   img = image(imageOrFilter)
   return img.GetSpacing()
   
-# return the index of an imageClass
+
 def index(imageOrFilter) :
+  """Return the index of an image, or of the output image of a filter
+  
+  This method take care of updating the needed informations
+  """
   # we don't need the entire output, only its size
   imageOrFilter.UpdateOutputInformation()
   img = image(imageOrFilter)
   return img.GetLargestPossibleRegion().GetIndex()
   
-# return a structuring elt
+
 def strel(dim, radius=1) :
+  """A method to create a ball structuring element
+  """
   import itk
+  import sys
+  # print >> sys.stderr, "strel() is deprecated and will be removed in the next release" 
   return itk.FlatStructuringElement[dim].Ball(radius)
   
 # return an image
 from itkTemplate import image
 
-# return the template of a class and its parameters
+
 def template(cl) :
+  """Return the template of a class (or of the class of an object) and its parameters
+  
+  template() returns a tuple with 2 elements:
+    - the first one is the itkTemplate object
+    - the second is a tuple containing the template parameters
+  """
   from itkTemplate import itkTemplate
   return itkTemplate.__class_to_template__[class_(cl)]
   
-# return ctype
+
 def ctype(s) :
+   """Return the c type corresponding to the string passed in parameter
+   
+   The string can contain some extra spaces.
+   see also itkCType
+   """
   from itkTypes import itkCType
   ret = itkCType.GetCType(" ".join(s.split()))
   if ret == None :
     raise KeyError("Unrecognized C type '%s'" % s)
   return ret
   
-# return a class from an instance
+
 def class_(obj) :
+  """Return a class from an object
+  
+  Often in itk, the __class__ is not what the user is expecting.
+  class_() should do a better job
+  """
   import inspect
   if inspect.isclass(obj) :
     # obj is already a class !
@@ -146,8 +203,13 @@ def class_(obj) :
     # finally, return the class found
     return cls
 
-# return range
+
 def range(imageOrFilter) :
+  """Return the range of values in a image of in the output image of a filter
+  
+  The minimum and maximum values are returned in a tuple: (min, max)
+  range() take care of updating the pipeline
+  """
   import itk
   img = image(imageOrFilter)
   img.UpdateOutputInformation()
@@ -156,25 +218,34 @@ def range(imageOrFilter) :
   comp.Compute()
   return (comp.GetMinimum(), comp.GetMaximum())
 
-# write an image
+
 def write(imageOrFilter, fileName):
+  """Write a image or the output image of a filter to filename
+  
+  The writer is instantiated with the image type of the image in
+  parameter (or, again, with the output image of the filter in parameter)
+  """
   import itk
   img = image(imageOrFilter)
   img.UpdateOutputInformation()
   writer = itk.ImageFileWriter[img].New(Input=img, FileName=fileName)
   writer.Update()
   
-# choose the method to call according to the dimension of the image
+
 def show(input, **kargs) :
-    import itk
-    img = image(input)
-    if img.GetImageDimension() == 3 and "show3D" in dir(itk):
-	return itk.show3D(input, **kargs)
-    else :
-	# print "2D not supported yet, use the 3D viewer."
-	return show2D(input, **kargs)
+  """display an image
+  """
+  import itk
+  img = image(input)
+  if img.GetImageDimension() == 3 and "show3D" in dir(itk):
+	  return itk.show3D(input, **kargs)
+  else :
+	  # print "2D not supported yet, use the 3D viewer."
+	  return show2D(input, **kargs)
     
 class show2D :
+  """Display a 2D image
+  """
   def __init__(self, input) :
     # use the tempfile module to get a non used file name and to put
     # the file at the rignt place
