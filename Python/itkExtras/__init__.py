@@ -167,11 +167,11 @@ def template(cl) :
   
 
 def ctype(s) :
-   """Return the c type corresponding to the string passed in parameter
+  """Return the c type corresponding to the string passed in parameter
    
-   The string can contain some extra spaces.
-   see also itkCType
-   """
+  The string can contain some extra spaces.
+  see also itkCType
+  """
   from itkTypes import itkCType
   ret = itkCType.GetCType(" ".join(s.split()))
   if ret == None :
