@@ -119,8 +119,8 @@ INSTALL_FILES(/bin FILES ${CMAKE_CURRENT_BINARY_DIR}/InstallOnly/itkwish)
 # the subdirs before searching in the current dir, and so find the pikIndex.tcl file in InstallOnly
 # first
 SET(CONFIG_WRAP_ITK_TCL_DIR "${WrapITK_BINARY_DIR}")
-SET(CONFIG_WRAP_ITK_TCL_SWIG_DIR "${WrapITK_BINARY_DIR}/lib")
-SET(CONFIG_WRAP_ITK_ITKWISH_DIR "${WrapITK_BINARY_DIR}/bin")
+SET(CONFIG_WRAP_ITK_TCL_SWIG_DIR "${LIBRARY_OUTPUT_PATH}")
+SET(CONFIG_WRAP_ITK_ITKWISH_DIR "${EXECUTABLE_OUTPUT_PATH}")
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/itkwish.in
                ${CMAKE_CURRENT_BINARY_DIR}/itkwish
                @ONLY IMMEDIATE )

@@ -171,7 +171,11 @@ class LibraryLoader(object):
   
   def setup(self):
     self.old_cwd = os.getcwd()
-    os.chdir(itkConfig.swig_lib)
+    try:
+      os.chdir(itkConfig.swig_lib)
+    except OSError:
+      # silently pass to avoid the case where the dir is not there
+      pass
     self.old_path = sys.path
     sys.path = [itkConfig.swig_lib, itkConfig.swig_py] + sys.path
     try:

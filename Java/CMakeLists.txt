@@ -14,8 +14,8 @@ MACRO(APPLE_SYMLINK Kit)
     # on mac os x, java files must have the name .jnilib
     # just link them with std lib file, and install the link
     # STRING(REGEX REPLACE ".dylib\$" ".jnilib" tgt "${clean_library_location}")
-    SET(src ${PROJECT_BINARY_DIR}/lib/lib${Kit}Java.dylib)
-    SET(tgt ${PROJECT_BINARY_DIR}/lib/lib${Kit}Java.jnilib)
+    SET(src ${LIBRARY_OUTPUT_PATH}/lib${Kit}Java.dylib)
+    SET(tgt ${LIBRARY_OUTPUT_PATH}/lib${Kit}Java.jnilib)
     ADD_CUSTOM_COMMAND(
                       OUTPUT ${tgt}
                       DEPENDS ${Kit}Java
