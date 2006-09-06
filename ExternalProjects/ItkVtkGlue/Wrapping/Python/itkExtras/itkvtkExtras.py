@@ -164,55 +164,54 @@ class show3D :
 
 
 
-try:
-  from vtk import vtkLSMReader
-  import itkExtras
-  import Base
+import itkExtras
 
-  class lsm( itkExtras.pipeline ):
-    """ Use vtk to import LSM image in ITK.
-    """
-    def __init__(self, fileName, channel=0, IType=Base.Image.UC3 ):
-      itkExtras.pipeline.__init__(self)
-      import itk
-      self.connect( vtkLSMReader() )
-      self.connect( itk.VTKImageToImageFilter[IType].New() )
-      self.connect( itk.ChangeInformationImageFilter[IType].New( ChangeSpacing=True ) )
-      self.SetFileName( fileName )
-      self.SetChannel( channel )
+class lsm( itkExtras.pipeline ):
+  """ Use vtk to import LSM image in ITK.
+  """
+  def __init__(self, fileName, channel=0, ImageType=None ):
+    from vtk import vtkLSMReader
+    import itk
+    itk.pipeline.__init__(self)
+    # if ImageType is None, give it a default value
+    # this is useful to avoid loading Base while loading this module
+    if ImageType == None:
+      ImageType = itk.Image.UC3
+    # set up the pipeline
+    self.connect( vtkLSMReader() )
+    self.connect( itk.VTKImageToImageFilter[ImageType].New() )
+    self.connect( itk.ChangeInformationImageFilter[ImageType].New( ChangeSpacing=True ) )
+    # a configure the pipeline
+    self.SetFileName( fileName )
+    self.SetChannel( channel )
+
+  def SetFileName( self, fileName ):
+    self[0].SetFileName( fileName )
+    self[0].Update()
+    self.UpdateSpacing()
+
+  def SetChannel( self, channel ):
+    self[0].SetUpdateChannel( channel )
+    self[0].Update()
+    self.UpdateSpacing()
+    self.__channel__ = channel
+    return self.GetChannelName( channel )
+
+  def UpdateSpacing(self):
+    self[-1].SetOutputSpacing( self[0].GetVoxelSizes() )
+
+  def GetFileName(self):
+    return self[0].GetFileName()
   
-    def SetFileName( self, fileName ):
-      self[0].SetFileName( fileName )
-      self[0].Update()
-      self.UpdateSpacing()
+  def GetChannel(self):
+    return self.__channel__
   
-    def SetChannel( self, channel ):
-      self[0].SetUpdateChannel( channel )
-      self[0].Update()
-      self.UpdateSpacing()
-      self.__channel__ = channel
-      return self.GetChannelName( channel )
+  def GetNumberOfChannels(self):
+    return self[0].GetNumberOfChannels()
   
-    def UpdateSpacing(self):
-      self[-1].SetOutputSpacing( self[0].GetVoxelSizes() )
+  def GetChannelName(self, channel=None):
+    if channel == None:
+      channel = self.GetChannel()
+    return self[0].GetChannelName( channel )
   
-    def GetFileName(self):
-      return self[0].GetFileName()
-    
-    def GetChannel(self):
-      return self.__channel__
-    
-    def GetNumberOfChannels(self):
-      return self[0].GetNumberOfChannels()
-    
-    def GetChannelName(self, channel=None):
-      if channel == None:
-        channel = self.GetChannel()
-      return self[0].GetChannelName( channel )
-  
-  
-except ImportError:
-  import sys
-  print >> sys.stderr, "Warning: Can't import vtkLSMReader. lsm class will not be usable."
-  
-  
+del itkExtras
