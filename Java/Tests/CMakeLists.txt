@@ -1,27 +1,15 @@
 
+# configure the test driver
+FIND_PROGRAM(ITK_TEST_DRIVER itkTestDriver)
+
+SET(JAVA_DRIVER "${ITK_TEST_DRIVER}"
+  "${JAVA_RUNTIME}"
+  -cp ".:${WrapITK_BINARY_DIR}/Java/${CMAKE_CFG_INTDIR}/InsightToolkit.jar"
+)
+  
+
 # put all generated files in this list
 SET(targets "")
-
-# configure and build the test driver
-FIND_PROGRAM(IMAGE_COMPARE ImageCompare)
-SET(JAVA_TEST_ITK_JAR "${WrapITK_BINARY_DIR}/Java/${CMAKE_CFG_INTDIR}/InsightToolkit.jar")
-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/javaTestDriver.java.in"
-   "${CMAKE_CURRENT_BINARY_DIR}/javaTestDriver.java"
-   @ONLY IMMEDIATE
-)
-
-ADD_CUSTOM_COMMAND(
-  OUTPUT javaTestDriver.class
-  DEPENDS ${WrapITK_BINARY_DIR}/Java/Tests/javaTestDriver.java
-  COMMAND ${JAVA_COMPILE}
-  ARGS -classpath "${CMAKE_CURRENT_SOURCE_DIR}/argparser.jar"
-  -d "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/javaTestDriver.java"
-)
-
-SET(targets ${targets} javaTestDriver.class)
-
-# a convenient var to use in tests
-SET(JAVA_DRIVER "${JAVA_RUNTIME}" -classpath ".:${CMAKE_CURRENT_SOURCE_DIR}/argparser.jar" javaTestDriver)
 
 MACRO(BUILD_JAVA_TEST name)
   # a convenient macro to build java tests
@@ -34,7 +22,7 @@ MACRO(BUILD_JAVA_TEST name)
     -d "${CMAKE_CURRENT_BINARY_DIR}" ${CMAKE_CURRENT_SOURCE_DIR}/${name}.java
     )
   SET(targets ${targets} ${name}.class)
-	
+  
 ENDMACRO(BUILD_JAVA_TEST)
 
 
@@ -46,6 +34,8 @@ ENDMACRO(BUILD_JAVA_TEST)
 
 
 UNIQUE(types "${WRAP_ITK_SCALAR};UC")
+# signed char can't be used to store an image with values up to 255
+LIST(REMOVE_ITEM types SC)
 FOREACH(JAVA_TEST_IMAGE_DIMENSION ${WRAP_ITK_DIMS})
   FOREACH(JAVA_TEST_PIXEL_TYPE ${types})
 
@@ -79,3 +69,4 @@ ENDFOREACH(JAVA_TEST_IMAGE_DIMENSION)
 
 
 ADD_CUSTOM_TARGET(JavaTests ALL DEPENDS ${targets})
+

@@ -2,7 +2,7 @@
 #  Program:   Insight Segmentation & Registration Toolkit
 #  Module:    $RCSfile: itkdata.py,v $
 #  Language:  C++
-#  Date:      $Date: 2004/03/04 23:06:56 $
+#  Date:      $Date: 2006/09/06 20:58:42 $
 #  Version:   $Revision: 1.1 $
 #
 #  Copyright (c) Insight Software Consortium. All rights reserved.

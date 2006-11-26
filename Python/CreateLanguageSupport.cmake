@@ -1,4 +1,73 @@
+MACRO(END_WRAPPER_LIBRARY_PYTHON)
 
+  SET(cpp_files )
+
+  SET(python_files )
+
+  SET(modules )
+  
+  # the list of interface this module depends
+  SET(module_target_depend )
+  FOREACH(dep ${WRAPPER_LIBRARY_DEPENDS})
+    SET(module_target_depend ${module_target_depend} ${${dep}_SWIG_FILES})
+  ENDFOREACH(dep)
+
+  FOREACH(source ${WRAPPER_LIBRARY_CABLESWIG_INPUTS})
+  
+    GET_FILENAME_COMPONENT(base_name ${source} NAME_WE)
+    STRING(REGEX REPLACE "^wrap_" "" group_name "${base_name}")
+    
+    # create the swig interface for all the groups in the module
+    #
+    SET(interface_file "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/${base_name}.i")
+    SET(lib ${group_name}Python)
+    SET(python_file "${LIBRARY_OUTPUT_PATH}/${lib}.py")
+    SET(cpp_file "${CMAKE_CURRENT_BINARY_DIR}/${base_name}Python.cpp")
+
+    ADD_CUSTOM_COMMAND(
+      OUTPUT ${cpp_file} ${python_file}
+      COMMAND swig -c++ -python -fcompact -O -features autodoc=1 -Werror -w508 -w312 -w314 -w509 -w302 -w362
+      -w389 # operator[], to be suppressed later...
+      -w384 -w383 # operator++ ane operator--
+      -w361 # operator!
+      -l${WrapITK_SOURCE_DIR}/Python/python.i
+      -o ${cpp_file}
+#      -I${WRAPPER_MASTER_INDEX_OUTPUT_DIR}
+      -outdir ${LIBRARY_OUTPUT_PATH}
+      ${interface_file}
+      WORKING_DIRECTORY ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python
+      DEPENDS ${interface_file} ${WrapITK_SOURCE_DIR}/Python/python.i ${module_target_depend}
+    )
+    ADD_CUSTOM_TARGET(${base_name}SwigPython DEPENDS ${cpp_file})
+    
+    # add the current interface files to the deps
+    SET(module_target_depend ${module_target_depend} ${interface_file})
+    
+    SET(cpp_files ${cpp_files} ${cpp_file})
+    
+    SET(modules ${modules} ${lib})
+
+    SET(python_files ${python_files} ${python_file})
+
+    ADD_LIBRARY(${lib} MODULE ${cpp_file})
+    SET_TARGET_PROPERTIES(${lib} PROPERTIES PREFIX "_")
+    TARGET_LINK_LIBRARIES(${lib} ${WRAPPER_LIBRARY_LINK_LIBRARIES} ${PYTHON_LIBRARY})
+    
+  ENDFOREACH(source)
+  
+#  ADD_LIBRARY(${WRAPPER_LIBRARY_NAME}Python MODULE ${cpp_files})
+#  SET_TARGET_PROPERTIES(${WRAPPER_LIBRARY_NAME}Python PROPERTIES PREFIX "_")
+#  TARGET_LINK_LIBRARIES( ${WRAPPER_LIBRARY_NAME}Python
+#    ${WRAPPER_LIBRARY_LINK_LIBRARIES} 
+#    ${PYTHON_LIBRARY}
+#  )
+
+  ADD_CUSTOM_TARGET(${WRAPPER_LIBRARY_NAME}SwigPython DEPENDS ${cpp_files} ${python_files})
+  
+  ADD_CUSTOM_TARGET(${WRAPPER_LIBRARY_NAME}Python DEPENDS ${modules})
+
+
+ENDMACRO(END_WRAPPER_LIBRARY_PYTHON)
 
 MACRO(ADD_PYTHON_TYPEMAP simple_name cpp_name swig_name template_params)
   SET(text "\n\n")
@@ -461,4 +530,5 @@ MACRO(PYTHON_SUPPORT_CONFIGURE_FILES)
       CONFIGURE_PYTHON_EXTERNAL_PROJECT_CONFIG("${PROJECT_BINARY_DIR}/Python/")
     ENDIF(EXTERNAL_WRAP_ITK_PROJECT)
 ENDMACRO(PYTHON_SUPPORT_CONFIGURE_FILES)
+
 

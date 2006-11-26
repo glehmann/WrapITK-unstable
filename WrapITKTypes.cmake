@@ -1,5 +1,9 @@
 #------------------------------------------------------------------------------
 
+# set the default include files for the generated wrapper files
+# itk::Command has to be available in all ITK wrapped files
+SET(WRAPPER_DEFAULT_INCLUDE "itkCommand.h")
+
 # define some macro to help creation of types vars
 
 MACRO(WRAP_TYPE class prefix)
@@ -9,6 +13,12 @@ MACRO(WRAP_TYPE class prefix)
    SET(WRAPPER_TEMPLATES "")
    SET(itk_Wrap_Prefix "${prefix}")
    SET(itk_Wrap_Class "${class}")
+
+   # If the type is ITK class, add apropriate include file
+   IF("${class}" MATCHES "itk::")
+     STRING(REGEX REPLACE "itk.*::(.*)" "itk\\1" includeFileName "${class}")
+     SET(WRAPPER_DEFAULT_INCLUDE ${WRAPPER_DEFAULT_INCLUDE} "${includeFileName}.h")
+   ENDIF("${class}" MATCHES "itk::")
 ENDMACRO(WRAP_TYPE)
 
 MACRO(END_WRAP_TYPE)
@@ -186,23 +196,3 @@ END_WRAP_TYPE()
 SET(itk_Wrap_SpatialObject ${WRAPPER_TEMPLATES})
 
 #------------------------------------------------------------------------------
-
-# set the default include files for the generated wrapper files
-SET(WRAPPER_DEFAULT_INCLUDE
-  "itkOffset.h"
-  "itkVector.h"
-  "itkCovariantVector.h"
-  "itkContinuousIndex.h"
-  "itkArray.h"
-  "itkFixedArray.h"
-  "itkRGBPixel.h"
-  "itkImage.h"
-  "itkVectorImage.h"
-  "itkVariableLengthVector.h"
-  "itkPoint.h"
-  "itkLevelSet.h"
-  "itkFlatStructuringElement.h"
-  "itkSpatialObject.h"
-  "itkCommand.h"
-  "vcl_complex.h"
-)

@@ -98,12 +98,12 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/itkTclModules.h.in
 
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-ADD_EXECUTABLE(itkwish itkTclAppInit.cxx)
+# ADD_EXECUTABLE(itkwish itkTclAppInit.cxx)
 FOREACH(module ${WRAP_ITK_MODULES})
-  TARGET_LINK_LIBRARIES(itkwish ${module}Tcl)
+#   TARGET_LINK_LIBRARIES(itkwish ${module}Tcl)
 ENDFOREACH(module)
 
-TARGET_LINK_LIBRARIES(itkwish ${TCL_LIBRARY} ${TK_LIBRARY})
+# TARGET_LINK_LIBRARIES(itkwish ${TCL_LIBRARY} ${TK_LIBRARY})
 
 # configure and install the driver itkwish script
 SET(CONFIG_WRAP_ITK_TCL_DIR "${CMAKE_INSTALL_PREFIX}/${WRAP_ITK_INSTALL_PREFIX}/Tcl")
@@ -127,5 +127,6 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/itkwish.in
 
 
 #install the actual executable
-INSTALL_TARGETS("${WRAP_ITK_INSTALL_PREFIX}/bin" itkwish)
+# INSTALL_TARGETS("${WRAP_ITK_INSTALL_PREFIX}/bin" itkwish)
 INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Tcl" .tcl itkinteraction itktesting itkdata itkutils)
+

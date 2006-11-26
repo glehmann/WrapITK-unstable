@@ -91,6 +91,7 @@ MACRO(INCLUDE_WRAP_CMAKE module)
   SET(WRAPPER_MODULE_NAME "${module}")
   SET(WRAPPER_TYPEDEFS)
   SET(WRAPPER_FORCE_INSTANTIATE)
+
   SET(WRAPPER_INCLUDE_FILES ${WRAPPER_DEFAULT_INCLUDE})
   SET(WRAPPER_AUTO_INCLUDE_HEADERS ON)
   SET(WRAPPER_DO_NOT_CREATE_CXX OFF)
@@ -213,7 +214,8 @@ MACRO(WRAP_CLASS class)
   # WRAP_INCLUDE should be manually called from the wrap_*.cmake file that calls
   # this macro.
   # Lastly, this class takes an optional 'wrap method' parameter. Valid values are:
-  # POINTER, POINTER_WITH_SUPERCLASS, DEREF and SELF.
+  # POINTER, POINTER_WITH_SUPERCLASS, POINTER_WITH_2_SUPERCLASSES, FORCE_INSTANTIATE 
+  # and SELF.
   #
   # Global vars used: none
   # Global vars modified: WRAPPER_INCLUDE_FILES
@@ -275,13 +277,13 @@ MACRO(WRAP_NAMED_CLASS class swig_name)
   IF("${ARGC}" EQUAL 3)
     SET(WRAPPER_WRAP_METHOD "${ARGV2}")
     SET(ok 0)
-    FOREACH(opt POINTER POINTER_WITH_SUPERCLASS FORCE_INSTANTIATE)
+    FOREACH(opt POINTER POINTER_WITH_SUPERCLASS POINTER_WITH_2_SUPERCLASSES FORCE_INSTANTIATE)
       IF("${opt}" STREQUAL "${WRAPPER_WRAP_METHOD}")
         SET(ok 1)
       ENDIF("${opt}" STREQUAL "${WRAPPER_WRAP_METHOD}")
     ENDFOREACH(opt)
     IF(ok EQUAL 0)
-      MESSAGE(SEND_ERROR "WRAP_CLASS: Invalid option '${WRAPPER_WRAP_METHOD}'. Possible values are POINTER, POINTER_WITH_SUPERCLASS and FORCE_INSTANTIATE")
+      MESSAGE(SEND_ERROR "WRAP_CLASS: Invalid option '${WRAPPER_WRAP_METHOD}'. Possible values are POINTER, POINTER_WITH_SUPERCLASS, POINTER_WITH_2_SUPERCLASSES and FORCE_INSTANTIATE")
     ENDIF(ok EQUAL 0)
   ENDIF("${ARGC}" EQUAL 3)
 
@@ -344,6 +346,11 @@ MACRO(WRAP_INCLUDE include_file)
       ${WRAPPER_INCLUDE_FILES}
       ${include_file}
     )
+    IF("${include_file}" MATCHES "<.*>")
+      SET(MODULE_INCLUDES "${MODULE_INCLUDES}#include ${include_file};\n")
+    ELSE("${include_file}" MATCHES "<.*>")
+      SET(MODULE_INCLUDES "${MODULE_INCLUDES}#include \"${include_file}\";\n")
+    ENDIF("${include_file}" MATCHES "<.*>")
   ENDIF(NOT already_included)
 ENDMACRO(WRAP_INCLUDE)
 
@@ -369,6 +376,13 @@ MACRO(END_WRAP_CLASS)
   ENDFOREACH(wrap)  
 ENDMACRO(END_WRAP_CLASS)
 
+
+MACRO(ADD_SIMPLE_TYPEDEF wrap_class swig_name)
+  # Add a typedef, without support for any option
+  SET(WRAPPER_TYPEDEFS "${WRAPPER_TYPEDEFS}      typedef ${wrap_class} ${swig_name};\n")
+ENDMACRO(ADD_SIMPLE_TYPEDEF)
+
+
 MACRO(ADD_ONE_TYPEDEF wrap_method wrap_class swig_name)
   # Add one  typedef to WRAPPER_TYPEDEFS
   # 'wrap_method' is the one of the valid WRAPPER_WRAP_METHODS from WRAP_CLASS,
@@ -392,35 +406,38 @@ MACRO(ADD_ONE_TYPEDEF wrap_method wrap_class swig_name)
     SET(full_class_name "${wrap_class}")
   ENDIF(template_parameters)
   
+  # insert a blank line to separate the classes
+  SET(WRAPPER_TYPEDEFS "${WRAPPER_TYPEDEFS}\n")
+
   # Add a typedef for the class. We have this funny looking full_name::base_name
   # thing (it expands to, for example "typedef itk::Foo<baz, 2>::Foo"), to 
   # trick gcc_xml into creating code for the class. If we left off the trailing
   # base_name, then gcc_xml wouldn't see the typedef as a class instantiation,
   # and thus wouldn't create XML for any of the methods, etc.
+
+  IF("${wrap_method}" MATCHES "2_SUPERCLASSES")
+    ADD_SIMPLE_TYPEDEF("${full_class_name}::Superclass::Superclass::Self" "${swig_name}_Superclass_Superclass")
+    ADD_SIMPLE_TYPEDEF("${full_class_name}::Superclass::Superclass::Pointer::SmartPointer" "${swig_name}_Superclass_Superclass_Pointer")
+  ENDIF("${wrap_method}" MATCHES "2_SUPERCLASSES")
+
+  IF("${wrap_method}" MATCHES "SUPERCLASS")
+    ADD_SIMPLE_TYPEDEF("${full_class_name}::Superclass::Self" "${swig_name}_Superclass")
+    ADD_SIMPLE_TYPEDEF("${full_class_name}::Superclass::Pointer::SmartPointer" "${swig_name}_Superclass_Pointer")
+  ENDIF("${wrap_method}" MATCHES "SUPERCLASS")
+
   IF("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
-    SET(typedefs "typedef ${full_class_name} ${swig_name}")
-    # add a peace of code to for type instantiation
+    ADD_SIMPLE_TYPEDEF("${full_class_name}" "${swig_name}")
+    # add a peace of code for type instantiation
     SET(WRAPPER_FORCE_INSTANTIATE "${WRAPPER_FORCE_INSTANTIATE}  sizeof(${swig_name});\n")
   ELSE("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
-    SET(typedefs "typedef ${full_class_name}::${base_name} ${swig_name}")
+    ADD_SIMPLE_TYPEDEF("${full_class_name}::${base_name}" "${swig_name}")
   ENDIF("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
 
   IF("${wrap_method}" MATCHES "POINTER")
     # add a pointer typedef if we are so asked
-    SET(typedefs ${typedefs} "typedef ${full_class_name}::Pointer::SmartPointer ${swig_name}_Pointer")
+    ADD_SIMPLE_TYPEDEF("${full_class_name}::Pointer::SmartPointer" "${swig_name}_Pointer")
   ENDIF("${wrap_method}" MATCHES "POINTER")
  
-  IF("${wrap_method}" MATCHES "SUPERCLASS")
-    SET(typedefs ${typedefs} "typedef ${full_class_name}::Superclass::Self ${swig_name}_Superclass")
-    SET(typedefs ${typedefs} "typedef ${full_class_name}::Superclass::Pointer::SmartPointer ${swig_name}_Superclass_Pointer")
-  ENDIF("${wrap_method}" MATCHES "SUPERCLASS")
-
-  # insert a blank line to separate the classes
-  SET(WRAPPER_TYPEDEFS "${WRAPPER_TYPEDEFS}\n")
-  FOREACH(typedef ${typedefs})
-    SET(WRAPPER_TYPEDEFS "${WRAPPER_TYPEDEFS}      ${typedef};\n")
-  ENDFOREACH(typedef)
-  
   # Note: if there's no template_parameters set, this will just pass an empty  
   # list as the template_params parameter of LANGUAGE_SUPPORT_ADD_CLASS, as required
   # in non-template cases.

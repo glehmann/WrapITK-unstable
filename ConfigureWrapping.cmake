@@ -88,7 +88,16 @@ MACRO(BEGIN_WRAPPER_LIBRARY library_name)
   # to the wrapper library (with no prior processing by swig, etc.)
   # A full path to each input is required.
   SET(WRAPPER_LIBRARY_CXX_SOURCES ) 
-
+  
+  # MODULE_ALIASES. contains what will be put in the %{module}.alias file
+  SET(MODULE_ALIASES )
+  
+  # MODULE_INCLUDES. contains what will be put in the %{module}.includes file
+  SET(MODULE_INCLUDES )
+  FOREACH(i ${WRAPPER_DEFAULT_INCLUDE})
+    SET(MODULE_INCLUDES "${MODULE_INCLUDES}#include \"${i}\";\n")
+  ENDFOREACH(i)
+  
   IF("${ARGC}" EQUAL 2)
     SET(WRAPPER_LIBRARY_PYTHON OFF)
     SET(WRAPPER_LIBRARY_TCL OFF)
@@ -143,7 +152,7 @@ ENDIF("${ITK_VERSION}" STRLESS "${ITK_REQUIRED_VERSION}")
 # Load the CableSwig settings used by ITK, or find CableSwig otherwise.
 #-----------------------------------------------------------------------------
 #
-SET(CableSwig_DIR ${ITK_CableSwig_DIR})
+#SET(CableSwig_DIR ${ITK_CableSwig_DIR})
 FIND_PACKAGE(CableSwig REQUIRED)
 
 
@@ -189,7 +198,7 @@ ENDIF(WRAP_ITK_PERL)
 ###############################################################################
 # Set various variables in order
 ###############################################################################
-SET(CMAKE_SKIP_RPATH ON CACHE BOOL "ITK wrappers must not have runtime path information." FORCE)
+# SET(CMAKE_SKIP_RPATH ON CACHE BOOL "ITK wrappers must not have runtime path information." FORCE)
 
 #------------------------------------------------------------------------------
 # System dependant wraping stuff
@@ -269,7 +278,7 @@ ENDIF(EXTERNAL_WRAP_ITK_PROJECT)
 # Include needed macros -- WRAP_ITK_CMAKE_DIR must be set correctly
 ###############################################################################
 INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateCableSwigInputs.cmake")
-INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateWrapperLibrary.cmake")
+INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateGenericSwigInterface.cmake")
 INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateLanguageSupport.cmake")
 
 ###############################################################################

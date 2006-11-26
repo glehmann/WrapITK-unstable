@@ -3,8 +3,8 @@
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkImageToVTKImageFilter.h,v $
   Language:  C++
-  Date:      $Date: 2004/02/19 03:47:59 $
-  Version:   $Revision: 1.6 $
+  Date:      $Date: 2006/10/18 13:55:58 $
+  Version:   $Revision: 1.3 $
 
   Copyright (c) 2002 Insight Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
@@ -81,32 +81,32 @@ public:
   
    const std::vector<double>& getvtest() const
      {
-	return m_vtest;
+  return m_vtest;
      }
 
    int testsize() 
      {
-	return m_vtest.size();
+  return m_vtest.size();
      }
   
    std::vector<double> addvector(const std::vector<double>& v) {
           for (unsigned int i=0; i<v.size(); i++)
-	        m_vtest.push_back(v[i]);
+          m_vtest.push_back(v[i]);
           return m_vtest;
       }
    
    const std::vector<double>& addtest(double toto)
           {
-	     m_vtest.push_back(toto);
-	             return m_vtest;
-	          }
+       m_vtest.push_back(toto);
+               return m_vtest;
+            }
    std::vector<double> tralala()
      {
-	std::vector<double> w;
-	    for (double i=0; i<10; i++)
-	          w.push_back(i);
-	    return w;
-	
+  std::vector<double> w;
+      for (double i=0; i<10; i++)
+            w.push_back(i);
+      return w;
+  
      }
    
 protected:

@@ -3,8 +3,8 @@
 #  Program:   Insight Segmentation & Registration Toolkit
 #  Module:    $RCSfile: ImageRegistration5.tcl,v $
 #  Language:  C++
-#  Date:      $Date: 2004/12/28 14:42:49 $
-#  Version:   $Revision: 1.9 $
+#  Date:      $Date: 2006/09/06 20:58:42 $
+#  Version:   $Revision: 1.1 $
 #
 #  Copyright (c) Insight Software Consortium. All rights reserved.
 #  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
