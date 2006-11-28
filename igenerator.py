@@ -118,7 +118,13 @@ def generate( typedef, access ):
 def generate_method( typedef, method ):
   # avoid the apply method for the class vnl_c_vector: the signature is quite strange
   # a currently confuse swig :-/
-  if method.access_type == access and not (typedef.name.startswith('vnl_') and method.name in ["as_ref"]) and not (typedef.name.startswith('itk') and method.name in ["rBegin", "rEnd"]):
+  if method.access_type == access :
+    if ( "(" in method.return_type.decl_string
+         or (typedef.name.startswith('vnl_') and method.name in ["as_ref"]) 
+         or (typedef.name.startswith('itk') and method.name in ["rBegin", "rEnd", "GetSpacingCallback", "GetOriginCallback"]) ) :
+      print >> sys.stderr, "Warning: ignoring method '%s::%s'." % (typedef.name, method.name)
+      return
+      
     # iterate over the arguments
     args = []
     for arg in method.arguments:
@@ -131,6 +137,7 @@ def generate_method( typedef, method ):
         s += " = %s" % arg.default_value
       # and add the string to the arg list
       args.append( s )
+      
     # find the method decorators
     static = ""
     const = ""
@@ -142,6 +149,7 @@ def generate_method( typedef, method ):
       static += "virtual "
     if method.virtuality == "pure virtual":
       const += " = 0"
+      
     print >> outputFile, "    %s%s %s(%s)%s;" % (static, get_alias(method.return_type.decl_string), method.name, ", ".join( args), const )
 
 
