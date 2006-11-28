@@ -1,6 +1,10 @@
 
 SUBDIRS(Tests)
 
+# create the tcl directory in the classindex dir
+FILE(MAKE_DIRECTORY ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/tcl)
+
+
 ###############################################################################
 # Add the ITKTclSupport library which contains the itkTclCommand class.
 

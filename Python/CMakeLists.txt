@@ -5,6 +5,10 @@ SUBDIRS(PyUtils)
 SUBDIRS(Tests)
 SUBDIRS(itkExtras)
 
+# create the python directory in the classindex dir
+FILE(MAKE_DIRECTORY ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python)
+
+
 ###############################################################################
 # Add doxygen support : Experimental
 SET(DOXYGEN_MAN_PATH CACHE PATH "Experimental/Python only: Directory in which doxygen-generated man pages for itk classes are or should be placed.")
