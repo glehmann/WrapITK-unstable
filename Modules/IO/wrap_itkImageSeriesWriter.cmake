@@ -5,8 +5,8 @@ WRAP_CLASS("itk::ImageSeriesWriter" POINTER)
     FOREACH(d2 ${WRAP_ITK_DIMS})
       IF("${d1}" GREATER "${d2}")
         FOREACH(t ${image_types})
-          WRAP_TEMPLATE("${ITKM_I${t}${d1}}${ITKM_I${t}${d2}}"
-                        "${ITKT_I${t}${d1}},${ITKT_I${t}${d2}}")        
+#          WRAP_TEMPLATE("${ITKM_I${t}${d1}}${ITKM_I${t}${d2}}"
+#                        "${ITKT_I${t}${d1}},${ITKT_I${t}${d2}}")        
         ENDFOREACH(t)
       ENDIF("${d1}" GREATER "${d2}")
     ENDFOREACH(d2)
