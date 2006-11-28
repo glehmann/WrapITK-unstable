@@ -34,8 +34,10 @@ MACRO(END_WRAPPER_LIBRARY)
   
   SET(module_target_depend )
   FOREACH(dep ${WRAPPER_LIBRARY_DEPENDS})
-    SET(module_target_depend ${module_target_depend} "${dep}Swig")
+    # MESSAGE("${dep}_SWIG_FILES: ${${dep}_SWIG_FILES}")
+    SET(module_target_depend ${module_target_depend} ${${dep}_SWIG_FILES})
   ENDFOREACH(dep)
+  # MESSAGE("${module_target_depend}")
 
   FOREACH(source ${WRAPPER_LIBRARY_CABLESWIG_INPUTS})
   
@@ -105,7 +107,7 @@ MACRO(END_WRAPPER_LIBRARY)
     ENDFOREACH(i)
     ADD_CUSTOM_COMMAND(
       OUTPUT ${interface_file}
-      COMMAND python /Users/glehmann/src/Insight/Wrapping/WrapITK/igenerator.py
+      COMMAND python ${WRAP_ITK_CMAKE_DIR}/igenerator.py
          ${opts}
          --mdx ${mdx_file}
          --take-includes ${includes_file}
@@ -113,7 +115,7 @@ MACRO(END_WRAPPER_LIBRARY)
          --swig-include ${base_name}_ext.i
          ${xml_file}
          ${interface_file}
-      DEPENDS ${xml_file} ${mdx_content} ${includes_file} /Users/glehmann/src/Insight/Wrapping/WrapITK/igenerator.py
+      DEPENDS ${xml_file} ${mdx_content} ${includes_file} ${WRAP_ITK_CMAKE_DIR}/igenerator.py ${module_target_depend}
     )
     ADD_CUSTOM_TARGET(${base_name}Swig DEPENDS ${interface_file}  ${module_target_depend})
   
@@ -141,7 +143,8 @@ MACRO(END_WRAPPER_LIBRARY)
   ADD_CUSTOM_TARGET(${WRAPPER_LIBRARY_NAME}Swig DEPENDS ${interface_files}) # ${module_target_depend})
   
   # and store the interface files in a var, to be reused later
-  SET(${WRAPPER_LIBRARY_NAME}_SWIG_FILES ${interface_files})
+  SET(${WRAPPER_LIBRARY_NAME}_SWIG_FILES ${interface_files} CACHE INTERNAL "Store in cache to be usable even if not in the same dir")
+  # MESSAGE("SET ${WRAPPER_LIBRARY_NAME}_SWIG_FILES: ${${WRAPPER_LIBRARY_NAME}_SWIG_FILES}")
   
   # OK, so let the language specific parts make their job
   END_WRAPPER_LIBRARY_PYTHON()
