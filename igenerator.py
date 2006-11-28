@@ -51,6 +51,11 @@ def get_alias( decl_string ):
     # replace the types defined in this type, to support std::vector<itkDataObject> for example
     for t, alias in aliases.items():
       s = s.replace( t, alias )
+    # drop the allocator part of the type, because it is not supported by the %template directive with some languages (like tcl)
+    if pygccxml.declarations.templates.is_instantiation(s):
+      args = pygccxml.declarations.templates.args(s)
+      args = [ arg for arg in args if not arg.startswith("std::allocator") ]
+      s = pygccxml.declarations.templates.join( pygccxml.declarations.templates.name(s), args )
     return s + end
     
   else:
