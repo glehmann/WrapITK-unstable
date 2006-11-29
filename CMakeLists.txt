@@ -5,9 +5,6 @@ PROJECT(WrapITK)
 # 2.4.1)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.2 FATAL_ERROR)
 
-# needed for the insight journal
-INCLUDE(IJMacros.txt)
-
 ENABLE_TESTING()
 
 # work around cmake problem (bug ?) on some solaris systems
