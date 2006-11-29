@@ -84,15 +84,6 @@ SET(CXX_TEST_PATH ${EXECUTABLE_OUTPUT_PATH})
 # Now include ConfigureWrapping
 INCLUDE(ConfigureWrapping.cmake)
 
-# Now make sure that itk.swg is copied to WRAPPER_SWIG_LIBRARY_OUTPUT_DIR, which
-# is set in ConfigureWrapping. We do this so there is only one place that swig
-# files needed for a WrapITK build are placed: in the binary directory. (For
-# external projects, we look in the WrapITK binary dir and the project's binary
-# dir.)
-SET(src "${WrapITK_SOURCE_DIR}/itk.swg")
-SET(tgt "${WRAPPER_SWIG_LIBRARY_OUTPUT_DIR}/itk.swg")
-EXEC_PROGRAM(${CMAKE_COMMAND} ARGS -E copy_if_different "\"${src}\"" "\"${tgt}\"")
-
 ###############################################################################
 # Configure CPack
 ###############################################################################
@@ -262,8 +253,6 @@ INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Inputs/LanguageSupport" 
   ConfigurationInputs/LanguageSupport/ModuleLoader.py.in
   ConfigurationInputs/LanguageSupport/ModuleConfig.py.in
   ConfigurationInputs/LanguageSupport/ExternalProjectConfig.py.in)
-
-INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/SWIG" FILES "itk.swg")
 
 INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/" FILES "${WrapITK_BINARY_DIR}/InstallOnly/WrapITKConfig.cmake")
 
