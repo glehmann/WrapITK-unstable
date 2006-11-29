@@ -27,9 +27,6 @@ ENDIF(SUNOS_STDCXX_FIX)
 
 # Set up options needed for ConfigureWrapping
 
-# load the language autodetection stuff for the insight journal
-INCLUDE(LanguageAutoDetection.cmake)
-
 # set WrapITK version
 SET(WrapITK_VERSION_MAJOR 0)
 SET(WrapITK_VERSION_MINOR 2)
