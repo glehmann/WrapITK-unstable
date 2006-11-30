@@ -238,6 +238,8 @@ MACRO(WRAP_CLASS class)
   IF(WRAPPER_AUTO_INCLUDE_HEADERS)
     WRAP_INCLUDE("${swig_name}.h")
   ENDIF(WRAPPER_AUTO_INCLUDE_HEADERS)
+  
+  WRAP_CLASS_ALL_LANGUAGES()
 ENDMACRO(WRAP_CLASS)
 
 MACRO(WRAP_NAMED_CLASS class swig_name)
@@ -309,6 +311,8 @@ MACRO(WRAP_NON_TEMPLATE_CLASS class)
 
   WRAP_CLASS("${class}" ${ARGN})
   ADD_ONE_TYPEDEF("${WRAPPER_WRAP_METHOD}" "${WRAPPER_CLASS}" "${WRAPPER_SWIG_NAME}")
+  
+  WRAP_NON_TEMPLATE_CLASS_ALL_LANGUAGES(${class})
 ENDMACRO(WRAP_NON_TEMPLATE_CLASS class)
 
 
@@ -373,13 +377,17 @@ MACRO(END_WRAP_CLASS)
     STRING(REGEX REPLACE "${sharp_regexp}" "\\1" mangled_suffix "${wrap}")
     STRING(REGEX REPLACE "${sharp_regexp}" "\\2" template_params "${wrap}")
     ADD_ONE_TYPEDEF("${WRAPPER_WRAP_METHOD}" "${WRAPPER_CLASS}" "${WRAPPER_SWIG_NAME}${mangled_suffix}" "${template_params}")
-  ENDFOREACH(wrap)  
+  ENDFOREACH(wrap)
+  
+  END_WRAP_CLASS_ALL_LANGUAGES()
 ENDMACRO(END_WRAP_CLASS)
 
 
 MACRO(ADD_SIMPLE_TYPEDEF wrap_class swig_name)
   # Add a typedef, without support for any option
   SET(WRAPPER_TYPEDEFS "${WRAPPER_TYPEDEFS}      typedef ${wrap_class} ${swig_name};\n")
+  
+  ADD_SIMPLE_TYPEDEF_ALL_LANGUAGES("${wrap_class}" "${swig_name}")
 ENDMACRO(ADD_SIMPLE_TYPEDEF)
 
 

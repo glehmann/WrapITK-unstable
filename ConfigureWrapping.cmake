@@ -124,7 +124,7 @@ MACRO(BEGIN_WRAPPER_LIBRARY library_name)
 # MESSAGE("${library_name} ${WRAPPER_LIBRARY_PYTHON} ${WRAPPER_LIBRARY_TCL} ${WRAPPER_LIBRARY_JAVA}")
 
   # Call the language support initialization function from CreateLanguageSupport.cmake
-  LANGUAGE_SUPPORT_INITIALIZE()
+#  LANGUAGE_SUPPORT_INITIALIZE()
 ENDMACRO(BEGIN_WRAPPER_LIBRARY)
 
 SET(WRAPPER_MASTER_INDEX_OUTPUT_DIR "${PROJECT_BINARY_DIR}/ClassIndex")
@@ -174,26 +174,6 @@ ENDIF(NOT GCCXML)
 IF(CSWIG_MISSING_VALUES)
   MESSAGE(SEND_ERROR "To use cswig wrapping, CSWIG, CABLE_INDEX, and GCCXML executables must be specified.  If they are all in the same directory, only specifiy one of them, and then run cmake configure again and the others should be found.\nCurrently, you are missing the following:\n ${CSWIG_MISSING_VALUES}")
 ENDIF(CSWIG_MISSING_VALUES)
-
-#-----------------------------------------------------------------------------
-# Find wrapping language API libraries.
-#-----------------------------------------------------------------------------
-IF(WRAP_ITK_TCL)
-  INCLUDE("${WRAP_ITK_CMAKE_DIR}/Tcl/ConfigureWrapping.cmake")
-ENDIF(WRAP_ITK_TCL)
-
-IF(WRAP_ITK_PYTHON)
-  INCLUDE("${WRAP_ITK_CMAKE_DIR}/Python/ConfigureWrapping.cmake")
-ENDIF(WRAP_ITK_PYTHON)
-
-IF(WRAP_ITK_JAVA)
-  INCLUDE("${WRAP_ITK_CMAKE_DIR}/Java/ConfigureWrapping.cmake")
-ENDIF(WRAP_ITK_JAVA)
-
-IF(WRAP_ITK_PERL)
-  INCLUDE("${WRAP_ITK_CMAKE_DIR}/Perl/ConfigureWrapping.cmake")
-ENDIF(WRAP_ITK_PERL)
-
 
 ###############################################################################
 # Set various variables in order
@@ -279,7 +259,12 @@ ENDIF(EXTERNAL_WRAP_ITK_PROJECT)
 ###############################################################################
 INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateCableSwigInputs.cmake")
 INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateGenericSwigInterface.cmake")
-INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateLanguageSupport.cmake")
+
+ADD_SUBDIRECTORY("${WRAP_ITK_CMAKE_DIR}/Languages")
+# get the porperties from the languages dirs - there should be others than this one
+GET_DIRECTORY_PROPERTY(inc DIRECTORY "${WRAP_ITK_CMAKE_DIR}/Languages" INCLUDE_DIRECTORIES)
+INCLUDE_DIRECTORIES(${inc})
+
 
 ###############################################################################
 # Create wrapper names for simple types to ensure consistent naming

@@ -1,3 +1,34 @@
+
+
+
+
+
+# the macro in charge of dispatching to the language specific macros
+
+MACRO(WRAP_CLASS_ALL_LANGUAGES)
+ENDMACRO(WRAP_CLASS_ALL_LANGUAGES)
+
+MACRO(WRAP_NON_TEMPLATE_CLASS_ALL_LANGUAGES class)
+ENDMACRO(WRAP_NON_TEMPLATE_CLASS_ALL_LANGUAGES class)
+
+MACRO(END_WRAP_CLASS_ALL_LANGUAGES)
+ENDMACRO(END_WRAP_CLASS_ALL_LANGUAGES)
+
+MACRO(ADD_SIMPLE_TYPEDEF_ALL_LANGUAGES wrap_class swig_name)
+ENDMACRO(ADD_SIMPLE_TYPEDEF_ALL_LANGUAGES wrap_class swig_name)
+
+MACRO(END_WRAPPER_LIBRARY_ALL_LANGUAGES)
+  END_WRAPPER_LIBRARY_PYTHON()
+ENDMACRO(END_WRAPPER_LIBRARY_ALL_LANGUAGES)
+
+
+
+
+
+
+
+
+
 ################################################################################
 # Macros to collect information about wrapped types and module dependencies
 # so that support files for given languages can be created to automatically
@@ -79,7 +110,7 @@ MACRO(LANGUAGE_SUPPORT_ADD_CLASS simple_name cpp_name swig_name template_paramet
   ENDIF("${template_parameters}" STREQUAL "")
 
   SET(WRAPPED_CLASSES ${WRAPPED_CLASSES} "${simple_name} # ${cpp_name} # ${swig_name} # ${template_params}")
-  ADD_TYPEMAP("${simple_name}" "${cpp_name}" "${swig_name}" "${template_params}")
+#  ADD_TYPEMAP("${simple_name}" "${cpp_name}" "${swig_name}" "${template_params}")
 ENDMACRO(LANGUAGE_SUPPORT_ADD_CLASS)
 
 
@@ -113,10 +144,38 @@ ENDMACRO(CONFIGURE_TYPEMAPS)
 
 
 
-# load language specific code in language specific dir.
 
-INCLUDE(${WRAP_ITK_CMAKE_DIR}/Python/CreateLanguageSupport.cmake)
-INCLUDE(${WRAP_ITK_CMAKE_DIR}/Java/CreateLanguageSupport.cmake)
-INCLUDE(${WRAP_ITK_CMAKE_DIR}/Tcl/CreateLanguageSupport.cmake)
+
+
+
+# build the languages list
+
+SET(WRAP_ITK_LANGUAGES )
+FILE(GLOB local_files *)
+FOREACH(f ${local_files})
+  FILE(RELATIVE_PATH lang "${CMAKE_CURRENT_SOURCE_DIR}" "${f}")
+  IF(NOT ${lang} MATCHES "CVS")
+    STRING(TOUPPER "${lang}" lang_upper)
+    
+    # add the language to the options
+    OPTION(WRAP_ITK_${lang_upper} "Build swig ${lang} wrapper support." OFF)
+    
+    # add the language to the list, if the user have turn it on, and include
+    # the subdirectory
+    IF(WRAP_ITK_${lang_upper})
+      SET(WRAP_ITK_LANGUAGES ${WRAP_ITK_LANGUAGES} "${lang}")
+      ADD_SUBDIRECTORY("${lang}")
+      GET_DIRECTORY_PROPERTY(inc DIRECTORY "${lang}" INCLUDE_DIRECTORIES)
+      INCLUDE_DIRECTORIES(${inc})
+    ENDIF(WRAP_ITK_${lang_upper})
+  ENDIF(NOT ${lang} MATCHES "CVS")
+ENDFOREACH(f)
+
+MESSAGE("${WRAP_ITK_LANGUAGES}")
+
+
+#IF(IS_DIRECTORY)
+
+#OPTION(WRAP_ITK_PYTHON "Build cswig Python wrapper support." OFF)
 
 
