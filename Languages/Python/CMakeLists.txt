@@ -310,11 +310,39 @@ MACRO(ADD_SIMPLE_TYPEDEF_PYTHON wrap_class swig_name)
   
   # and now, generate the typemaps, still without taking care of the Superclasses
   IF(NOT "${swig_name}" MATCHES "Superclass")
+
+# A bug in swig currently prevent to use %extend on superclasses of smart pointed classes,
+# without redefining the method in the subclasses, so implement the __str__ method in all
+# the smart pointed classes (see below)
+#    IF("${swig_name}" STREQUAL "itkLightObject")
+#      SET(text "\n\n")
+#      SET(text "${text}%extend itkLightObject {\n")
+#      SET(text "${text}  std::string __str__() {\n")
+#      SET(text "${text}    itk::OStringStream msg;\n")
+#      SET(text "${text}    self->Print( msg );\n")
+#      SET(text "${text}    return msg.str();\n")
+#      SET(text "${text}  }\n")
+#      SET(text "${text}}\n")
+#      SET(text "${text}\n\n")
+#      SET(WRAP_ITK_PYTHON_SWIG_EXT "${WRAP_ITK_PYTHON_SWIG_EXT}${text}")
+#    ENDIF("${swig_name}" STREQUAL "itkLightObject")
   
-    IF("${ext_def}" MATCHES "SmartPointer$")
+    IF("${wrap_class}" MATCHES "SmartPointer$")
       STRING(REGEX REPLACE "_Pointer$" "" smart_pointed "${swig_name}")
       ADD_PYTHON_POINTER_TYPEMAP("${smart_pointed}")
-    ENDIF("${ext_def}" MATCHES "SmartPointer$")
+
+      SET(text "\n\n")
+      SET(text "${text}%extend ${smart_pointed} {\n")
+      SET(text "${text}  std::string __str__() {\n")
+      SET(text "${text}    itk::OStringStream msg;\n")
+      SET(text "${text}    self->Print( msg );\n")
+      SET(text "${text}    return msg.str();\n")
+      SET(text "${text}  }\n")
+      SET(text "${text}}\n")
+      SET(text "${text}\n\n")
+      SET(WRAP_ITK_PYTHON_SWIG_EXT "${WRAP_ITK_PYTHON_SWIG_EXT}${text}")
+      
+    ENDIF("${wrap_class}" MATCHES "SmartPointer$")
 
     IF("${cpp_name}" STREQUAL "itk::Index")
       ADD_PYTHON_SEQ_TYPEMAP("${swig_name}" "${template_params}")
