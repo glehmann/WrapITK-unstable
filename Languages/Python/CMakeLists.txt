@@ -302,13 +302,14 @@ MACRO(ADD_SIMPLE_TYPEDEF_PYTHON wrap_class swig_name)
     SET(ext_def "")
   ENDIF("${wrap_class}" MATCHES "<.*>")
   STRING(REGEX REPLACE ".*::" "" simple_name "${cpp_name}")
-  # MESSAGE("${cpp_name} -- ${template_params} -- ${ext_def}")
+#  MESSAGE("${wrap_class} -- ${swig_name}")
+#  MESSAGE("${cpp_name} -- ${template_params} -- ${ext_def}")
 
   # generate the python files, without taking care of the Superclasses
   IF(NOT "${swig_name}" MATCHES "Superclass")
   ENDIF(NOT "${swig_name}" MATCHES "Superclass")
   
-  # and now, generate the typemaps, still without taking care of the Superclasses
+  # and now, generate the typemaps and other customizations, still without taking care of the Superclasses
   IF(NOT "${swig_name}" MATCHES "Superclass")
 
 # A bug in swig currently prevent to use %extend on superclasses of smart pointed classes,
@@ -489,6 +490,8 @@ MACRO(ADD_PYTHON_SEQ_TYPEMAP swig_name dim)
   
   SET(WRAP_ITK_PYTHON_SWIG_EXT "${WRAP_ITK_PYTHON_SWIG_EXT}${text}")
 ENDMACRO(ADD_PYTHON_SEQ_TYPEMAP)
+
+
 
 MACRO(ADD_PYTHON_VEC_TYPEMAP swig_name template_params)
   STRING(REGEX REPLACE "(.*),(.*)" "\\1" type "${template_params}")
