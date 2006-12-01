@@ -1,22 +1,16 @@
 ###############################################################################
 # configure python
-
 FIND_PACKAGE(PythonLibs)
 FIND_PACKAGE(PythonInterp)
 MARK_AS_ADVANCED(PYTHON_EXECUTABLE)
 INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
+
 
 ###############################################################################
 # store the current dir, so it can be reused later
 SET(WRAP_ITK_PYTHON_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}" CACHE INTERNAL "python source dir")
 SET(WRAP_ITK_PYTHON_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}" CACHE INTERNAL "python binary dir")
 
-###############################################################################
-# Create the PyUtils library
-
-# SUBDIRS(PyUtils)
-SUBDIRS(Tests)
-SUBDIRS(itkExtras)
 
 ###############################################################################
 # create the python directory in the classindex dir
@@ -142,6 +136,7 @@ ENDIF ("${WrapITK_BINARY_DIR}" MATCHES "^${WrapITK_SOURCE_DIR}$")
 # Install the package python files.
 WRAP_ITK_INSTALL(/Python ${WRAP_ITK_PYTHON_INSTALL_FILES})
 
+
 ###############################################################################
 # Configure and install the custom python .pth files
 
@@ -241,13 +236,14 @@ MACRO(END_WRAPPER_LIBRARY_PYTHON)
       -w389 # operator[], to be suppressed later...
       -w384 -w383 # operator++ ane operator--
       -w361 # operator!
-      -l${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i
+      -w467 # overloaded functions (with typemaps)
+#      -l${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i
       -o ${cpp_file}
 #      -I${WRAPPER_MASTER_INDEX_OUTPUT_DIR}
       -outdir ${LIBRARY_OUTPUT_PATH}
       ${interface_file}
       WORKING_DIRECTORY ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python
-      DEPENDS ${interface_file} ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i ${module_target_depend}
+      DEPENDS ${interface_file} ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/${base_name}_ext.i ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i ${module_target_depend}
     )
     ADD_CUSTOM_TARGET(${base_name}SwigPython DEPENDS ${cpp_file})
     
@@ -283,58 +279,111 @@ MACRO(END_WRAPPER_LIBRARY_PYTHON)
 
 ENDMACRO(END_WRAPPER_LIBRARY_PYTHON)
 
-MACRO(ADD_PYTHON_TYPEMAP simple_name cpp_name swig_name template_params)
-  SET(text "\n\n")
-  IF("${cpp_name}" STREQUAL "itk::SmartPointer")
-    ADD_PYTHON_POINTER_TYPEMAP("${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::SmartPointer")
+MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
+  SET(WRAP_ITK_PYTHON_SWIG_EXT "%include ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i\n\n")
+ENDMACRO(INCLUDE_WRAP_CMAKE_PYTHON)
 
-  IF("${cpp_name}" STREQUAL "itk::Index")
-    ADD_PYTHON_SEQ_TYPEMAP("${cpp_name}" "${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::Index")
+MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON module)
+  # MESSAGE("${WRAP_ITK_PYTHON_SWIG_EXT}")
+  CONFIGURE_FILE("${WRAP_ITK_PYTHON_SOURCE_DIR}/module_ext.i.in"
+    "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/wrap_${module}_ext.i"
+    @ONLY IMMEDIATE)
+ENDMACRO(END_INCLUDE_WRAP_CMAKE_PYTHON)
 
-  IF("${cpp_name}" STREQUAL "itk::Size")
-    ADD_PYTHON_SEQ_TYPEMAP("${cpp_name}" "${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::Size")
+MACRO(ADD_SIMPLE_TYPEDEF_PYTHON wrap_class swig_name)
+  # split the class name and the template parameters
+  IF("${wrap_class}" MATCHES "<.*>")
+    STRING(REGEX REPLACE "^([^<]+)< *(.+) *>([^>]*)$" "\\1" cpp_name "${wrap_class}")
+    STRING(REGEX REPLACE "^([^<]+)< *(.+) *>([^>]*)$" "\\2" template_params "${wrap_class}")
+    STRING(REGEX REPLACE "^([^<]+)< *(.+) *>([^>]*)$" "\\3" ext_def "${wrap_class}")
+  ELSE("${wrap_class}" MATCHES "<.*>")
+    SET(cpp_name "${wrap_class}")
+    SET(template_params NO_TEMPLATE)
+    SET(ext_def "")
+  ENDIF("${wrap_class}" MATCHES "<.*>")
+  STRING(REGEX REPLACE ".*::" "" simple_name "${cpp_name}")
+  # MESSAGE("${cpp_name} -- ${template_params} -- ${ext_def}")
+
+  # generate the python files, without taking care of the Superclasses
+  IF(NOT "${swig_name}" MATCHES "Superclass")
+  ENDIF(NOT "${swig_name}" MATCHES "Superclass")
+  
+  # and now, generate the typemaps, still without taking care of the Superclasses
+  IF(NOT "${swig_name}" MATCHES "Superclass")
+  
+    IF("${ext_def}" MATCHES "SmartPointer$")
+      STRING(REGEX REPLACE "_Pointer$" "" smart_pointed "${swig_name}")
+      ADD_PYTHON_POINTER_TYPEMAP("${smart_pointed}")
+    ENDIF("${ext_def}" MATCHES "SmartPointer$")
+
+    IF("${cpp_name}" STREQUAL "itk::Index")
+      ADD_PYTHON_SEQ_TYPEMAP("${swig_name}" "${template_params}")
+    ENDIF("${cpp_name}" STREQUAL "itk::Index")
+
+    IF("${cpp_name}" STREQUAL "itk::Size")
+      ADD_PYTHON_SEQ_TYPEMAP("${swig_name}" "${template_params}")
+    ENDIF("${cpp_name}" STREQUAL "itk::Size")
 
 #   IF("${cpp_name}" STREQUAL "itk::RGBPixel")
-#     ADD_PYTHON_SEQ_TYPEMAP("${cpp_name}" "${template_params}")
+#     ADD_PYTHON_SEQ_TYPEMAP("${swig_name}" "${template_params}")
 #   ENDIF("${cpp_name}" STREQUAL "itk::RGBPixel")
 
-  IF("${cpp_name}" STREQUAL "itk::Offset")
-    ADD_PYTHON_SEQ_TYPEMAP("${cpp_name}" "${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::Offset")
+    IF("${cpp_name}" STREQUAL "itk::Offset")
+      ADD_PYTHON_SEQ_TYPEMAP("${swig_name}" "${template_params}")
+    ENDIF("${cpp_name}" STREQUAL "itk::Offset")
 
-  IF("${cpp_name}" STREQUAL "itk::FixedArray")
-    ADD_PYTHON_VEC_TYPEMAP("${cpp_name}" "${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::FixedArray")
+    IF("${cpp_name}" STREQUAL "itk::FixedArray")
+      ADD_PYTHON_VEC_TYPEMAP("${swig_name}" "${template_params}")
+    ENDIF("${cpp_name}" STREQUAL "itk::FixedArray")
 
-  IF("${cpp_name}" STREQUAL "itk::Vector")
-    ADD_PYTHON_VEC_TYPEMAP("${cpp_name}" "${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::Vector")
+    IF("${cpp_name}" STREQUAL "itk::Vector")
+      ADD_PYTHON_VEC_TYPEMAP("${swig_name}" "${template_params}")
+    ENDIF("${cpp_name}" STREQUAL "itk::Vector")
 
-  IF("${cpp_name}" STREQUAL "itk::CovariantVector")
-    ADD_PYTHON_VEC_TYPEMAP("${cpp_name}" "${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::CovariantVector")
+    IF("${cpp_name}" STREQUAL "itk::CovariantVector")
+      ADD_PYTHON_VEC_TYPEMAP("${swig_name}" "${template_params}")
+    ENDIF("${cpp_name}" STREQUAL "itk::CovariantVector")
 
-  IF("${cpp_name}" STREQUAL "itk::Point")
-    ADD_PYTHON_VEC_TYPEMAP("${cpp_name}" "${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::Point")
+    IF("${cpp_name}" STREQUAL "itk::Point")
+      ADD_PYTHON_VEC_TYPEMAP("${swig_name}" "${template_params}")
+    ENDIF("${cpp_name}" STREQUAL "itk::Point")
 
-  IF("${cpp_name}" STREQUAL "itk::ContinuousIndex")
-    ADD_PYTHON_VEC_TYPEMAP("${cpp_name}" "${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::ContinuousIndex")
+    IF("${cpp_name}" STREQUAL "itk::ContinuousIndex")
+      ADD_PYTHON_VEC_TYPEMAP("${swig_name}" "${template_params}")
+    ENDIF("${cpp_name}" STREQUAL "itk::ContinuousIndex")
 
-  IF("${cpp_name}" STREQUAL "itk::Array")
-    ADD_PYTHON_VARIABLE_LENGHT_SEQ_TYPEMAP("${cpp_name}< ${template_params} >" "${template_params}")
-  ENDIF("${cpp_name}" STREQUAL "itk::Array")
+    IF("${cpp_name}" STREQUAL "itk::Array")
+      ADD_PYTHON_VARIABLE_LENGHT_SEQ_TYPEMAP("${swig_name}" "${template_params}")
+    ENDIF("${cpp_name}" STREQUAL "itk::Array")
+    
+    IF("${cpp_name}" STREQUAL "itk::VectorContainer" AND NOT "${swig_name}" MATCHES "Pointer$")
+      # add a template definition for the superclass which is not in ITK
+      STRING(REGEX REPLACE "^[^,]+, *(.+) *$" "\\1" superclass_template_param "${template_params}")
+      STRING(REPLACE "::" "" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE "unsigned" "U" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE "signed" "S" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE "char" "C" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE "short" "S" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE "long" "L" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE "float" "F" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE "double" "D" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE " " "" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE "<" "" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE ">" "" superclass_template_param "${superclass_template_param}")
+      STRING(REPLACE "," "" superclass_template_param "${superclass_template_param}")
+      SET(WRAP_ITK_PYTHON_SWIG_EXT "${WRAP_ITK_PYTHON_SWIG_EXT}%template(${swig_name}_Superclass) std::vector< ${superclass_template_param} >;\n")
+    ENDIF("${cpp_name}" STREQUAL "itk::VectorContainer" AND NOT "${swig_name}" MATCHES "Pointer$")
+    
+  ENDIF(NOT "${swig_name}" MATCHES "Superclass")
 
-ENDMACRO(ADD_PYTHON_TYPEMAP)
+ENDMACRO(ADD_SIMPLE_TYPEDEF_PYTHON)
 
-MACRO(ADD_PYTHON_SEQ_TYPEMAP cpp_name dim)
+
+
+
+MACRO(ADD_PYTHON_SEQ_TYPEMAP swig_name dim)
   SET(text "\n\n")
-  SET(text "${text}#ifdef SWIGPYTHON\n")
-  SET(text "${text}%typemap(in) ${cpp_name}<${dim}>& (${cpp_name}<${dim}> itks) {\n")
+  SET(text "${text}%typemap(in) ${swig_name}& (${swig_name} itks) {\n")
   SET(text "${text}  if ((SWIG_ConvertPtr($input,(void **)(&$1),$1_descriptor, 0)) == -1) {\n")
   SET(text "${text}    PyErr_Clear();\n")
   SET(text "${text}    if (PySequence_Check($input) && PyObject_Length($input) == ${dim}) {\n")
@@ -357,7 +406,7 @@ MACRO(ADD_PYTHON_SEQ_TYPEMAP cpp_name dim)
   SET(text "${text}    }\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}%typemap(typecheck) ${cpp_name}<${dim}>& {\n")
+  SET(text "${text}%typemap(typecheck) ${swig_name}& {\n")
   SET(text "${text}  void *ptr;\n")
   SET(text "${text}  if (SWIG_ConvertPtr($input, &ptr, $1_descriptor, 0) == -1\n")
   SET(text "${text}      && ( !PySequence_Check($input) || PyObject_Length($input) != ${dim} )\n")
@@ -368,9 +417,9 @@ MACRO(ADD_PYTHON_SEQ_TYPEMAP cpp_name dim)
   SET(text "${text}    _v = 1;\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}%typemap(in) ${cpp_name}<${dim}> (${cpp_name}<${dim}> itks) {\n")
-  SET(text "${text}  ${cpp_name}<${dim}> * s;\n")
-  SET(text "${text}  if ((SWIG_ConvertPtr($input,(void **)(&s),$descriptor(${cpp_name}<${dim}>*), 0)) == -1) {\n")
+  SET(text "${text}%typemap(in) ${swig_name} (${swig_name} itks) {\n")
+  SET(text "${text}  ${swig_name} * s;\n")
+  SET(text "${text}  if ((SWIG_ConvertPtr($input,(void **)(&s),$descriptor(${swig_name}*), 0)) == -1) {\n")
   SET(text "${text}    PyErr_Clear();\n")
   SET(text "${text}    if (PySequence_Check($input) && PyObject_Length($input) == ${dim}) {\n")
   SET(text "${text}      for (int i =0; i < ${dim}; i++) {\n")
@@ -397,9 +446,9 @@ MACRO(ADD_PYTHON_SEQ_TYPEMAP cpp_name dim)
   SET(text "${text}    SWIG_fail;\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}%typemap(typecheck) ${cpp_name}<${dim}> {\n")
+  SET(text "${text}%typemap(typecheck) ${swig_name} {\n")
   SET(text "${text}  void *ptr;\n")
-  SET(text "${text}  if (SWIG_ConvertPtr($input, &ptr, $descriptor(${cpp_name}<${dim}>*), 0) == -1\n")
+  SET(text "${text}  if (SWIG_ConvertPtr($input, &ptr, $descriptor(${swig_name}*), 0) == -1\n")
   SET(text "${text}       && ( !PySequence_Check($input) || PyObject_Length($input) != ${dim} )\n")
   SET(text "${text}       && !PyInt_Check($input) ) {\n")
   SET(text "${text}    _v = 0;\n")
@@ -408,19 +457,17 @@ MACRO(ADD_PYTHON_SEQ_TYPEMAP cpp_name dim)
   SET(text "${text}    _v = 1;\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}#endif // SWIGPYTHON\n")
   SET(text "${text}\n\n")
   
-  SET(WRAPPER_TYPEMAPS "${WRAPPER_TYPEMAPS}${text}")
+  SET(WRAP_ITK_PYTHON_SWIG_EXT "${WRAP_ITK_PYTHON_SWIG_EXT}${text}")
 ENDMACRO(ADD_PYTHON_SEQ_TYPEMAP)
 
-MACRO(ADD_PYTHON_VEC_TYPEMAP cpp_name template_params)
+MACRO(ADD_PYTHON_VEC_TYPEMAP swig_name template_params)
   STRING(REGEX REPLACE "(.*),(.*)" "\\1" type "${template_params}")
   STRING(REGEX REPLACE "(.*),(.*)" "\\2" dim "${template_params}")
 
   SET(text "\n\n")
-  SET(text "${text}#ifdef SWIGPYTHON\n")
-  SET(text "${text}%typemap(in) ${cpp_name}<${template_params}>& (${cpp_name}<${template_params}> itks) {\n")
+  SET(text "${text}%typemap(in) ${swig_name}& (${swig_name} itks) {\n")
   SET(text "${text}  if ((SWIG_ConvertPtr($input,(void **)(&$1),$1_descriptor, 0)) == -1) {\n")
   SET(text "${text}    PyErr_Clear();\n")
   SET(text "${text}    if (PySequence_Check($input) && PyObject_Length($input) == ${dim}) {\n")
@@ -451,7 +498,7 @@ MACRO(ADD_PYTHON_VEC_TYPEMAP cpp_name template_params)
   SET(text "${text}    }\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}%typemap(typecheck) ${cpp_name}<${template_params}>& {\n")
+  SET(text "${text}%typemap(typecheck) ${swig_name}& {\n")
   SET(text "${text}  void *ptr;\n")
   SET(text "${text}  if (SWIG_ConvertPtr($input, &ptr, $1_descriptor, 0) == -1\n")
   SET(text "${text}      && ( !PySequence_Check($input) || PyObject_Length($input) != ${dim} )\n")
@@ -462,9 +509,9 @@ MACRO(ADD_PYTHON_VEC_TYPEMAP cpp_name template_params)
   SET(text "${text}    _v = 1;\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}%typemap(in) ${cpp_name}<${template_params}> (${cpp_name}<${template_params}> itks) {\n")
-  SET(text "${text}  ${cpp_name}<${template_params}> * s;\n")
-  SET(text "${text}  if ((SWIG_ConvertPtr($input,(void **)(&s),$descriptor(${cpp_name}<${template_params}>*), 0)) == -1) {\n")
+  SET(text "${text}%typemap(in) ${swig_name} (${swig_name} itks) {\n")
+  SET(text "${text}  ${swig_name} * s;\n")
+  SET(text "${text}  if ((SWIG_ConvertPtr($input,(void **)(&s),$descriptor(${swig_name}*), 0)) == -1) {\n")
   SET(text "${text}    PyErr_Clear();\n")
   SET(text "${text}    if (PySequence_Check($input) && PyObject_Length($input) == ${dim}) {\n")
   SET(text "${text}      for (int i =0; i < ${dim}; i++) {\n")
@@ -499,9 +546,9 @@ MACRO(ADD_PYTHON_VEC_TYPEMAP cpp_name template_params)
   SET(text "${text}   SWIG_fail;\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}%typemap(typecheck) ${cpp_name}<${template_params}> {\n")
+  SET(text "${text}%typemap(typecheck) ${swig_name} {\n")
   SET(text "${text}  void *ptr;\n")
-  SET(text "${text}  if (SWIG_ConvertPtr($input, &ptr, $descriptor(${cpp_name}<${template_params}>*), 0) == -1\n")
+  SET(text "${text}  if (SWIG_ConvertPtr($input, &ptr, $descriptor(${swig_name}*), 0) == -1\n")
   SET(text "${text}       && ( !PySequence_Check($input) || PyObject_Length($input) != ${dim} )\n")
   SET(text "${text}      && !PyInt_Check($input) && !PyFloat_Check($input) ) {\n")
   SET(text "${text}    _v = 0;\n")
@@ -510,15 +557,13 @@ MACRO(ADD_PYTHON_VEC_TYPEMAP cpp_name template_params)
   SET(text "${text}    _v = 1;\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}#endif // SWIGPYTHON\n")
   SET(text "${text}\n\n")
   
-  SET(WRAPPER_TYPEMAPS "${WRAPPER_TYPEMAPS}${text}")
+  SET(WRAP_ITK_PYTHON_SWIG_EXT "${WRAP_ITK_PYTHON_SWIG_EXT}${text}")
 ENDMACRO(ADD_PYTHON_VEC_TYPEMAP)
 
 MACRO(ADD_PYTHON_VARIABLE_LENGHT_SEQ_TYPEMAP type value_type)
   SET(text "\n\n")
-  SET(text "${text}#ifdef SWIGPYTHON\n")
   SET(text "${text}%typemap(in) ${type}& (${type} itks) {\n")
   SET(text "${text}  if ((SWIG_ConvertPtr($input,(void **)(&$1),$1_descriptor, 0)) == -1) {\n")
   SET(text "${text}    PyErr_Clear();\n")
@@ -576,16 +621,14 @@ MACRO(ADD_PYTHON_VARIABLE_LENGHT_SEQ_TYPEMAP type value_type)
   SET(text "${text}    _v = 1;\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}#endif // SWIGPYTHON\n")
   SET(text "${text}\n\n")
   
-  SET(WRAPPER_TYPEMAPS "${WRAPPER_TYPEMAPS}${text}")
+  SET(WRAP_ITK_PYTHON_SWIG_EXT "${WRAP_ITK_PYTHON_SWIG_EXT}${text}")
 ENDMACRO(ADD_PYTHON_VARIABLE_LENGHT_SEQ_TYPEMAP)
 
 
 MACRO(ADD_PYTHON_POINTER_TYPEMAP template_params)
   SET(text "\n\n")
-  SET(text "${text}#ifdef SWIGPYTHON\n")
   SET(text "${text} // Python typemaps for Smart Pointers to ${template_params} class. \n\n")
   SET(text "${text}%typemap(out) ${template_params} * {\n")
   SET(text "${text}  std::string methodName = \"\$symname\";\n")
@@ -593,19 +636,19 @@ MACRO(ADD_PYTHON_POINTER_TYPEMAP template_params)
   SET(text "${text}    // really return a pointer in that case\n")
   SET(text "${text}    \$result = SWIG_NewPointerObj((void *)(\$1), \$1_descriptor, 1);\n")
   SET(text "${text}  } else {\n")
-  SET(text "${text}    itk::SmartPointer< ${template_params} > * ptr;\n")
-  SET(text "${text}    ptr = new itk::SmartPointer< ${template_params} >(\$1);\n")
-  SET(text "${text}    \$result = SWIG_NewPointerObj((void *)(ptr), \$descriptor(itk::SmartPointer< ${template_params} > *), 1);\n")
+  SET(text "${text}    ${template_params}_Pointer * ptr;\n")
+  SET(text "${text}    ptr = new ${template_params}_Pointer(\$1);\n")
+  SET(text "${text}    \$result = SWIG_NewPointerObj((void *)(ptr), \$descriptor(${template_params}_Pointer *), 1);\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
   SET(text "${text}%typemap(in) ${template_params} * {\n")
-  SET(text "${text}  itk::SmartPointer< ${template_params} > * sptr;\n")
+  SET(text "${text}  ${template_params}_Pointer * sptr;\n")
   SET(text "${text}  ${template_params} * ptr;\n")
   SET(text "${text}  // we must test this case first to avoid a segfault if arg is None\n")
   SET(text "${text}  if ((SWIG_ConvertPtr($input,(void **) &ptr, $1_descriptor, SWIG_POINTER_EXCEPTION)) != -1) {\n")
   SET(text "${text}    // we have a simple pointer. Just return it\n")
   SET(text "${text}    $1 = ptr;\n")
-  SET(text "${text}  } else if ((SWIG_ConvertPtr($input,(void **) &sptr, $descriptor(itk::SmartPointer< ${template_params} > *), SWIG_POINTER_EXCEPTION)) != -1) {\n")
+  SET(text "${text}  } else if ((SWIG_ConvertPtr($input,(void **) &sptr, $descriptor(${template_params}_Pointer *), SWIG_POINTER_EXCEPTION)) != -1) {\n")
   SET(text "${text}    // it's a SmartPointer. Get the pointer and return it\n")
   SET(text "${text}    $1 = sptr->GetPointer();\n")
   SET(text "${text}  } else {\n")
@@ -618,17 +661,16 @@ MACRO(ADD_PYTHON_POINTER_TYPEMAP template_params)
   SET(text "${text}%typemap(typecheck) ${template_params} * {\n")
   SET(text "${text}  void *ptr;\n")
   SET(text "${text}  if (SWIG_ConvertPtr(\$input, &ptr, \$1_descriptor, 0) == -1\n")
-  SET(text "${text}      && SWIG_ConvertPtr(\$input, &ptr, \$descriptor(itk::SmartPointer< ${template_params} > *), 0) == -1) {\n")
+  SET(text "${text}      && SWIG_ConvertPtr(\$input, &ptr, \$descriptor(${template_params}_Pointer *), 0) == -1) {\n")
   SET(text "${text}    _v = 0;\n")
   SET(text "${text}    PyErr_Clear();\n")
   SET(text "${text}  } else {\n")
   SET(text "${text}    _v = 1;\n")
   SET(text "${text}  }\n")
   SET(text "${text}}\n")
-  SET(text "${text}#endif // SWIGPYTHON\n")
   SET(text "${text}\n\n")
   
-  SET(WRAPPER_TYPEMAPS "${WRAPPER_TYPEMAPS}${text}")
+  SET(WRAP_ITK_PYTHON_SWIG_EXT "${WRAP_ITK_PYTHON_SWIG_EXT}${text}")
 ENDMACRO(ADD_PYTHON_POINTER_TYPEMAP)
 
 
@@ -744,5 +786,12 @@ MACRO(PYTHON_SUPPORT_CONFIGURE_FILES)
       CONFIGURE_PYTHON_EXTERNAL_PROJECT_CONFIG("${PROJECT_BINARY_DIR}/Python/")
     ENDIF(EXTERNAL_WRAP_ITK_PROJECT)
 ENDMACRO(PYTHON_SUPPORT_CONFIGURE_FILES)
+
+
+###############################################################################
+# Create the PyUtils library
+# SUBDIRS(PyUtils)
+SUBDIRS(Tests)
+SUBDIRS(itkExtras)
 
 

@@ -79,6 +79,9 @@ MACRO(INCLUDE_WRAP_CMAKE module)
 
   MESSAGE(STATUS "${WRAPPER_LIBRARY_NAME}: Creating ${module} wrappers.")
 
+  # call languages specific macros
+  INCLUDE_WRAP_CMAKE_ALL_LANGUAGES("${module}")
+
   # We run into some trouble if there's a module with the same name as the
   # wrapper library. Fix this.
   STRING(TOUPPER "${module}" upper_module)
@@ -107,6 +110,10 @@ MACRO(INCLUDE_WRAP_CMAKE module)
   IF(NOT WRAPPER_DO_NOT_CREATE_CXX)
     WRITE_WRAP_CXX("wrap_${module}.cxx")
   ENDIF(NOT WRAPPER_DO_NOT_CREATE_CXX)
+
+  # call languages specific macros
+  END_INCLUDE_WRAP_CMAKE_ALL_LANGUAGES("${module}")
+
 ENDMACRO(INCLUDE_WRAP_CMAKE)
 
 
@@ -445,15 +452,7 @@ MACRO(ADD_ONE_TYPEDEF wrap_method wrap_class swig_name)
     # add a pointer typedef if we are so asked
     ADD_SIMPLE_TYPEDEF("${full_class_name}::Pointer::SmartPointer" "${swig_name}_Pointer")
   ENDIF("${wrap_method}" MATCHES "POINTER")
- 
-  # Note: if there's no template_parameters set, this will just pass an empty  
-  # list as the template_params parameter of LANGUAGE_SUPPORT_ADD_CLASS, as required
-  # in non-template cases.
-  LANGUAGE_SUPPORT_ADD_CLASS("${base_name}" "${wrap_class}" "${swig_name}" "${template_parameters}")
-  
-  IF("${wrap_method}" MATCHES "POINTER")
-    LANGUAGE_SUPPORT_ADD_CLASS("SmartPointer" "itk::SmartPointer" "${swig_name}_Pointer" "${full_class_name}")
-  ENDIF("${wrap_method}" MATCHES "POINTER")
+
 ENDMACRO(ADD_ONE_TYPEDEF)
 
 
