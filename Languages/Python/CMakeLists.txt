@@ -280,7 +280,21 @@ MACRO(END_WRAPPER_LIBRARY_PYTHON)
 ENDMACRO(END_WRAPPER_LIBRARY_PYTHON)
 
 MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
-  SET(WRAP_ITK_PYTHON_SWIG_EXT "%include ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i\n\n")
+
+  # the default typemaps, exception handler, and includes
+  SET(text "%include ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i\n\n")
+  
+  # add stream support only in one module, so it doesn't implemented in all the modules
+  IF("${module}" STREQUAL "ITKCommonBase")
+    SET(text "${text}%include std_iostream.i\n")
+    SET(text "${text}%{\n")
+    SET(text "${text}using namespace std;  // workaround a bug in swig where basic_string is used without the std:: prefix\n")
+    SET(text "${text}%}\n")
+    SET(text "${text}%include std_sstream.i\n\n")
+  ENDIF("${module}" STREQUAL "ITKCommonBase")
+
+  SET(WRAP_ITK_PYTHON_SWIG_EXT "${text}")
+
 ENDMACRO(INCLUDE_WRAP_CMAKE_PYTHON)
 
 MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON module)
