@@ -83,16 +83,16 @@ def echo(object, f=sys.stderr) :
    repr(object) is used otherwise
    """
    import itk
-   ss = itk.StringStream()
+   ss = itk.stringstream()
    try :
       try:
-         object.Print(ss.GetStream())
+         object.Print(ss)
       except:
-         object.Print(ss.GetStream(),Indent.New());
+         object.Print(ss, itk.Indent.New());
    except:
       print >> f, repr(object)
    else:
-      print >> f, ss.GetString()
+      print >> f, ss.str()
 del sys
 
 
