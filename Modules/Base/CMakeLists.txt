@@ -5,6 +5,8 @@ SET(WRAPPER_LIBRARY_GROUPS
   itkOffset
   itkArray
   itkFixedArray
+  itkIndex
+  itkSize
   itkPoint
   itkDefaultDynamicMeshTraits
   itkDefaultStaticMeshTraits
