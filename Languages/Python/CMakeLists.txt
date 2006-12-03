@@ -204,7 +204,12 @@ ENDIF(PY_SITE_PACKAGES_PATH)
 # )
 
 
-MACRO(END_WRAPPER_LIBRARY_PYTHON)
+MACRO(WRAP_LIBRARY_PYTHON library_name)
+  SET(WRAP_ITK_PYTHON_CONFIGURATION_TEMPLATES "")
+ENDMACRO(WRAP_LIBRARY_PYTHON)
+
+
+MACRO(END_WRAP_LIBRARY_PYTHON)
 
   SET(cpp_files )
 
@@ -212,11 +217,19 @@ MACRO(END_WRAPPER_LIBRARY_PYTHON)
 
   SET(modules )
   
-  # the list of interface this module depends
+  # the list of interface this module depends and build the deps for the python configuration file
   SET(module_target_depend )
+  SET(WRAP_ITK_PYTHON_CONFIGURATION_DEPENDS "")
   FOREACH(dep ${WRAPPER_LIBRARY_DEPENDS})
     SET(module_target_depend ${module_target_depend} ${${dep}_SWIG_FILES})
+    SET(WRAP_ITK_PYTHON_CONFIGURATION_DEPENDS "${WRAP_ITK_PYTHON_CONFIGURATION_DEPENDS} '${dep}',")  
   ENDFOREACH(dep)
+  
+  # create the python config file
+  CONFIGURE_FILE("${WRAP_ITK_PYTHON_SOURCE_DIR}/ModuleConfig.py.in"
+    "${WRAP_ITK_PYTHON_BINARY_DIR}/Configurations/${WRAPPER_LIBRARY_NAME}Config.py"
+    @ONLY IMMEDIATE)
+
 
   FOREACH(source ${WRAPPER_LIBRARY_CABLESWIG_INPUTS})
   
@@ -276,8 +289,36 @@ MACRO(END_WRAPPER_LIBRARY_PYTHON)
   
   ADD_CUSTOM_TARGET(${WRAPPER_LIBRARY_NAME}Python DEPENDS ${modules})
 
+ENDMACRO(END_WRAP_LIBRARY_PYTHON)
 
-ENDMACRO(END_WRAPPER_LIBRARY_PYTHON)
+
+MACRO(ADD_ONE_TYPEDEF_PYTHON wrap_method wrap_class swig_name template_params)
+  # ('simple name', 'c++ name', 'swig name', 'template params')
+  STRING(REGEX REPLACE "(.*::)" "" base_name "${wrap_class}")
+  
+  ADD_PYTHON_CONFIG_TEMPLATE("${base_name}" "${wrap_class}" "${swig_name}" "${template_params}")
+  IF("${wrap_method}" MATCHES "POINTER")
+     ADD_PYTHON_CONFIG_TEMPLATE("SmartPointer" "itk::SmartPointer" "${swig_name}_Pointer" "${wrap_class}< ${template_params} >")
+  ENDIF("${wrap_method}" MATCHES "POINTER")
+  
+  # std::complex and vcl_complex are the same classes, but python don't know that
+  IF("${wrap_class}" STREQUAL "vcl_complex")
+    ADD_PYTHON_CONFIG_TEMPLATE("complex" "std::complex" "${swig_name}" "${template_params}")
+  ENDIF("${wrap_class}" STREQUAL "vcl_complex")
+
+ENDMACRO(ADD_ONE_TYPEDEF_PYTHON)
+
+
+MACRO(ADD_PYTHON_CONFIG_TEMPLATE base_name wrap_class swig_name template_params)
+
+  IF("${template_params}" STREQUAL "")
+    SET(WRAP_ITK_PYTHON_CONFIGURATION_TEMPLATES "${WRAP_ITK_PYTHON_CONFIGURATION_TEMPLATES}  ('${base_name}', '${wrap_class}', '${swig_name}'),\n")
+  ELSE("${template_params}" STREQUAL "")
+    SET(WRAP_ITK_PYTHON_CONFIGURATION_TEMPLATES "${WRAP_ITK_PYTHON_CONFIGURATION_TEMPLATES}  ('${base_name}', '${wrap_class}', '${swig_name}', '${template_params}'),\n")
+  ENDIF("${template_params}" STREQUAL "")
+    
+ENDMACRO(ADD_PYTHON_CONFIG_TEMPLATE)
+
 
 MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
 
@@ -298,12 +339,14 @@ MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
 
 ENDMACRO(INCLUDE_WRAP_CMAKE_PYTHON)
 
+
 MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON module)
   # MESSAGE("${WRAP_ITK_PYTHON_SWIG_EXT}")
   CONFIGURE_FILE("${WRAP_ITK_PYTHON_SOURCE_DIR}/module_ext.i.in"
     "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/wrap_${module}_ext.i"
     @ONLY IMMEDIATE)
 ENDMACRO(END_INCLUDE_WRAP_CMAKE_PYTHON)
+
 
 MACRO(ADD_SIMPLE_TYPEDEF_PYTHON wrap_class swig_name)
   # split the class name and the template parameters
@@ -320,11 +363,6 @@ MACRO(ADD_SIMPLE_TYPEDEF_PYTHON wrap_class swig_name)
 #  MESSAGE("${wrap_class} -- ${swig_name}")
 #  MESSAGE("${cpp_name} -- ${template_params} -- ${ext_def}")
 
-  # generate the python files, without taking care of the Superclasses
-  IF(NOT "${swig_name}" MATCHES "Superclass")
-    # TODO
-  ENDIF(NOT "${swig_name}" MATCHES "Superclass")
-  
   # and now, generate the typemaps and other customizations
   
   IF("${swig_name}" STREQUAL "itkLightObject")

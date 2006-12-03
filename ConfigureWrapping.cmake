@@ -44,7 +44,7 @@
 # All variables set here are optional and have sensible default values.
 # Also define some other global defaults like WRAPPER_MASTER_INDEX_OUTPUT_DIR.
 ###############################################################################
-MACRO(BEGIN_WRAPPER_LIBRARY library_name)
+MACRO(WRAP_LIBRARY library_name)
   SET(WRAPPER_LIBRARY_NAME "${library_name}")
 
   # Mark the current source dir for inclusion because it may contain header files.
@@ -123,9 +123,16 @@ MACRO(BEGIN_WRAPPER_LIBRARY library_name)
 
 # MESSAGE("${library_name} ${WRAPPER_LIBRARY_PYTHON} ${WRAPPER_LIBRARY_TCL} ${WRAPPER_LIBRARY_JAVA}")
 
-  # Call the language support initialization function from CreateLanguageSupport.cmake
-#  LANGUAGE_SUPPORT_INITIALIZE()
+  # Call the language support initialization function
+  WRAP_LIBRARY_ALL_LANGUAGES("${library_name}")
+  
+ENDMACRO(WRAP_LIBRARY)
+
+MACRO(BEGIN_WRAPPER_LIBRARY library_name)
+  MESSAGE("Deprecation warning: BEGIN_WRAPPER_LIBRARY is replaced by WRAP_LIBRARY.")
+  WRAP_LIBRARY("${library_name}")
 ENDMACRO(BEGIN_WRAPPER_LIBRARY)
+
 
 SET(WRAPPER_MASTER_INDEX_OUTPUT_DIR "${PROJECT_BINARY_DIR}/ClassIndex")
 SET(WRAPPER_SWIG_LIBRARY_OUTPUT_DIR "${PROJECT_BINARY_DIR}/SWIG")

@@ -453,6 +453,8 @@ MACRO(ADD_ONE_TYPEDEF wrap_method wrap_class swig_name)
     ADD_SIMPLE_TYPEDEF("${full_class_name}::Pointer::SmartPointer" "${swig_name}_Pointer")
   ENDIF("${wrap_method}" MATCHES "POINTER")
 
+  ADD_ONE_TYPEDEF_ALL_LANGUAGES("${wrap_method}" "${wrap_class}" "${swig_name}" "${ARGV3}")
+  
 ENDMACRO(ADD_ONE_TYPEDEF)
 
 
