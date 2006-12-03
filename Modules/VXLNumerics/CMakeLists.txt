@@ -1,6 +1,7 @@
 WRAP_LIBRARY(VXLNumerics)
 
 SET(WRAPPER_LIBRARY_GROUPS
+  vcl_complex
   vnl_matrix
   vnl_vector
 )
