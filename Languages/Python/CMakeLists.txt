@@ -287,11 +287,12 @@ MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
   # add stream support only in one module, so it doesn't implemented in all the modules
   IF("${module}" STREQUAL "ITKCommonBase")
     SET(text "${text}%include std_iostream.i\n")
-    SET(text "${text}%{\n")
-    SET(text "${text}using namespace std;  // workaround a bug in swig where basic_string is used without the std:: prefix\n")
-    SET(text "${text}%}\n")
     SET(text "${text}%include std_sstream.i\n\n")
   ENDIF("${module}" STREQUAL "ITKCommonBase")
+
+  # include std_strin.i here instead of python.i to workaround a bug when std_string.i
+  # is included before std_sstream.i (bug #1607576)
+  SET(text "${text}%include std_string.i\n\n")
 
   SET(WRAP_ITK_PYTHON_SWIG_EXT "${text}")
 
@@ -339,7 +340,7 @@ MACRO(ADD_SIMPLE_TYPEDEF_PYTHON wrap_class swig_name)
 #    
 # A bug in swig currently prevent to use %extend on superclasses of smart pointed classes,
 # without redefining the method in the subclasses, so implement the __str__ method in all
-# the smart pointed classes (see below)
+# the smart pointed classes (see below) (bug #1607365)
 #    SET(WRAP_ITK_PYTHON_SWIG_EXT "${WRAP_ITK_PYTHON_SWIG_EXT}${text}")
   ENDIF("${swig_name}" STREQUAL "itkLightObject")
   
