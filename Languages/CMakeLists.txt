@@ -56,7 +56,7 @@ SET(WRAP_ITK_LANGUAGES )
 FILE(GLOB local_files *)
 FOREACH(f ${local_files})
   FILE(RELATIVE_PATH lang "${CMAKE_CURRENT_SOURCE_DIR}" "${f}")
-  IF(IS_DIRECTORY "${lang}" AND NOT "${lang}" MATCHES "CVS")
+  IF(IS_DIRECTORY "${f}" AND NOT "${lang}" MATCHES "CVS")
     STRING(TOUPPER "${lang}" lang_upper)
     
     # add the language to the options
@@ -70,6 +70,7 @@ FOREACH(f ${local_files})
       GET_DIRECTORY_PROPERTY(inc DIRECTORY "${lang}" INCLUDE_DIRECTORIES)
       INCLUDE_DIRECTORIES(${inc})
     ENDIF(WRAP_ITK_${lang_upper})
-  ENDIF(IS_DIRECTORY "${lang}" AND NOT "${lang}" MATCHES "CVS")
+  ENDIF(IS_DIRECTORY "${f}" AND NOT "${lang}" MATCHES "CVS")
 ENDFOREACH(f)
 
+# MESSAGE("WRAP_ITK_LANGUAGES: ${WRAP_ITK_LANGUAGES}")

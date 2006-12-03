@@ -53,7 +53,7 @@ IF(CMAKE_CONFIGURATION_TYPES)
     SET(CONFIG_PYTHON_SWIGPY_DIR "../../lib/${config}")
     SET(CONFIG_PYTHON_SWIGLIB_DIR "../../lib/${config}")
     CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/itkConfig.py.in"
-                   "${WrapITK_BINARY_DIR}/Python/${config}/itkConfig.py"
+                   "${WRAP_ITK_PYTHON_BINARY_DIR}/${config}/itkConfig.py"
                    @ONLY IMMEDIATE)
   ENDFOREACH(config)
 ELSE(CMAKE_CONFIGURATION_TYPES)
@@ -64,7 +64,7 @@ ELSE(CMAKE_CONFIGURATION_TYPES)
   SET(CONFIG_PYTHON_SWIGPY_DIR "../lib")
   SET(CONFIG_PYTHON_SWIGLIB_DIR "../lib")
   CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/itkConfig.py.in"
-                 "${WrapITK_BINARY_DIR}/Python/itkConfig.py"
+                 "${WRAP_ITK_PYTHON_BINARY_DIR}/itkConfig.py"
                  @ONLY IMMEDIATE)
 ENDIF(CMAKE_CONFIGURATION_TYPES)
 
@@ -73,10 +73,10 @@ SET(CONFIG_PYTHON_SWIGLIB_DIR "../lib")
 SET(CONFIG_PYTHON_SWIGPY_DIR "../lib")
 SET(CONFIG_PYTHON_CONFIGPY_DIR "Configuration")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/itkConfig.py.in"
-               "${WrapITK_BINARY_DIR}/Python/InstallOnly/itkConfig.py"
+               "${WRAP_ITK_PYTHON_BINARY_DIR}/InstallOnly/itkConfig.py"
               @ONLY IMMEDIATE)
 
-WRAP_ITK_INSTALL(/Python "${WrapITK_BINARY_DIR}/Python/InstallOnly/itkConfig.py")
+WRAP_ITK_INSTALL(/Python "${WRAP_ITK_PYTHON_BINARY_DIR}/InstallOnly/itkConfig.py")
 
 
 ###############################################################################

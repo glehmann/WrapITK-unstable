@@ -163,30 +163,6 @@ FOREACH(module ${WRAP_ITK_MODULES})
 ENDFOREACH(module)
 
 ###############################################################################
-# Configure language-specific features
-###############################################################################
-IF(WRAP_ITK_TCL)
-  SUBDIRS(Tcl)
-ENDIF(WRAP_ITK_TCL)
-
-IF(WRAP_ITK_PERL)
-  SUBDIRS(Perl)
-ENDIF(WRAP_ITK_PERL)
-
-IF(WRAP_ITK_PYTHON)
-  SUBDIRS(Python)
-ENDIF(WRAP_ITK_PYTHON)
-
-IF(WRAP_ITK_JAVA)
-  IF(WIN32)
-    MESSAGE("WRAP_ITK_JAVA is not available for Windows at this point")
-    SET(WRAP_ITK_JAVA "OFF" CACHE BOOL "Java wrapping with WrapITK is disabled in Windows")
-  ELSE(WIN32)
-    SUBDIRS(Java)
-  ENDIF(WIN32)
-ENDIF(WRAP_ITK_JAVA)
-
-###############################################################################
 # Configure WrapITKConfig.cmake and FindWrapITK.cmake for external projects
 ###############################################################################
 # First, configure for use directly from the build dir.
