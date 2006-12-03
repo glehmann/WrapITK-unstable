@@ -206,6 +206,7 @@ ENDIF(PY_SITE_PACKAGES_PATH)
 
 MACRO(WRAP_LIBRARY_PYTHON library_name)
   SET(WRAP_ITK_PYTHON_CONFIGURATION_TEMPLATES "")
+  SET(WRAP_ITK_PYTHON_LIBRARY_MODULE "")
 ENDMACRO(WRAP_LIBRARY_PYTHON)
 
 
@@ -227,9 +228,14 @@ MACRO(END_WRAP_LIBRARY_PYTHON)
   
   # create the python config file
   CONFIGURE_FILE("${WRAP_ITK_PYTHON_SOURCE_DIR}/ModuleConfig.py.in"
-    "${WRAP_ITK_PYTHON_BINARY_DIR}/Configurations/${WRAPPER_LIBRARY_NAME}Config.py"
+    "${WRAP_ITK_PYTHON_BINARY_DIR}/Configuration/${WRAPPER_LIBRARY_NAME}Config.py"
     @ONLY IMMEDIATE)
-
+    
+  # create the lib module python file
+  SET(WRAP_ITK_FILE_CONTENT "${WRAP_ITK_PYTHON_LIBRARY_MODULE}")
+  CONFIGURE_FILE("${WrapITK_SOURCE_DIR}/ConfigurationInputs/empty.in"
+    "${WRAP_ITK_PYTHON_BINARY_DIR}/${WRAPPER_LIBRARY_NAME}Python.py"
+    @ONLY IMMEDIATE)
 
   FOREACH(source ${WRAPPER_LIBRARY_CABLESWIG_INPUTS})
   
@@ -298,7 +304,11 @@ MACRO(ADD_ONE_TYPEDEF_PYTHON wrap_method wrap_class swig_name template_params)
   
   ADD_PYTHON_CONFIG_TEMPLATE("${base_name}" "${wrap_class}" "${swig_name}" "${template_params}")
   IF("${wrap_method}" MATCHES "POINTER")
-     ADD_PYTHON_CONFIG_TEMPLATE("SmartPointer" "itk::SmartPointer" "${swig_name}_Pointer" "${wrap_class}< ${template_params} >")
+    IF("${template_params}" STREQUAL "")
+      ADD_PYTHON_CONFIG_TEMPLATE("SmartPointer" "itk::SmartPointer" "${swig_name}_Pointer" "${wrap_class}")
+    ELSE("${template_params}" STREQUAL "")
+      ADD_PYTHON_CONFIG_TEMPLATE("SmartPointer" "itk::SmartPointer" "${swig_name}_Pointer" "${wrap_class}< ${template_params} >")
+    ENDIF("${template_params}" STREQUAL "")
   ENDIF("${wrap_method}" MATCHES "POINTER")
   
   # std::complex and vcl_complex are the same classes, but python don't know that
@@ -329,6 +339,30 @@ MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
   IF("${module}" STREQUAL "ITKCommonBase")
     SET(text "${text}%include std_iostream.i\n")
     SET(text "${text}%include std_sstream.i\n\n")
+
+    # add the vars defined by including std_iostream and std_stream to the python config
+    ADD_PYTHON_CONFIG_TEMPLATE("PySwigIterator" "PySwigIterator" "PySwigIterator" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("cerr" "std::cerr" "cerr" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("cin" "std::cin" "cin" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("clog" "std::clog" "clog" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("cout" "std::cout" "cout" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("cvar" "std::cvar" "cvar" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("endl" "std::endl" "endl" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("ends" "std::ends" "ends" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("flush" "std::flush" "flush" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("ios" "std::ios" "ios" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("ios_base" "std::ios_base" "ios_base" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("ios_base_sync_with_stdio" "std::ios_base_sync_with_stdio" "ios_base_sync_with_stdio" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("ios_base_xalloc" "std::ios_base_xalloc" "ios_base_xalloc" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("iostream" "std::iostream" "iostream" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("istream" "std::istream" "istream" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("istringstream" "std::istringstream" "istringstream" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("ostream" "std::ostream" "ostream" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("ostringstream" "std::ostringstream" "ostringstream" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("streambuf" "std::streambuf" "streambuf" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("string" "std::string" "string" "")
+    ADD_PYTHON_CONFIG_TEMPLATE("stringstream" "std::stringstream" "stringstream" "")
+
   ENDIF("${module}" STREQUAL "ITKCommonBase")
 
   # include std_strin.i here instead of python.i to workaround a bug when std_string.i
@@ -337,28 +371,8 @@ MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
 
   SET(WRAP_ITK_PYTHON_SWIG_EXT "${text}")
   
-  # add the vars defined by including std_iostream and std_stream to the python config
-  ADD_PYTHON_CONFIG_TEMPLATE("PySwigIterator" "PySwigIterator" "PySwigIterator" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("cerr" "std::cerr" "cerr" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("cin" "std::cin" "cin" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("clog" "std::clog" "clog" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("cout" "std::cout" "cout" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("cvar" "std::cvar" "cvar" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("endl" "std::endl" "endl" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("ends" "std::ends" "ends" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("flush" "std::flush" "flush" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("ios" "std::ios" "ios" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("ios_base" "std::ios_base" "ios_base" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("ios_base_sync_with_stdio" "std::ios_base_sync_with_stdio" "ios_base_sync_with_stdio" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("ios_base_xalloc" "std::ios_base_xalloc" "ios_base_xalloc" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("iostream" "std::iostream" "iostream" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("istream" "std::istream" "istream" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("istringstream" "std::istringstream" "istringstream" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("ostream" "std::ostream" "ostream" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("ostringstream" "std::ostringstream" "ostringstream" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("streambuf" "std::streambuf" "streambuf" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("string" "std::string" "string" "")
-  ADD_PYTHON_CONFIG_TEMPLATE("stringstream" "std::stringstream" "stringstream" "")
+  # register the module for the lib module
+  SET(WRAP_ITK_PYTHON_LIBRARY_MODULE "${WRAP_ITK_PYTHON_LIBRARY_MODULE}from ${module}Python import *\n")
 
 ENDMACRO(INCLUDE_WRAP_CMAKE_PYTHON)
 
