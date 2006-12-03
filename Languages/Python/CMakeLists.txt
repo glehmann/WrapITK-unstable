@@ -338,8 +338,7 @@ ENDMACRO(ADD_PYTHON_CONFIG_TEMPLATE)
 
 MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
 
-  # the default typemaps, exception handler, and includes
-  SET(text "%include ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i\n\n")
+  SET(text "")
   
   # add stream support only in one module, so it doesn't implemented in all the modules
   IF("${module}" STREQUAL "ITKCommonBase")
@@ -369,12 +368,15 @@ MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
     ADD_PYTHON_CONFIG_TEMPLATE("string" "std::string" "string" "")
     ADD_PYTHON_CONFIG_TEMPLATE("stringstream" "std::stringstream" "stringstream" "")
 
+    # include std_strin.i here instead of python.i to workaround a bug when std_string.i
+    # is included before std_sstream.i (bug #1607576)
+    SET(text "${text}%include std_string.i\n\n")
+
   ENDIF("${module}" STREQUAL "ITKCommonBase")
 
-  # include std_strin.i here instead of python.i to workaround a bug when std_string.i
-  # is included before std_sstream.i (bug #1607576)
-  SET(text "${text}%include std_string.i\n\n")
-
+  # the default typemaps, exception handler, and includes
+  SET(text "${text}%include ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i\n\n")
+  
   SET(WRAP_ITK_PYTHON_SWIG_EXT "${text}")
   
   # register the module for the lib module
