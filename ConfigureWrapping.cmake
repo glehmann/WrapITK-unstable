@@ -95,7 +95,7 @@ MACRO(BEGIN_WRAPPER_LIBRARY library_name)
   # MODULE_INCLUDES. contains what will be put in the %{module}.includes file
   SET(MODULE_INCLUDES )
   FOREACH(i ${WRAPPER_DEFAULT_INCLUDE})
-    SET(MODULE_INCLUDES "${MODULE_INCLUDES}#include \"${i}\";\n")
+    SET(MODULE_INCLUDES "${MODULE_INCLUDES}#include \"${i}\"\n")
   ENDFOREACH(i)
   
   IF("${ARGC}" EQUAL 2)
