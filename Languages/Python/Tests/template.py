@@ -67,7 +67,7 @@ except AttributeError:
 try :
   reader = readerType.New(FileName=1)
   raise Exception('no exception sent for wrong attribute type')
-except TypeError:
+except :
   pass
   
 # pass filter as argument for input
@@ -104,7 +104,7 @@ assert repr(im2.GetPointer()) == repr(sub.GetInput(1).GetPointer())
 try:
   itk.MedianImageFilter[IType, IType].New(1)
   raise Exception('no exception sent for wrong input type')
-except TypeError:
+except:
   pass
 
 try:
