@@ -10,6 +10,8 @@ optionParser.add_option("--include", action="append", dest="includes", default=[
 optionParser.add_option("--take-includes", action="append", dest="take_includes", default=[], metavar="FILE", help="File which contains the include to take, and include in the generated interface file.")
 optionParser.add_option("--swig-include", action="append", dest="swig_includes", default=[], metavar="FILE", help="File to be included by swig (%include) in the generated interface file.")
 optionParser.add_option("--import", action="append", dest="imports", default=[], metavar="FILE", help="File to be imported in the generated interface file.")
+optionParser.add_option("-w", "--disable-warning", action="append", dest="warnings", default=[], metavar="WARNING", help="Warning to be disabled.")
+optionParser.add_option("-W", "--warning-error", action="store_true", dest="warningError", help="Treat warnings as errors.")
 options, args = optionParser.parse_args()
 
 # the output file
@@ -21,6 +23,12 @@ else :
 # a dict to let us use the alias name instead of the full c++ name. Without
 # that, in many cases, swig don't know that's the same type
 aliases = {}
+
+def warn( id, msg ):
+  if str(id) not in options.warnings:
+    print >> sys.stderr, "Warning(%s): %s" % (str(id), msg)
+    if options.warningError:
+      sys.exit(1)
 
 def get_alias( decl_string ):
   s = str(decl_string)
@@ -122,7 +130,7 @@ def generate_method( typedef, method ):
     if ( "(" in method.return_type.decl_string
          or (typedef.name.startswith('vnl_') and method.name in ["as_ref"]) 
          or (typedef.name.startswith('itk') and method.name in ["rBegin", "rEnd", "GetSpacingCallback", "GetOriginCallback"]) ) :
-      print >> sys.stderr, "Warning: ignoring method '%s::%s'." % (typedef.name, method.name)
+      warn( 1, "ignoring method '%s::%s'." % (typedef.name, method.name) )
       return
       
     # iterate over the arguments
@@ -130,7 +138,7 @@ def generate_method( typedef, method ):
     for arg in method.arguments:
       s = "%s %s" % (get_alias(arg.type.decl_string), arg.name)
       if "(" in s:
-        print >> sys.stderr, "Warning: ignoring method '%s::%s'." % (typedef.name, method.name)
+        warn( 1, "ignoring method '%s::%s'." % (typedef.name, method.name) )
         return
       # append the default value if it exists
       if arg.default_value:
@@ -231,7 +239,7 @@ for typedef in wrappers_ns.typedefs(): #allow_empty=True):
   if s.startswith("::"):
     s = s[2:]
   if not aliases.has_key( s ) :
-    print >> sys.stderr, "Warning: %s (%s) should be already defined in the idx files." % (s, typedef.name)
+    warn(2, "%s (%s) should be already defined in the idx files." % (s, typedef.name) )
     aliases[s] = typedef.name
     # declare the typedef
     print >> outputFile, "typedef %s %s;" % (s, typedef.name)
