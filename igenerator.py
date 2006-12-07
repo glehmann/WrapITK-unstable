@@ -120,6 +120,13 @@ def generate( typedef, access ):
   for method in typedef.type.declaration.member_operators(): #allow_empty=True, recursive=False):
     generate_method( typedef, method )
     
+  # iterate over enumerations
+  if access == "public":
+    for enum in typedef.type.declaration.enums():
+      if enum.name != "":
+        content = [" %s = %i" % (key, value) for key, value in enum.values]
+        print >> outputFile, "    enum %s { %s };" % ( enum.name, ", ".join( content ) )
+  
   # TODO: ivars, typedefs, ...
     
     
