@@ -1,2 +1,6 @@
 WRAP_NON_TEMPLATE_CLASS("itk::CostFunction" POINTER)
 WRAP_NON_TEMPLATE_CLASS("itk::SingleValuedCostFunction" POINTER)
+WRAP_NON_TEMPLATE_CLASS("itk::SingleValuedVnlCostFunctionAdaptor")
+WRAP_NON_TEMPLATE_CLASS("itk::MultipleValuedCostFunction" POINTER)
+WRAP_NON_TEMPLATE_CLASS("itk::MultipleValuedVnlCostFunctionAdaptor")
+WRAP_NON_TEMPLATE_CLASS("itk::Statistics::RandomVariateGeneratorBase"  POINTER)

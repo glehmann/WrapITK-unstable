@@ -5,6 +5,7 @@ SET(WRAPPER_LIBRARY_GROUPS
   itkPointBasedSpatialObject
   itkImageSpatialObject
   itkTreeNodeSO
+  itkSpatialObjectPoint
 )
 
 SET(WRAPPER_LIBRARY_DEPENDS Base BaseTransforms)

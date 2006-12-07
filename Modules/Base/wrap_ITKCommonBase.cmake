@@ -14,8 +14,5 @@ WRAP_NON_TEMPLATE_CLASS("itk::Indent")
 WRAP_NON_TEMPLATE_CLASS("itk::SimpleFilterWatcher")
 WRAP_NON_TEMPLATE_CLASS("itk::XMLFilterWatcher")
 WRAP_NON_TEMPLATE_CLASS("itk::MetaDataDictionary")
-
-#
-# disabled because the superclass gives problems with swig
-#
-# WRAP_NON_TEMPLATE_CLASS("itk::StringStream")
+WRAP_NON_TEMPLATE_CLASS("itk::TimeProbe")
+WRAP_NON_TEMPLATE_CLASS("itk::MetaDataObjectBase" POINTER)

@@ -50,7 +50,9 @@ END_WRAP_TYPE()
 SET(itk_Wrap_Offset ${WRAPPER_TEMPLATES})
 
 WRAP_TYPE("itk::Vector" "V")
-  FOREACH(d ${WRAP_ITK_DIMS})
+  # dim 6 is used by ScaleSkewVersor3DTransform
+  UNIQUE(vector_sizes "${WRAP_ITK_DIMS};6")
+  FOREACH(d ${vector_sizes})
     WRAP_TEMPLATE("${ITKM_F}${d}"  "${ITKT_F},${d}")
     WRAP_TEMPLATE("${ITKM_D}${d}"  "${ITKT_D},${d}")
   ENDFOREACH(d)
@@ -80,7 +82,12 @@ END_WRAP_TYPE()
 SET(itk_Wrap_Array ${WRAPPER_TEMPLATES})
 
 WRAP_TYPE("itk::FixedArray" "FA")
-  UNIQUE(array_sizes "${WRAP_ITK_DIMS};1;3")
+  SET(dims ${WRAP_ITK_DIMS})
+  FOREACH(d ${WRAP_ITK_DIMS})
+    MATH(EXPR d2 "${d} * 2")
+    SET(dims ${dims} ${d2})
+  ENDFOREACH(d)
+  UNIQUE(array_sizes "${dims};1;3;4")
   # make sure that 1-D FixedArrays are wrapped. Also wrap for each selected
   # image dimension.
   # 3-D FixedArrays are required as superclass of rgb pixels
@@ -136,6 +143,10 @@ WRAP_TYPE("itk::Image" "I")
       
       WRAP_TEMPLATE("${ITKM_${type}}${d}"  "${ITKT_${type}},${d}")
     ENDFOREACH(type)
+    
+    # FixedArray types required by level set filters
+    WRAP_TEMPLATE("${ITKM_FAF${d}}${d}"  "${ITKT_FAF${d}},${d}")
+    
   ENDFOREACH(d)
 END_WRAP_TYPE()
 SET(itk_Wrap_Image ${WRAPPER_TEMPLATES})

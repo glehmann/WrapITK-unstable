@@ -4,6 +4,7 @@ SET(WRAPPER_LIBRARY_GROUPS
   vcl_complex
   vnl_matrix
   vnl_vector
+  vnl_unary_function
 )
 
 SET(WRAPPER_LIBRARY_LINK_LIBRARIES itkvnl itkvnl_inst)

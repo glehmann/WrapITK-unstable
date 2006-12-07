@@ -1,0 +1,3 @@
+WRAP_CLASS("itk::Array2D")
+  WRAP_TEMPLATE("${ITKT_D}" "${ITKT_D}")
+END_WRAP_CLASS()

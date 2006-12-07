@@ -1,0 +1,1 @@
+WRAP_NON_TEMPLATE_CLASS("itk::PolygonGroupOrientation" FORCE_INSTANTIATE)
