@@ -24,11 +24,78 @@ else :
 # that, in many cases, swig don't know that's the same type
 aliases = {}
 
+
+error = False
+
 def warn( id, msg ):
+  global error
   if str(id) not in options.warnings:
-    print >> sys.stderr, "Warning(%s): %s" % (str(id), msg)
     if options.warningError:
-      sys.exit(1)
+      print >> sys.stderr, "Error(%s): %s" % (str(id), msg)
+      error = True
+    else:
+      print >> sys.stderr, "Warning(%s): %s" % (str(id), msg)
+
+
+
+notWrapped = [
+  "itk::SmartPointerForwardReference",
+  "itk::LibHandle",
+  "itk::CreateObjectFunctionBase",
+  "itk::NeighborhoodAllocator",
+  "itk::ImageRegion", # to avoid wrapping all the region for all the dims
+  "itk::ImportImageContainer",
+  "itk::DefaultPixelAccessor",
+  "itk::NeighborhoodAccessorFunctor",
+  "itk::DefaultVectorPixelAccessor",
+  "itk::VectorImageNeighborhoodAccessorFunctor",
+  "itk::ConstNeighborhoodIterator",
+  "itk::Neighborhood",
+  "itk::VectorContainer",
+  "itk::MapContainer",
+  "itk::ThreadFunctionType",
+  "itk::ThreadProcessIDType",
+]
+
+
+def renameTypesInSTL( s ):
+  if s.startswith( "std::" ) and pygccxml.declarations.templates.is_instantiation(s):
+    args = []
+    for arg in pygccxml.declarations.templates.args(s):
+      t, d = typeAndDecorators( arg );
+      if aliases.has_key( t ):
+        args.append( aliases[t] + d )
+      else:
+        args.append( renameTypesInSTL( t ) + d )
+    return pygccxml.declarations.templates.join( pygccxml.declarations.templates.name(s), args ) + typeAndDecorators( s )[1]
+  return s
+  
+
+def removeStdAllocator( s ):
+  if pygccxml.declarations.templates.is_instantiation(s):
+    args = []
+    for arg in pygccxml.declarations.templates.args(s):
+      if not arg.startswith("std::allocator"):
+        t, d = typeAndDecorators( arg );
+        args.append( removeStdAllocator( t ) + d )
+    return pygccxml.declarations.templates.join( pygccxml.declarations.templates.name(s), args ) + typeAndDecorators( s )[1]
+  return s
+  
+
+def typeAndDecorators( s ):
+  end = ""
+  s = s.strip()
+  ends = [" ", "*", "&", "const"]
+  needToContinue = True
+  while needToContinue:
+    needToContinue = False
+    for e in ends:
+      if s.endswith( e ):
+        end = e + end
+        s = s[:-len(e)]
+        needToContinue = True
+  return (s, end)
+ 
 
 def get_alias( decl_string ):
   s = str(decl_string)
@@ -45,28 +112,29 @@ def get_alias( decl_string ):
   s = s.replace("complex double", "std::complex<double>")
   s = s.replace("complex long double", "std::complex<long double>")
   
-  end = ""
-  ends = [" *", " &", " const"]
-  for e in ends:
-    if s.endswith( e ):
-      end = e + end
-      s = s[:-len(e)]
+  (s, end) = typeAndDecorators( s )
 
   if aliases.has_key( s ):
+#    print >> sys.stderr, s, end, "        ", aliases[s]
     return aliases[s] + end
-    
-  elif s.startswith("std::"):
-    # replace the types defined in this type, to support std::vector<itkDataObject> for example
-    for t, alias in aliases.items():
-      s = s.replace( t, alias )
-    # drop the allocator part of the type, because it is not supported by the %template directive with some languages (like tcl)
-    if pygccxml.declarations.templates.is_instantiation(s):
-      args = pygccxml.declarations.templates.args(s)
-      args = [ arg for arg in args if not arg.startswith("std::allocator") ]
-      s = pygccxml.declarations.templates.join( pygccxml.declarations.templates.name(s), args )
-    return s + end
-    
+  
   else:
+    # replace the types defined in this type, to support std::vector<itkDataObject> for example
+    s = renameTypesInSTL( s )
+    
+    # drop the allocator part of the type, because it is not supported by the %template directive with some languages (like tcl)
+    s = removeStdAllocator( s )
+    
+    # rename basic_string to std::string to make name shorter
+    s = s.replace("std::basic_string< char, std::char_traits< char > >", "std::string")
+    
+    if "<" in s:
+      short_result = s[:s.find("<")]
+    else:
+      short_result = s
+    if s.startswith( "itk::") and not s[:s.rfind("::")] in aliases and not short_result in notWrapped:
+      warn( 4, "ITK type not wrapped, or currently not known: %s" % s )
+    
     return s + end
     
 
@@ -134,10 +202,14 @@ def generate_method( typedef, method ):
   # avoid the apply method for the class vnl_c_vector: the signature is quite strange
   # a currently confuse swig :-/
   if method.access_type == access :
-    if ( "(" in method.return_type.decl_string
-         or (typedef.name.startswith('vnl_') and method.name in ["as_ref"]) 
+  
+    if "(" in method.return_type.decl_string :
+      warn( 1, "ignoring method not supported by swig '%s::%s'." % (typedef.name, method.name) )
+      return
+      
+    if ( (typedef.name.startswith('vnl_') and method.name in ["as_ref"]) 
          or (typedef.name.startswith('itk') and method.name in ["rBegin", "rEnd", "GetSpacingCallback", "GetOriginCallback"]) ) :
-      warn( 1, "ignoring method '%s::%s'." % (typedef.name, method.name) )
+      warn( 3, "ignoring black listed method '%s::%s'." % (typedef.name, method.name) )
       return
       
     # iterate over the arguments
@@ -145,7 +217,7 @@ def generate_method( typedef, method ):
     for arg in method.arguments:
       s = "%s %s" % (get_alias(arg.type.decl_string), arg.name)
       if "(" in s:
-        warn( 1, "ignoring method '%s::%s'." % (typedef.name, method.name) )
+        warn( 1, "ignoring method not supported by swig '%s::%s'." % (typedef.name, method.name) )
         return
       # append the default value if it exists
       if arg.default_value:
@@ -301,6 +373,9 @@ for typedef in reversed(list(wrappers_ns.typedefs())):
   print >> outputFile
 
 
+if error:
+  sys.exit(1)
+  
 # finally, really write the output
 if args[1] != '-':
   f = file(args[1], "w")
