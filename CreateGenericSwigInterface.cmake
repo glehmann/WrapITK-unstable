@@ -113,7 +113,7 @@ MACRO(END_WRAP_LIBRARY)
          --take-includes ${includes_file}
 #         --import ${module_interface_file}
          --swig-include ${base_name}_ext.i
-         -w 1 -W
+         -w1 -w3 --warning-error
          ${xml_file}
          ${interface_file}
       DEPENDS ${xml_file} ${mdx_content} ${includes_file} ${WRAP_ITK_CMAKE_DIR}/igenerator.py ${module_target_depend}
