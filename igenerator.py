@@ -39,23 +39,35 @@ def warn( id, msg ):
 
 
 notWrapped = [
-  "itk::SmartPointerForwardReference",
+  "itk::SmartPointerForwardReference<.+>",
   "itk::LibHandle",
   "itk::CreateObjectFunctionBase",
-  "itk::NeighborhoodAllocator",
-  "itk::ImageRegion", # to avoid wrapping all the region for all the dims
-  "itk::ImportImageContainer",
-  "itk::DefaultPixelAccessor",
-  "itk::NeighborhoodAccessorFunctor",
-  "itk::DefaultVectorPixelAccessor",
-  "itk::VectorImageNeighborhoodAccessorFunctor",
-  "itk::ConstNeighborhoodIterator",
-  "itk::Neighborhood",
-  "itk::VectorContainer",
-  "itk::MapContainer",
+  "itk::NeighborhoodAllocator<.+>",
+  "itk::ImageRegion<.+>", # to avoid wrapping all the region for all the dims
+  "itk::ImportImageContainer<.+>",
+  "itk::DefaultPixelAccessor<.+>",
+  "itk::NeighborhoodAccessorFunctor<.+>",
+  "itk::DefaultVectorPixelAccessor<.+>",
+  "itk::VectorImageNeighborhoodAccessorFunctor<.+>",
+  "itk::.*Iterator.*",  # TODO: remove this one ?
+  "itk::Neighborhood<.+>", # TODO: remove this one
+  "itk::VectorContainer<.+>",  # some of those types are quite difficult some ignore them all
+  "itk::MapContainer<.+>",  # some of those types are quite difficult some ignore them all
   "itk::ThreadFunctionType",
   "itk::ThreadProcessIDType",
+  "itk::PolygonGroupOrientation", # cableidx must generate something for the enums before wrapping this one
+  "itk::SpatialOrientation::ValidCoordinateOrientationFlags",  # the same for this one
+  "itk::Functor::.+",
+  "itk::Function::.+",
+  "itk::.+Function.*",  # Level set functions
+  "itk::dsr", # a struct which shouldn't be exposed in analyze IO code ?
+  "itk::InterpolateImageFunction<.+>",  # use one more dimension than the wrapped one
+  "itk::watershed::.+",  # ignore the internal classes of the watershed
+  "itk::SmartPointer< itk::VoronoiDiagram2D<.+> >",  # require to wrap too more type
+  "itk::Image< itk::CovariantVector< double, \d+ >, \d+ >",  # used internally in ImageToImageMetric
 ]
+
+notWrappedRegExp = re.compile( "|".join( [ "^"+s+"$" for s in notWrapped] ) )
 
 
 def renameTypesInSTL( s ):
@@ -128,11 +140,11 @@ def get_alias( decl_string ):
     # rename basic_string to std::string to make name shorter
     s = s.replace("std::basic_string< char, std::char_traits< char > >", "std::string")
     
-    if "<" in s:
-      short_result = s[:s.find("<")]
-    else:
-      short_result = s
-    if s.startswith( "itk::") and not s[:s.rfind("::")] in aliases and not short_result in notWrapped:
+    # rename some types not renamed by gccxml (why ?)
+    s = s.replace( "itk::SerieUIDContainer", "std::vector< std::string >")
+    s = s.replace( "itk::FilenamesContainer", "std::vector< std::string >")
+    
+    if s.startswith( "itk::") and not s[:s.rfind("::")] in aliases and not notWrappedRegExp.match( s ):
       warn( 4, "ITK type not wrapped, or currently not known: %s" % s )
     
     return s + end
@@ -165,7 +177,7 @@ def normalize(name):
   return name 
 
 
-def generate( typedef, access ):
+def generate_class( typedef, access ):
   # iterate over the constructors
   for constructor in typedef.type.declaration.constructors(): #recursive=False) :
     if constructor.access_type == access:
@@ -191,11 +203,15 @@ def generate( typedef, access ):
   # iterate over enumerations
   if access == "public":
     for enum in typedef.type.declaration.enums():
-      if enum.name != "":
-        content = [" %s = %i" % (key, value) for key, value in enum.values]
-        print >> outputFile, "    enum %s { %s };" % ( enum.name, ", ".join( content ) )
+      generate_enum( enum.name, enum.values )
+    
+  # TODO: ivars, typedefs, subclasses, ...
+
+
+def generate_enum( name, values ):
+  content = [" %s = %i" % (key, value) for key, value in values]
+  print >> outputFile, "    enum %s { %s };" % ( name, ", ".join( content ) )
   
-  # TODO: ivars, typedefs, ...
     
     
 def generate_method( typedef, method ):
@@ -318,7 +334,7 @@ for typedef in wrappers_ns.typedefs(): #allow_empty=True):
   if s.startswith("::"):
     s = s[2:]
   if not aliases.has_key( s ) :
-    warn(2, "%s (%s) should be already defined in the idx files." % (s, typedef.name) )
+    warn( 2, "%s (%s) should be already defined in the idx files." % (s, typedef.name) )
     aliases[s] = typedef.name
     # declare the typedef
     print >> outputFile, "typedef %s %s;" % (s, typedef.name)
@@ -350,27 +366,37 @@ for typedef in reversed(list(wrappers_ns.typedefs())):
   # print >> outputFile, "%}"
   # print >> outputFile
 
+  
   # begin a new class
-  super_classes = []
-  for super_class in typedef.type.declaration.bases:
-    super_classes.append( "%s %s" % ( super_class.access, get_alias(super_class.related_class.decl_string) ) )
-  s = ""
-  if super_classes:
-    s = " : " + ", ".join( super_classes )
-  print >> outputFile, "class %s%s {" % ( typedef.name, s )
-  
-  for access in ['public', 'protected', 'private']:
-    print >> outputFile, "  %s:" % access
-    generate( typedef, access )
+  if isinstance( typedef.type.declaration, pygccxml.declarations.class_declaration.class_t ):
+    super_classes = []
+    for super_class in typedef.type.declaration.bases:
+      super_classes.append( "%s %s" % ( super_class.access, get_alias(super_class.related_class.decl_string) ) )
+    s = ""
+    if super_classes:
+      s = " : " + ", ".join( super_classes )
+    print >> outputFile, "class %s%s {" % ( typedef.name, s )
     
-  # add the destructor in private section if it is not public
-  if not pygccxml.declarations.type_traits.has_public_destructor( typedef.type.declaration ) :
-    print >> outputFile, "    ~%s();" % typedef.name
+    for access in ['public', 'protected', 'private']:
+      print >> outputFile, "  %s:" % access
+      generate_class( typedef, access )
+      
+    # add the destructor in private section if it is not public
+    if not pygccxml.declarations.type_traits.has_public_destructor( typedef.type.declaration ) :
+      print >> outputFile, "    ~%s();" % typedef.name
   
-  # finally, close the class
-  print >> outputFile, "};"
-  print >> outputFile
-  print >> outputFile
+    # finally, close the class
+    print >> outputFile, "};"
+    print >> outputFile
+    print >> outputFile
+
+  elif isinstance( typedef.type.declaration, pygccxml.declarations.enumeration.enumeration_t ):
+    generate_enum( typedef.name, typedef.type.declaration.values )
+    print >> outputFile
+    print >> outputFile
+      
+  else:
+    warn( 5, "Unknown type type: %s" % str(typedef.type.declaration) )
 
 
 if error:
