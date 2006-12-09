@@ -129,6 +129,10 @@ def get_alias( decl_string ):
   if aliases.has_key( s ):
 #    print >> sys.stderr, s, end, "        ", aliases[s]
     return aliases[s] + end
+    
+  elif s[:s.rfind("::")] in aliases:
+    # take care of subtypes/enum/...
+    return aliases[ s[:s.rfind("::")] ] + s[s.rfind("::"):] + end
   
   else:
     # replace the types defined in this type, to support std::vector<itkDataObject> for example
@@ -144,7 +148,7 @@ def get_alias( decl_string ):
     s = s.replace( "itk::SerieUIDContainer", "std::vector< std::string >")
     s = s.replace( "itk::FilenamesContainer", "std::vector< std::string >")
     
-    if s.startswith( "itk::") and not s[:s.rfind("::")] in aliases and not notWrappedRegExp.match( s ):
+    if s.startswith( "itk::") and not notWrappedRegExp.match( s ):
       warn( 4, "ITK type not wrapped, or currently not known: %s" % s )
     
     return s + end
@@ -177,83 +181,112 @@ def normalize(name):
   return name 
 
 
-def generate_class( typedef, access ):
-  # iterate over the constructors
-  for constructor in typedef.type.declaration.constructors(): #recursive=False) :
-    if constructor.access_type == access:
-      # iterate over the arguments
-      args = []
-      for arg in constructor.arguments:
-        s = "%s %s" % (get_alias(arg.type.decl_string), arg.name)
-        # append the default value if it exists
-        if arg.default_value:
-          s += " = %s" % arg.default_value
-        # and add the string to the arg list
-        args.append( s )
-      print >> outputFile, "    %s(%s);" % (typedef.name, ", ".join( args) )
+def generate_class( typedef, indent=0 ):
+  super_classes = []
+  for super_class in typedef.type.declaration.bases:
+    super_classes.append( "%s %s" % ( super_class.access, get_alias(super_class.related_class.decl_string) ) )
+  s = ""
+  if super_classes:
+    s = " : " + ", ".join( super_classes )
+  print >> outputFile, "  "*indent, "class %s%s {" % ( typedef.name, s )
+    
+  # iterate over access
+  for access in pygccxml.declarations.ACCESS_TYPES.ALL:
+    
+    # print the access type
+    print >> outputFile, "  "*indent, "  %s:" % access
+
+    # iterate over the members
+    for member in typedef.type.declaration.get_members( access=access ):
+      if isinstance( member, pygccxml.declarations.typedef.typedef_t ):
+        warn( 51, "Member typedef are not supported: %s" % member.name )
+      elif isinstance( member, pygccxml.declarations.calldef.member_function_t ):
+        generate_method( typedef, member, indent )
+      elif isinstance( member, pygccxml.declarations.calldef.constructor_t ):
+        generate_constructor( typedef, member, indent )
+      elif isinstance( member, pygccxml.declarations.calldef.member_operator_t ):
+        generate_method( typedef, member, indent )
+      elif isinstance( member, pygccxml.declarations.calldef.destructor_t ):
+        generate_destructor( typedef, member, indent )
+      elif isinstance( member, pygccxml.declarations.enumeration.enumeration_t ):
+        generate_enum( typedef, member, indent )
+      elif isinstance( member, pygccxml.declarations.variable.variable_t ):
+        warn( 52, "Member variables are not supported: %s" % member.name )
+      elif isinstance( member, pygccxml.declarations.class_declaration.class_t ):
+        warn( 53, "Member classes are not supported: %s" % member.name )
+      elif isinstance( member, pygccxml.declarations.class_declaration.class_declaration_t ):
+        warn( 53, "Member classes are not supported: %s" % member.name )
+      elif isinstance( member, pygccxml.declarations.calldef.casting_operator_t ):
+        warn( 54, "Member casting operators are not supported: %s" % member.name )
+      else :
+        warn( 50, "Unknown member type: %s" % repr(member) )
+
+  # finally, close the class
+  print >> outputFile, "  "*indent, "};"
+  print >> outputFile
+  print >> outputFile
+        
+
+def generate_constructor( typedef, constructor, indent ):  
+  # iterate over the arguments
+  args = []
+  for arg in constructor.arguments:
+    s = "%s %s" % (get_alias(arg.type.decl_string), arg.name)
+    # append the default value if it exists
+    if arg.default_value:
+      s += " = %s" % arg.default_value
+    # and add the string to the arg list
+    args.append( s )
+  print >> outputFile, "  "*indent, "    %s(%s);" % (typedef.name, ", ".join( args) )
   
-  # iterate over the methods
-  for method in typedef.type.declaration.member_functions(): #allow_empty=True, recursive=False):
-    generate_method( typedef, method )
-    
-  # and the operators
-  for method in typedef.type.declaration.member_operators(): #allow_empty=True, recursive=False):
-    generate_method( typedef, method )
-    
-  # iterate over enumerations
-  if access == "public":
-    for enum in typedef.type.declaration.enums():
-      generate_enum( enum.name, enum.values )
-    
-  # TODO: ivars, typedefs, subclasses, ...
+  
+def generate_destructor( typedef, destructor, indent ):  
+  print >> outputFile, "  "*indent, "    ~%s();" % typedef.name
 
 
-def generate_enum( name, values ):
-  content = [" %s = %i" % (key, value) for key, value in values]
-  print >> outputFile, "    enum %s { %s };" % ( name, ", ".join( content ) )
+def generate_enum( typedef, enum, indent  ):
+  content = [" %s = %i" % (key, value) for key, value in enum.values]
+  print >> outputFile, "  "*indent, "    enum %s { %s };" % ( enum.name, ", ".join( content ) )
   
     
-    
-def generate_method( typedef, method ):
+def generate_method( typedef, method, indent ):
   # avoid the apply method for the class vnl_c_vector: the signature is quite strange
-  # a currently confuse swig :-/
-  if method.access_type == access :
-  
-    if "(" in method.return_type.decl_string :
+  # and currently confuse swig :-/
+  if "(" in method.return_type.decl_string :
+    warn( 1, "ignoring method not supported by swig '%s::%s'." % (typedef.name, method.name) )
+    return
+      
+  if ( (typedef.name.startswith('vnl_') and method.name in ["as_ref"]) 
+       or (typedef.name.startswith('itk') and method.name in ["rBegin", "rEnd", "GetSpacingCallback", "GetOriginCallback", "Begin", "End"]) ) :
+    warn( 3, "ignoring black listed method '%s::%s'." % (typedef.name, method.name) )
+    return
+      
+  # iterate over the arguments
+  args = []
+  for arg in method.arguments:
+    s = "%s %s" % (get_alias(arg.type.decl_string), arg.name)
+    if "(" in s:
       warn( 1, "ignoring method not supported by swig '%s::%s'." % (typedef.name, method.name) )
       return
+    # append the default value if it exists
+    if arg.default_value:
+      s += " = %s" % arg.default_value
+    # and add the string to the arg list
+    args.append( s )
       
-    if ( (typedef.name.startswith('vnl_') and method.name in ["as_ref"]) 
-         or (typedef.name.startswith('itk') and method.name in ["rBegin", "rEnd", "GetSpacingCallback", "GetOriginCallback"]) ) :
-      warn( 3, "ignoring black listed method '%s::%s'." % (typedef.name, method.name) )
-      return
+  # find the method decorators
+  static = ""
+  const = ""
+  if method.has_static:
+    static = "static "
+  if method.has_const:
+    const = " const"
+  if method.virtuality != "not virtual":
+    static += "virtual "
+  if method.virtuality == "pure virtual":
+    const += " = 0"
       
-    # iterate over the arguments
-    args = []
-    for arg in method.arguments:
-      s = "%s %s" % (get_alias(arg.type.decl_string), arg.name)
-      if "(" in s:
-        warn( 1, "ignoring method not supported by swig '%s::%s'." % (typedef.name, method.name) )
-        return
-      # append the default value if it exists
-      if arg.default_value:
-        s += " = %s" % arg.default_value
-      # and add the string to the arg list
-      args.append( s )
-      
-    # find the method decorators
-    static = ""
-    const = ""
-    if method.has_static:
-      static = "static "
-    if method.has_const:
-      const = " const"
-    if method.virtuality != "not virtual":
-      static += "virtual "
-    if method.virtuality == "pure virtual":
-      const += " = 0"
-      
-    print >> outputFile, "    %s%s %s(%s)%s;" % (static, get_alias(method.return_type.decl_string), method.name, ", ".join( args), const )
+  print >> outputFile, "  "*indent, "    %s%s %s(%s)%s;" % (static, get_alias(method.return_type.decl_string), method.name, ", ".join( args), const )
 
 
 
@@ -369,31 +402,10 @@ for typedef in reversed(list(wrappers_ns.typedefs())):
   
   # begin a new class
   if isinstance( typedef.type.declaration, pygccxml.declarations.class_declaration.class_t ):
-    super_classes = []
-    for super_class in typedef.type.declaration.bases:
-      super_classes.append( "%s %s" % ( super_class.access, get_alias(super_class.related_class.decl_string) ) )
-    s = ""
-    if super_classes:
-      s = " : " + ", ".join( super_classes )
-    print >> outputFile, "class %s%s {" % ( typedef.name, s )
+    generate_class( typedef )
     
-    for access in ['public', 'protected', 'private']:
-      print >> outputFile, "  %s:" % access
-      generate_class( typedef, access )
-      
-    # add the destructor in private section if it is not public
-    if not pygccxml.declarations.type_traits.has_public_destructor( typedef.type.declaration ) :
-      print >> outputFile, "    ~%s();" % typedef.name
-  
-    # finally, close the class
-    print >> outputFile, "};"
-    print >> outputFile
-    print >> outputFile
-
   elif isinstance( typedef.type.declaration, pygccxml.declarations.enumeration.enumeration_t ):
-    generate_enum( typedef.name, typedef.type.declaration.values )
-    print >> outputFile
-    print >> outputFile
+    warn( 6, "Enum are currently supported only nested in a class." )
       
   else:
     warn( 5, "Unknown type type: %s" % str(typedef.type.declaration) )
