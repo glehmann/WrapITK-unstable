@@ -1,8 +1,10 @@
+
 # non templated IO classes and factories
 WRAP_NON_TEMPLATE_CLASS("itk::ImageIOBase" POINTER)
 WRAP_NON_TEMPLATE_CLASS("itk::IPLCommonImageIO" POINTER)
 WRAP_NON_TEMPLATE_CLASS("itk::TransformFileReader" POINTER)
 WRAP_NON_TEMPLATE_CLASS("itk::TransformFileWriter" POINTER)
+WRAP_NON_TEMPLATE_CLASS("itk::ImageIORegion")
 
 WRAP_CLASS("itk::RawImageIO" POINTER)
   FOREACH(d ${WRAP_ITK_DIMS})
@@ -14,7 +16,7 @@ SET(io_classes
   AnalyzeImageIO
   BioRadImageIO
   BMPImageIO
-  Brains2MaskImageIO
+#  Brains2MaskImageIO
   DICOMImageIO2
   GDCMImageIO
   DicomImageIO

@@ -128,6 +128,7 @@ SET(optional_modules
   BinaryMorphology
   Calculators
   Compose
+  Interpolators  # is required by DeformableTransforms
   DeformableTransforms
   Denoising
   DistanceMap
@@ -136,15 +137,14 @@ SET(optional_modules
   FFTW
   Filtering
   IntensityFilters
-  Interpolators
   IO
   Iterators
   LevelSet
   Morphology
   #Patented
   PixelMath
+  Resize  # required by Registration
   Registration
-  Resize
   SegmentationAndThreshold
   SegmentationValidation
   SimpleFilters

@@ -8,7 +8,9 @@ SET(WRAPPER_LIBRARY_DEPENDS
   Base 
   BaseNumerics
   BaseTransforms 
-  BaseSpatialObject)
+  BaseSpatialObject
+  Resize
+)
 
 SET(WRAPPER_LIBRARY_LINK_LIBRARIES ITKCommon ITKNumerics)
 

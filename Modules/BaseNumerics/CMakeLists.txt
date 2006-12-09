@@ -2,6 +2,8 @@ WRAP_LIBRARY(BaseNumerics)
 
 SET(WRAPPER_LIBRARY_GROUPS
   ITKCostFunctions
+  itkDenseFrequencyContainer
+  itkSample
 )
 
 SET(WRAPPER_LIBRARY_DEPENDS Base VXLNumerics)

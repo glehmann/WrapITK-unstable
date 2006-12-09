@@ -43,7 +43,8 @@ ENDMACRO(END_WRAP_TYPE)
 
 
 WRAP_TYPE("itk::Offset" "O")
-  FOREACH(d ${WRAP_ITK_DIMS})
+  UNIQUE(dims "${WRAP_ITK_DIMS};1")
+  FOREACH(d ${dims})
     WRAP_TEMPLATE("${d}"  "${d}")
   ENDFOREACH(d)
 END_WRAP_TYPE()
@@ -78,6 +79,7 @@ SET(itk_Wrap_ContinuousIndex ${WRAPPER_TEMPLATES})
 WRAP_TYPE("itk::Array" "A")
   WRAP_TEMPLATE("${ITKM_D}" "${ITKT_D}")
   WRAP_TEMPLATE("${ITKM_F}" "${ITKT_F}")
+  WRAP_TEMPLATE("${ITKM_UL}" "${ITKT_UL}")
 END_WRAP_TYPE()
 SET(itk_Wrap_Array ${WRAPPER_TEMPLATES})
 
@@ -146,6 +148,9 @@ WRAP_TYPE("itk::Image" "I")
     
     # FixedArray types required by level set filters
     WRAP_TEMPLATE("${ITKM_FAF${d}}${d}"  "${ITKT_FAF${d}},${d}")
+    
+    # Offset, used by Danielsson's filter
+    WRAP_TEMPLATE("${ITKM_O${d}}${d}"  "${ITKT_O${d}},${d}")
     
   ENDFOREACH(d)
 END_WRAP_TYPE()
