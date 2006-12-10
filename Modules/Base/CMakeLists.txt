@@ -28,6 +28,8 @@ SET(WRAPPER_LIBRARY_GROUPS
   itkInPlaceImageFilterA
   itkInPlaceImageFilterB
   itkFiniteDifferenceImageFilter
+  itkVectorContainer
+  itkMapContainer
 )
 
 SET(WRAPPER_LIBRARY_DEPENDS VXLNumerics)
