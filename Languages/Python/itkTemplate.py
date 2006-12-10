@@ -92,17 +92,23 @@ class itkTemplate(object):
     # - the template is not a SmartPointer. In that case, we keep only the end of the
     #   real class name which is a short string discribing the template arguments
     #   (for example IUC2)
-    if cl.__name__.endswith("_Pointer") :
-      # it's a SmartPointer
-      attributeName = cl.__name__[len("itk"):-len("_Pointer")]
-    else :
-      # it's not a SmartPointer
-      # we need to now the size of the name to keep only the suffix
-      # short name does not contain :: and nested namespace
-      # itk::Numerics::Sample -> itkSample
+    if cl.__name__.startswith("itk"):
+      if cl.__name__.endswith("_Pointer") :
+        # it's a SmartPointer
+        attributeName = cl.__name__[len("itk"):-len("_Pointer")]
+      else :
+        # it's not a SmartPointer
+        # we need to now the size of the name to keep only the suffix
+        # short name does not contain :: and nested namespace
+        # itk::Numerics::Sample -> itkSample
+        import re
+        shortNameSize = len(re.sub(r':.*:', '', self.__name__))
+        attributeName = cl.__name__[shortNameSize:]
+    else:
       import re
-      shortNameSize = len(re.sub(r':.*:', '', self.__name__))
+      shortNameSize = len(re.sub(r'.*::', '', self.__name__))
       attributeName = cl.__name__[shortNameSize:]
+      
       
     if attributeName.isdigit() :
       # the attribute name can't be a number
