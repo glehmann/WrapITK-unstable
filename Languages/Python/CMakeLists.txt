@@ -283,10 +283,14 @@ MACRO(END_WRAP_LIBRARY_PYTHON)
 
     ADD_LIBRARY(${lib} MODULE ${cpp_file})
     SET_TARGET_PROPERTIES(${lib} PROPERTIES PREFIX "_")
-    IF(CMAKE_COMPILER_IS_GNUCC)
-#      SET_TARGET_PROPERTIES(${lib} PROPERTIES COMPILE_FLAGS "-fvisibility=hidden")
-    ENDIF(CMAKE_COMPILER_IS_GNUCC)
     TARGET_LINK_LIBRARIES(${lib} ${WRAPPER_LIBRARY_LINK_LIBRARIES} ${PYTHON_LIBRARY})
+    
+# gcc visibility can't be used without getting errors when passing objects
+# from one module to an other
+#
+#    IF(CMAKE_COMPILER_IS_GNUCC)
+#      SET_TARGET_PROPERTIES(${lib} PROPERTIES COMPILE_FLAGS "-fvisibility=hidden")
+#    ENDIF(CMAKE_COMPILER_IS_GNUCC)
     
   ENDFOREACH(source)
   
