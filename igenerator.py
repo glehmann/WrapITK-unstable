@@ -130,28 +130,37 @@ def get_alias( decl_string ):
 #    print >> sys.stderr, s, end, "        ", aliases[s]
     return aliases[s] + end
     
-  elif s[:s.rfind("::")] in aliases:
+  if s.startswith("itk::Templates::"):
+    # that's a explicitly instantiated type. The name is the same than the WraITK
+    # one, so lets use it as a base for WrapITK
+    # Ex: itk::Templates::RGBPixelUC
+    # don't store the new string in s, because we need it unchanged if the type is
+    # explicitly instantiated, but not wrapped
+    new_s = s.replace("::Templates::", "")
+    if new_s.split("::")[0] in aliases.values():
+      return new_s + end
+    
+  if s[:s.rfind("::")] in aliases:
     # take care of subtypes/enum/...
     return aliases[ s[:s.rfind("::")] ] + s[s.rfind("::"):] + end
   
-  else:
-    # replace the types defined in this type, to support std::vector<itkDataObject> for example
-    s = renameTypesInSTL( s )
+  # replace the types defined in this type, to support std::vector<itkDataObject> for example
+  s = renameTypesInSTL( s )
     
-    # drop the allocator part of the type, because it is not supported by the %template directive with some languages (like tcl)
-    s = removeStdAllocator( s )
+  # drop the allocator part of the type, because it is not supported by the %template directive with some languages (like tcl)
+  s = removeStdAllocator( s )
     
-    # rename basic_string to std::string to make name shorter
-    s = s.replace("std::basic_string< char, std::char_traits< char > >", "std::string")
+  # rename basic_string to std::string to make name shorter
+  s = s.replace("std::basic_string< char, std::char_traits< char > >", "std::string")
     
-    # rename some types not renamed by gccxml (why ?)
-    s = s.replace( "itk::SerieUIDContainer", "std::vector< std::string >")
-    s = s.replace( "itk::FilenamesContainer", "std::vector< std::string >")
+  # rename some types not renamed by gccxml (why ?)
+  s = s.replace( "itk::SerieUIDContainer", "std::vector< std::string >")
+  s = s.replace( "itk::FilenamesContainer", "std::vector< std::string >")
     
-    if s.startswith( "itk::") and not notWrappedRegExp.match( s ):
-      warn( 4, "ITK type not wrapped, or currently not known: %s" % s )
+  if s.startswith( "itk::") and not notWrappedRegExp.match( s ):
+    warn( 4, "ITK type not wrapped, or currently not known: %s" % s )
     
-    return s + end
+  return s + end
     
 
 def load_idx(file_name):
