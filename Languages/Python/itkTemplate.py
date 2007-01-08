@@ -66,7 +66,7 @@ class itkTemplate(object):
     # the full class should not be already registered. If it is, there is a problem
     # somewhere so warn the user so he can fix the problem
     if itkTemplate.__templates__.has_key( normalizedFullName ) :
-      print >>sys.stderr, "Warning: templated class already defined '%s'" % normalizedFullName
+      print >>sys.stderr,"Warning: template %s\n  already defined as %s\n  is redefined as    %s" % (normalizedFullName, self.__template__[param], cl)
     # register the class
     itkTemplate.__templates__[normalizedFullName] = cl
 
