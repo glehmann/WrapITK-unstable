@@ -281,7 +281,7 @@ MACRO(END_WRAP_LIBRARY_PYTHON)
 
     SET(python_files ${python_files} ${python_file})
 
-    ADD_LIBRARY(${lib} MODULE ${cpp_file})
+    ADD_LIBRARY(${lib} MODULE ${cpp_file} ${WRAPPER_LIBRARY_CXX_SOURCES})
     SET_TARGET_PROPERTIES(${lib} PROPERTIES PREFIX "_")
     TARGET_LINK_LIBRARIES(${lib} ${WRAPPER_LIBRARY_LINK_LIBRARIES} ${PYTHON_LIBRARY})
     
