@@ -89,7 +89,7 @@ WRAP_TYPE("itk::FixedArray" "FA")
     MATH(EXPR d2 "${d} * 2")
     SET(dims ${dims} ${d2})
   ENDFOREACH(d)
-  UNIQUE(array_sizes "${dims};1;3;4")
+  UNIQUE(array_sizes "${dims};1;3;4;6")
   # make sure that 1-D FixedArrays are wrapped. Also wrap for each selected
   # image dimension.
   # 3-D FixedArrays are required as superclass of rgb pixels
