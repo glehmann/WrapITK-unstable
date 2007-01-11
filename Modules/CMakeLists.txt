@@ -40,6 +40,7 @@ SET(optional_modules
   PixelMath
   Resize  # required by Registration
   Registration
+  Review
   SegmentationAndThreshold
   SegmentationValidation
   SimpleFilters
