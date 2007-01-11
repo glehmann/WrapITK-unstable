@@ -1,4 +1,4 @@
-WRAP_LIBRARY(BaseTransforms)
+WRAP_LIBRARY(Transforms)
 
 SET(WRAPPER_LIBRARY_GROUPS
   itkTransform

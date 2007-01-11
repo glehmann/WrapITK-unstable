@@ -8,9 +8,9 @@
 import itk, sys
 
 import Base
-import BaseNumerics
-import BaseSpatialObject
-import BaseTransforms
+import Numerics
+import SpatialObject
+import Transforms
 import BinaryMorphology
 import Calculators
 import Compose
@@ -55,9 +55,9 @@ image.Allocate()
 
 
 
-# BaseNumerics
-# BaseSpatialObject
-# BaseTransforms
+# Numerics
+# SpatialObject
+# Transforms
 # Compose
 # DeformableTransforms
 # FFT

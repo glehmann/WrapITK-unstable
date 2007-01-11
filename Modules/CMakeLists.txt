@@ -1,9 +1,7 @@
 SET(WRAP_ITK_MODULES
   VXLNumerics
   Base
-  BaseNumerics
-  BaseTransforms
-  BaseSpatialObject)
+)
   
 # set Iterators module to OFF by default
 # it is currently usable only when applying patches to ITK, and will only
@@ -20,6 +18,9 @@ ENDIF(USE_FFTWD OR USE_FFTWF)
 
 
 SET(optional_modules 
+  Numerics
+  Transforms
+  SpatialObject
   BinaryMorphology
   Calculators
   Compose

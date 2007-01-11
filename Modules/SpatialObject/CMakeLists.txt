@@ -1,4 +1,4 @@
-WRAP_LIBRARY(BaseSpatialObject)
+WRAP_LIBRARY(SpatialObject)
 
 SET(WRAPPER_LIBRARY_GROUPS
   itkSpatialObjectBase
@@ -8,7 +8,7 @@ SET(WRAPPER_LIBRARY_GROUPS
   itkSpatialObjectPoint
 )
 
-SET(WRAPPER_LIBRARY_DEPENDS Base BaseTransforms)
+SET(WRAPPER_LIBRARY_DEPENDS Base Transforms)
 
 SET(WRAPPER_LIBRARY_LINK_LIBRARIES ITKCommon ITKSpatialObject)
 

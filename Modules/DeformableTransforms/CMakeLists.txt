@@ -4,7 +4,7 @@ SET(WRAPPER_LIBRARY_GROUPS
   itkKernelTransform
 )
 
-SET(WRAPPER_LIBRARY_DEPENDS Base BaseTransforms Interpolators)
+SET(WRAPPER_LIBRARY_DEPENDS Base Transforms Interpolators)
 
 SET(WRAPPER_LIBRARY_LINK_LIBRARIES ITKCommon)
 

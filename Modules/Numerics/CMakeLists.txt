@@ -1,4 +1,4 @@
-WRAP_LIBRARY(BaseNumerics)
+WRAP_LIBRARY(Numerics)
 
 SET(WRAPPER_LIBRARY_GROUPS
   ITKCostFunctions

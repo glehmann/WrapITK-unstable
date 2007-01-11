@@ -6,9 +6,9 @@ SET(WRAPPER_LIBRARY_GROUPS
 
 SET(WRAPPER_LIBRARY_DEPENDS 
   Base 
-  BaseNumerics
-  BaseTransforms 
-  BaseSpatialObject
+  Numerics
+  Transforms
+  SpatialObject
   Resize
 )
 
