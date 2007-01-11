@@ -36,6 +36,10 @@ MACRO(END_WRAP_LIBRARY)
   FOREACH(dep ${WRAPPER_LIBRARY_DEPENDS})
     # MESSAGE("${dep}_SWIG_FILES: ${${dep}_SWIG_FILES}")
     SET(module_target_depend ${module_target_depend} ${${dep}_SWIG_FILES})
+    # be sure that the module is selected by the user
+    IF(NOT "${WRAP_ITK_MODULES}" MATCHES "(^|;)${dep}(;|$)")
+      MESSAGE(SEND_ERROR "${dep} is required by ${WRAPPER_LIBRARY_NAME} module. Please set WRAP_${dep} to ON, or WRAP_${WRAPPER_LIBRARY_NAME} to OFF.")
+    ENDIF(NOT "${WRAP_ITK_MODULES}" MATCHES "(^|;)${dep}(;|$)")
   ENDFOREACH(dep)
   # MESSAGE("${module_target_depend}")
 
