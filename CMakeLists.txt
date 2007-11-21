@@ -4,6 +4,7 @@ PROJECT(WrapITK)
 # Require 2.4.2 for MATH and LIST commands (REMOVE_ITEM is not the same in
 # 2.4.1)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.2 FATAL_ERROR)
+INCLUDE("CMakeUtilityFunctions.cmake")
 
 ENABLE_TESTING()
 
@@ -78,9 +79,6 @@ ENDIF(NOT EXECUTABLE_OUTPUT_PATH)
 MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH WRAP_ITK_INSTALL_PREFIX)
 SET(CXX_TEST_PATH ${EXECUTABLE_OUTPUT_PATH})
 
-# Now include ConfigureWrapping
-INCLUDE(ConfigureWrapping.cmake)
-
 ###############################################################################
 # Configure CPack
 ###############################################################################
@@ -98,12 +96,6 @@ IF("${CMAKE_VERSION}" STRGREATER "2.4")
   SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/Documentation/Copyright/ITKCopyright.txt")
   INCLUDE(CPack)
 ENDIF("${CMAKE_VERSION}" STRGREATER "2.4")
-
-###############################################################################
-# Configure specific wrapper modules
-###############################################################################
-
-ADD_SUBDIRECTORY("${WRAP_ITK_CMAKE_DIR}/Modules")
 
 ###############################################################################
 # Configure WrapITKConfig.cmake and FindWrapITK.cmake for external projects
@@ -189,12 +181,10 @@ INSTALL_AT_ABSOLUTE_PATH(install_wrapitk_compatibility "${CMAKE_ROOT}/Modules" "
 
 
 
-INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Python" FILES "${WRAP_ITK_CMAKE_DIR}/Python/CreateLanguageSupport.cmake")
-INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Java" FILES "${WRAP_ITK_CMAKE_DIR}/Java/CreateLanguageSupport.cmake")
-INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Tcl" FILES "${WRAP_ITK_CMAKE_DIR}/Tcl/CreateLanguageSupport.cmake")
+###############################################################################
+# The real work on wrappers
+###############################################################################
 
-INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Python" FILES "${WRAP_ITK_CMAKE_DIR}/Python/ConfigureWrapping.cmake")
-INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Java" FILES "${WRAP_ITK_CMAKE_DIR}/Java/ConfigureWrapping.cmake")
-INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Tcl" FILES "${WRAP_ITK_CMAKE_DIR}/Tcl/ConfigureWrapping.cmake")
+INCLUDE(ConfigureWrapping.cmake)
 
-INSTALL_FILES("${WRAP_ITK_INSTALL_PREFIX}/Configuration/Inputs/LanguageSupport" FILES "${WRAP_ITK_CMAKE_DIR}/ConfigurationInputs/LanguageSupport/ExternalProjectConfig.pth.in")
+

@@ -60,8 +60,13 @@ ENDMACRO(INTERSECTION)
 
 MACRO(REMOVE var_name list1 list2)
   # Remove elements in list2 from list1 and store the result in var_name.
-  SET(${var_name} ${list1})
-  LIST(REMOVE_ITEM ${var_name} list1 ${list2})
+  IF("${list1}" STREQUAL "")
+    # if list1 is empty, LIST(REMOVE_ITEM ...) send an error message
+    SET(${var_name} "")
+  ELSE("${list1}" STREQUAL "")
+    SET(${var_name} ${list1})
+    LIST(REMOVE_ITEM ${var_name} list1 ${list2})
+  ENDIF("${list1}" STREQUAL "")
 ENDMACRO(REMOVE)
 
 

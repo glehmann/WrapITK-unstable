@@ -279,3 +279,10 @@ INCLUDE_DIRECTORIES(${inc})
 INCLUDE("${WRAP_ITK_CMAKE_DIR}/WrapBasicTypes.cmake")
 INCLUDE("${WRAP_ITK_CMAKE_DIR}/WrapITKTypes.cmake")
 
+
+###############################################################################
+# Configure specific wrapper modules
+###############################################################################
+
+ADD_SUBDIRECTORY("${WRAP_ITK_CMAKE_DIR}/Modules")
+
