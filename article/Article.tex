@@ -37,7 +37,7 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 
 % Increment the release number whenever significant changes are made.
 % The author and/or editor can define 'significant' however they like.
-\release{0.2}
+\release{0.2.2}
 
 % At minimum, give your name and an email address.  You can include a
 % snail-mail address if you like.
@@ -120,7 +120,7 @@ in C++. Additionally, WrapITK ensures that \verb$SmartPointer$s are always
 returned and acceptable as input, so no bare pointers are ever exposed to
 Python. This is not the case in the standard ITK wrappers.
 
-  \item ITK was broken on MacOS X \cite{MacOsXWebSite} with python.
+  \item ITK was broken on MacOS X \cite{MacOsXWebSite} with Python and Java.
 
   \item  Loading python modules can take lot of time. With WrapITK, by default,
 only the modules really used are loaded, so the loading time is much shorter
@@ -1015,6 +1015,8 @@ the idea of the author of a wrapper by reading the file.
   \item support mostly transparently the dimensions and types chosen by the user.
 \end{itemize}
 
+     \subsubsection{A simple example: MedianImageFilter}
+
 The most common case should be to create a new wrapper for a simple image filter, like 
 \verb$MedianImageFilter$. Let's see that example in detail.
 
@@ -1039,6 +1041,76 @@ Then, several \verb$WRAP_IMAGE_FILTER_*$ macros are called. They are convenient 
 create wrapper for classes which take only image types as template arguments. The parameter,
 here \verb$2$, give the number of required template arguments. The two image types used as
 template parameter are the same.
+
+     \subsubsection{WrapITK predifined lists}
+
+The main task of the developer is to define which template parameters are valid for a given
+templated class, and interesting for the user. He also have to take care about
+instantiating some templated classes according to the options selected by the user.
+
+With WrapITK, the developer don't have to declare that a class is instantiated with the template parameters
+\verb$unsigned char$, \verb$unsigned short$, and \verb$unsigned long$, but rather declares that the
+templated classe can be instantiated with all the unsigned integer types choosed by the user.
+To do that, WrapITK provides some already defined list which are grouping the types chosen by
+the user. Those lists can be used by the developer to create a wrappers but must
+{\em never} be modified.
+
+\begin{itemize}
+  \item \verb$WRAP_ITK_DIMS$ contains all the dimensions selected by the user.
+
+  \item \verb$WRAP_ITK_USIGN_INT$ contains all unsigned integer types selected by the user.
+
+  \item \verb$WRAP_ITK_SIGN_INT$ contains all signed integer types selected by the user.
+
+  \item \verb$WRAP_ITK_INT$ contains all signed and unsigned integral types
+selected by the user.
+
+  \item \verb$WRAP_ITK_REAL$ contains all the real types selected by the user.
+
+  \item \verb$WRAP_ITK_SCALAR$ contains all the scalar types selected by the user.
+
+  \item \verb$WRAP_ITK_RGB$ contains all the \verb$RGB$ types selected by the user.
+
+  \item \verb$WRAP_ITK_VECTOR_REAL$ contains all the \verb$Vector$ types selected
+by the user.
+
+  \item \verb$WRAP_ITK_COV_VECTOR_REAL$ contains all the \verb$CovariantVector$ types selected
+by the user.
+
+  \item \verb$WRAP_ITK_VECTOR$ contains all the \verb$Vector$ and 
+\verb$CovariantVector$ types selected by the user.
+
+  \item \verb$WRAP_ITK_ALL_TYPES$ contains all the types selected by the user.
+
+  \item \verb$SMALLER_THAN_D$ contains all the types "smaller" than \verb$double$
+selected by the user. This variable is useful when a filter decrease the range
+of pixel value, like \verb$BinaryThresholdImageFilter$.
+
+  \item \verb$SMALLER_THAN_UL$ contains all the types "smaller" than \verb$unsigned long$
+selected by the user.
+
+  \item \verb$SMALLER_THAN_US$ contains all the types "smaller" than \verb$unsigned short$
+selected by the user.
+
+  \item \verb$SMALLER_THAN_SL$ contains all the types "smaller" than \verb$signed long$
+selected by the user.
+
+  \item \verb$SMALLER_THAN_SS$ contains all the types "smaller" than \verb$signed short$
+selected by the user.
+
+\end{itemize}
+
+
+     \subsubsection{WrapITK predifined variables and naming consistency}
+
+WrapITK defines some pairs of variables for each basic type the developer may have
+to manipulate: the c++ type, and its template parameter name. The name of the type
+is stored in \verb$ITKM_???$, and the c++ type in \verb$ITKT_???$.
+
+For example, for \verb$unsigned char$, \verb$ITKM_UC$ and \verb$ITKT_UC$
+are defined, with \verb|${ITKM_UC} = "UC"| and \verb|${ITKM_UC} = "unsigned char"|.
+
+     \subsubsection{WrapITK macros}
 
 All of the available directives are defined and documented
 in \verb$CreateCableSwigInputs.cmake$. The basics are presented here:
@@ -1092,54 +1164,6 @@ bottom of \verb$CreateCableSwigInputs$ and described below.
 Same as \verb$WRAP_CLASS$, but creates a wrapper
 for a non-templated class. No \verb$END_WRAP_CLASS()$ is necessary after this macro
 because there is no block of template instantiating commands to close.
-
-\end{itemize}
-
-WrapITK defines some lists which group the types and dimensions. Those lists can be used
-by the developer to create a wrappers but must {\em never} be modified.
-
-\begin{itemize}
-  \item \verb$WRAP_ITK_DIMS$ contains all the dimensions selected by the user.
-
-  \item \verb$WRAP_ITK_USIGN_INT$ contains all unsigned integer types selected by the user.
-
-  \item \verb$WRAP_ITK_SIGN_INT$ contains all signed integer types selected by the user.
-
-  \item \verb$WRAP_ITK_INT$ contains all signed and unsigned integral types
-selected by the user.
-
-  \item \verb$WRAP_ITK_REAL$ contains all the real types selected by the user.
-
-  \item \verb$WRAP_ITK_SCALAR$ contains all the scalar types selected by the user.
-
-  \item \verb$WRAP_ITK_RGB$ contains all the \verb$RGB$ types selected by the user.
-
-  \item \verb$WRAP_ITK_VECTOR_REAL$ contains all the \verb$Vector$ types selected
-by the user.
-
-  \item \verb$WRAP_ITK_COV_VECTOR_REAL$ contains all the \verb$CovariantVector$ types selected
-by the user.
-
-  \item \verb$WRAP_ITK_VECTOR$ contains all the \verb$Vector$ and 
-\verb$CovariantVector$ types selected by the user.
-
-  \item \verb$WRAP_ITK_ALL_TYPES$ contains all the types selected by the user.
-
-  \item \verb$SMALLER_THAN_D$ contains all the types "smaller" than \verb$double$
-selected by the user. This variable is useful when a filter decrease the range
-of pixel value, like \verb$BinaryThresholdImageFilter$.
-
-  \item \verb$SMALLER_THAN_UL$ contains all the types "smaller" than \verb$unsigned long$
-selected by the user.
-
-  \item \verb$SMALLER_THAN_US$ contains all the types "smaller" than \verb$unsigned short$
-selected by the user.
-
-  \item \verb$SMALLER_THAN_SL$ contains all the types "smaller" than \verb$signed long$
-selected by the user.
-
-  \item \verb$SMALLER_THAN_SS$ contains all the types "smaller" than \verb$signed short$
-selected by the user.
 
 \end{itemize}
 
@@ -1213,7 +1237,7 @@ pixel types selected by the user
     \item \verb$SCALAR$ to select all the image types with scalar pixel types selected by the user
     \item \verb$VECTOR$ to select all the image types with \verb$Vector$ and \verb$CovariantVector$
 pixel types selected by the user
-    \item \verb$ALL$ to select all the image types selected by the user.
+    \item \verb$ALL_TYPES$ to select all the image types selected by the user.
   \end{itemize}
 
  This macro creates a template instantiation with \verb$size$
