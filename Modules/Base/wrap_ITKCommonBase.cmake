@@ -15,5 +15,6 @@ WRAP_NON_TEMPLATE_CLASS("itk::SimpleFilterWatcher")
 WRAP_NON_TEMPLATE_CLASS("itk::XMLFilterWatcher")
 WRAP_NON_TEMPLATE_CLASS("itk::MetaDataDictionary")
 WRAP_NON_TEMPLATE_CLASS("itk::TimeProbe")
-WRAP_NON_TEMPLATE_CLASS("itk::MetaDataObjectBase" POINTER)
+# TODO: enable pointer support, once fixed the protected New() method.
+WRAP_NON_TEMPLATE_CLASS("itk::MetaDataObjectBase")# POINTER)
 WRAP_NON_TEMPLATE_CLASS("itk::ProgressReporter")
