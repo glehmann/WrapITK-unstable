@@ -38,104 +38,7 @@
 # only used by the macros defined in a given cmake file.
 ###############################################################################
 
-###############################################################################
-# Define fundamental wrapping macro which sets up the global variables used
-# across all of the wrapping macros included at the end of this file. 
-# All variables set here are optional and have sensible default values.
-# Also define some other global defaults like WRAPPER_MASTER_INDEX_OUTPUT_DIR.
-###############################################################################
-MACRO(WRAP_LIBRARY library_name)
-  SET(WRAPPER_LIBRARY_NAME "${library_name}")
 
-  # Mark the current source dir for inclusion because it may contain header files.
-  INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}")
-  
-  # WRAPPER_LIBRARY_SOURCE_DIR. Directory to be scanned for wrap_*.cmake files. 
-  SET(WRAPPER_LIBRARY_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-  
-  # WRAPPER_LIBRARY_OUTPUT_DIR. Directory in which generated cxx, xml, and idx
-  # files will be placed. 
-  SET(WRAPPER_LIBRARY_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-
-  # WRAPPER_LIBRARY_DEPENDS. List of names of other wrapper libraries that
-  # define symbols used by this wrapper library.
-  SET(WRAPPER_LIBRARY_DEPENDS )
-
-  # WRAPPER_LIBRARY_LINK_LIBRARIES. List of other libraries that should
-  # be linked to the wrapper library.
-  SET(WRAPPER_LIBRARY_LINK_LIBRARIES )
-
-  # WRAPPER_LIBRARY_GROUPS. List of wrap_*.cmake groups in the source dir
-  # that should be included/wrapped before the rest. Just the group name is needed,
-  # not the full path or file name. 
-  SET(WRAPPER_LIBRARY_GROUPS )
-
-  # WRAPPER_LIBRARY_CABLESWIG_INPUTS. List of C++ source files to be used
-  # as input for CableSwig. This list is then appended to by
-  # WRAPPER_LIBRARY_AUTO_INCLUDE_WRAP_FILES. A full path to each input is required.
-  SET(WRAPPER_LIBRARY_CABLESWIG_INPUTS )
-
-  # WRAPPER_SWIG_LIBRARY_FILES. List of swig .swg files to pass to cswig to control
-  # type handling and so forth. A full path to each include is required.
-  # The itk.swg file and the library file for the current library are implicitly added.
-  SET(WRAPPER_SWIG_LIBRARY_FILES )
-
-  # WRAPPER_LIBRARY_SWIG_INPUTS. SWIG input files to be fed to swig (not
-  # CableSwig). A full path to each input is required.
-  SET(WRAPPER_LIBRARY_SWIG_INPUTS ) 
-
-  # WRAPPER_LIBRARY_CXX_SOURCES. C++ sources to be compiled and linked in
-  # to the wrapper library (with no prior processing by swig, etc.)
-  # A full path to each input is required.
-  SET(WRAPPER_LIBRARY_CXX_SOURCES ) 
-  
-  # MODULE_ALIASES. contains what will be put in the %{module}.alias file
-  SET(MODULE_ALIASES )
-  
-  # MODULE_INCLUDES. contains what will be put in the %{module}.includes file
-  SET(MODULE_INCLUDES )
-  FOREACH(i ${WRAPPER_DEFAULT_INCLUDE})
-    SET(MODULE_INCLUDES "${MODULE_INCLUDES}#include \"${i}\"\n")
-  ENDFOREACH(i)
-  
-  IF("${ARGC}" EQUAL 2)
-    SET(WRAPPER_LIBRARY_PYTHON OFF)
-    SET(WRAPPER_LIBRARY_TCL OFF)
-    SET(WRAPPER_LIBRARY_JAVA OFF)
-    FOREACH(lang ${ARGV1})
-      IF("${lang}" STREQUAL "Python") 
-        SET(WRAPPER_LIBRARY_PYTHON ON)
-      ENDIF("${lang}" STREQUAL "Python")
-
-      IF("${lang}" STREQUAL "Tcl") 
-        SET(WRAPPER_LIBRARY_TCL ON)
-      ENDIF("${lang}" STREQUAL "Tcl")
-
-      IF("${lang}" STREQUAL "Java") 
-        SET(WRAPPER_LIBRARY_JAVA ON)
-      ENDIF("${lang}" STREQUAL "Java")
-    ENDFOREACH(lang)
-  ELSE("${ARGC}" EQUAL 2)
-    SET(WRAPPER_LIBRARY_PYTHON ON)
-    SET(WRAPPER_LIBRARY_TCL ON)
-    SET(WRAPPER_LIBRARY_JAVA ON)
-  ENDIF("${ARGC}" EQUAL 2)
-
-# MESSAGE("${library_name} ${WRAPPER_LIBRARY_PYTHON} ${WRAPPER_LIBRARY_TCL} ${WRAPPER_LIBRARY_JAVA}")
-
-  # Call the language support initialization function
-  WRAP_LIBRARY_ALL_LANGUAGES("${library_name}")
-  
-ENDMACRO(WRAP_LIBRARY)
-
-MACRO(BEGIN_WRAPPER_LIBRARY library_name)
-  MESSAGE("Deprecation warning: BEGIN_WRAPPER_LIBRARY is replaced by WRAP_LIBRARY.")
-  WRAP_LIBRARY("${library_name}")
-ENDMACRO(BEGIN_WRAPPER_LIBRARY)
-
-
-SET(WRAPPER_MASTER_INDEX_OUTPUT_DIR "${PROJECT_BINARY_DIR}/ClassIndex")
-SET(WRAPPER_SWIG_LIBRARY_OUTPUT_DIR "${PROJECT_BINARY_DIR}/SWIG")
 
 ###############################################################################
 # Find Required Packages
@@ -264,13 +167,22 @@ ENDIF(EXTERNAL_WRAP_ITK_PROJECT)
 ###############################################################################
 # Include needed macros -- WRAP_ITK_CMAKE_DIR must be set correctly
 ###############################################################################
-INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateCableSwigInputs.cmake")
+INCLUDE("${WRAP_ITK_CMAKE_DIR}/TypedefMacros.cmake")
+INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateGccXMLInputs.cmake")
 INCLUDE("${WRAP_ITK_CMAKE_DIR}/CreateGenericSwigInterface.cmake")
 
 ADD_SUBDIRECTORY("${WRAP_ITK_CMAKE_DIR}/Languages")
 # get the porperties from the languages dirs - there should be others than this one
 GET_DIRECTORY_PROPERTY(inc DIRECTORY "${WRAP_ITK_CMAKE_DIR}/Languages" INCLUDE_DIRECTORIES)
 INCLUDE_DIRECTORIES(${inc})
+
+
+###############################################################################
+# let the different languages running some code before begining to parse the
+# modules
+###############################################################################
+
+WRAP_MODULES_ALL_LANGUAGES()
 
 
 ###############################################################################
@@ -285,4 +197,12 @@ INCLUDE("${WRAP_ITK_CMAKE_DIR}/WrapITKTypes.cmake")
 ###############################################################################
 
 ADD_SUBDIRECTORY("${WRAP_ITK_CMAKE_DIR}/Modules")
+
+
+###############################################################################
+# let the different languages running some code after have parsed all the
+# modules
+###############################################################################
+
+WRAP_MODULES_ALL_LANGUAGES()
 

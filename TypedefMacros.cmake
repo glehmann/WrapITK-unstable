@@ -11,6 +11,93 @@
 ################################################################################
 
 
+###############################################################################
+# Define fundamental wrapping macro which sets up the global variables used
+# across all of the wrapping macros included at the end of this file. 
+# All variables set here are optional and have sensible default values.
+# Also define some other global defaults like WRAPPER_MASTER_INDEX_OUTPUT_DIR.
+###############################################################################
+MACRO(WRAP_LIBRARY library_name)
+  SET(WRAPPER_LIBRARY_NAME "${library_name}")
+
+  # Mark the current source dir for inclusion because it may contain header files.
+  INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}")
+  
+  # WRAPPER_LIBRARY_SOURCE_DIR. Directory to be scanned for wrap_*.cmake files. 
+  SET(WRAPPER_LIBRARY_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+  
+  # WRAPPER_LIBRARY_OUTPUT_DIR. Directory in which generated cxx, xml, and idx
+  # files will be placed. 
+  SET(WRAPPER_LIBRARY_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+
+  # WRAPPER_LIBRARY_DEPENDS. List of names of other wrapper libraries that
+  # define symbols used by this wrapper library.
+  SET(WRAPPER_LIBRARY_DEPENDS )
+
+  # WRAPPER_LIBRARY_LINK_LIBRARIES. List of other libraries that should
+  # be linked to the wrapper library.
+  SET(WRAPPER_LIBRARY_LINK_LIBRARIES )
+
+  # WRAPPER_LIBRARY_GROUPS. List of wrap_*.cmake groups in the source dir
+  # that should be included/wrapped before the rest. Just the group name is needed,
+  # not the full path or file name. 
+  SET(WRAPPER_LIBRARY_GROUPS )
+
+  # WRAPPER_LIBRARY_CABLESWIG_INPUTS. List of C++ source files to be used
+  # as input for CableSwig. This list is then appended to by
+  # WRAPPER_LIBRARY_AUTO_INCLUDE_WRAP_FILES. A full path to each input is required.
+  SET(WRAPPER_LIBRARY_CABLESWIG_INPUTS )
+
+  # WRAPPER_SWIG_LIBRARY_FILES. List of swig .swg files to pass to cswig to control
+  # type handling and so forth. A full path to each include is required.
+  # The itk.swg file and the library file for the current library are implicitly added.
+  SET(WRAPPER_SWIG_LIBRARY_FILES )
+
+  # WRAPPER_LIBRARY_SWIG_INPUTS. SWIG input files to be fed to swig (not
+  # CableSwig). A full path to each input is required.
+  SET(WRAPPER_LIBRARY_SWIG_INPUTS ) 
+
+  # WRAPPER_LIBRARY_CXX_SOURCES. C++ sources to be compiled and linked in
+  # to the wrapper library (with no prior processing by swig, etc.)
+  # A full path to each input is required.
+  SET(WRAPPER_LIBRARY_CXX_SOURCES ) 
+
+  IF("${ARGC}" EQUAL 2)
+    FOREACH(lang ${WRAP_ITK_LANGUAGES})
+      STRING(TOUPPER ${lang} LANG)
+      SET(WRAPPER_LIBRARY_${LANG} OFF)
+    ENDFOREACH(lang)
+    FOREACH(lang ${ARGV1})
+      STRING(TOUPPER ${lang} LANG)
+      SET(WRAPPER_LIBRARY_${LANG} ON)
+    ENDFOREACH(lang)
+  ELSE("${ARGC}" EQUAL 2)
+    FOREACH(lang ${WRAP_ITK_LANGUAGES})
+      STRING(TOUPPER ${lang} LANG)
+      SET(WRAPPER_LIBRARY_${LANG} ON)
+    ENDFOREACH(lang)
+  ENDIF("${ARGC}" EQUAL 2)
+
+  # Call the language support initialization function
+  WRAP_LIBRARY_ALL_LANGUAGES("${library_name}")
+  
+ENDMACRO(WRAP_LIBRARY)
+
+MACRO(BEGIN_WRAPPER_LIBRARY library_name)
+  MESSAGE("Deprecation warning: BEGIN_WRAPPER_LIBRARY is replaced by WRAP_LIBRARY.")
+  WRAP_LIBRARY("${library_name}")
+ENDMACRO(BEGIN_WRAPPER_LIBRARY)
+
+
+MACRO(END_WRAP_LIBRARY)
+  END_WRAP_LIBRARY_ALL_LANGUAGES()
+ENDMACRO(END_WRAP_LIBRARY)
+
+MACRO(WRAPPER_LIBRARY_CREATE_LIBRARY)
+  MESSAGE("Deprecation warning: WRAPPER_LIBRARY_CREATE_LIBRARY is replaced by END_WRAP_LIBRARY.")
+  END_WRAP_LIBRARY()
+ENDMACRO(WRAPPER_LIBRARY_CREATE_LIBRARY)
+
 ################################################################################
 # Macros for finding and processing wrap_*.cmake files.
 ################################################################################
@@ -30,6 +117,7 @@ MACRO(WRAPPER_LIBRARY_CREATE_WRAP_FILES)
     # EXISTS test is to allow groups to be declared in WRAPPER_LIBRARY_GROUPS
     # which aren't represented by cmake files: e.g. groups that are created in
     # custom cableswig cxx inputs stored in WRAPPER_LIBRARY_CABLESWIG_INPUTS.
+    # TODO: rather test for the presence in WRAPPER_LIBRARY_CABLESWIG_INPUTS, so an error message can be sent to help the develper if the file doesn't exist
     IF(EXISTS "${WRAPPER_LIBRARY_SOURCE_DIR}/wrap_${module}.cmake")
         INCLUDE_WRAP_CMAKE("${module}")
     ENDIF(EXISTS "${WRAPPER_LIBRARY_SOURCE_DIR}/wrap_${module}.cmake")
@@ -63,8 +151,7 @@ MACRO(WRAPPER_LIBRARY_CREATE_WRAP_FILES)
       INCLUDE_WRAP_CMAKE("${module}")
     ENDIF(${will_include})
   ENDFOREACH(file)
-  
-  WRITE_MODULE_FILES()
+
 ENDMACRO(WRAPPER_LIBRARY_CREATE_WRAP_FILES)
 
 MACRO(INCLUDE_WRAP_CMAKE module)
@@ -77,11 +164,6 @@ MACRO(INCLUDE_WRAP_CMAKE module)
   #                       WRAPPER_INCLUDE_FILES WRAPPER_AUTO_INCLUDE_HEADERS
   #                       WRAPPER_DO_NOT_CREATE_CXX
 
-  MESSAGE(STATUS "${WRAPPER_LIBRARY_NAME}: Creating ${module} wrappers.")
-
-  # call languages specific macros
-  INCLUDE_WRAP_CMAKE_ALL_LANGUAGES("${module}")
-
   # We run into some trouble if there's a module with the same name as the
   # wrapper library. Fix this.
   STRING(TOUPPER "${module}" upper_module)
@@ -90,14 +172,20 @@ MACRO(INCLUDE_WRAP_CMAKE module)
     SET(module "${module}_module")
   ENDIF("${upper_module}" STREQUAL "${upper_lib}")
  
+  MESSAGE(STATUS "${WRAPPER_LIBRARY_NAME}: Creating ${module} wrappers.")
+
+  # call languages specific macros
+  INCLUDE_WRAP_CMAKE_ALL_LANGUAGES("${module}")
+
   # preset the vars before include the file
   SET(WRAPPER_MODULE_NAME "${module}")
-  SET(WRAPPER_TYPEDEFS)
-  SET(WRAPPER_FORCE_INSTANTIATE)
 
-  SET(WRAPPER_INCLUDE_FILES ${WRAPPER_DEFAULT_INCLUDE})
+  SET(WRAPPER_INCLUDE_FILES )
+  FOREACH(inc ${WRAPPER_DEFAULT_INCLUDE})
+    WRAP_INCLUDE("${inc}")
+  ENDFOREACH(inc)
   SET(WRAPPER_AUTO_INCLUDE_HEADERS ON)
-  SET(WRAPPER_DO_NOT_CREATE_CXX OFF)
+#   SET(WRAPPER_DO_NOT_CREATE_CXX OFF)
 
   # Now include the file.
   INCLUDE("${WRAPPER_LIBRARY_SOURCE_DIR}/wrap_${module}.cmake")
@@ -107,101 +195,14 @@ MACRO(INCLUDE_WRAP_CMAKE module)
   # provides a custom wrap_*.cxx file and manually appends it to the 
   # WRAPPER_LIBRARY_CABLESWIG_INPUTS list; thus that file would not
   # need or want any cxx file generated.
-  IF(NOT WRAPPER_DO_NOT_CREATE_CXX)
-    WRITE_WRAP_CXX("wrap_${module}.cxx")
-  ENDIF(NOT WRAPPER_DO_NOT_CREATE_CXX)
+#   IF(NOT WRAPPER_DO_NOT_CREATE_CXX)
+#     WRITE_WRAP_CXX("wrap_${module}.cxx")
+#   ENDIF(NOT WRAPPER_DO_NOT_CREATE_CXX)
 
   # call languages specific macros
   END_INCLUDE_WRAP_CMAKE_ALL_LANGUAGES("${module}")
 
 ENDMACRO(INCLUDE_WRAP_CMAKE)
-
-
-MACRO(WRITE_WRAP_CXX file_name)
-  # write the wrap_*.cxx file
-  #
-  # Global vars used: WRAPPER_INCLUDE_FILES WRAPPER_MODULE_NAME and WRAPPER_TYPEDEFS
-  # Global vars modified: none
-  
-  # Create the '#include' statements.
-  SET(CONFIG_WRAPPER_INCLUDES)
-  FOREACH(inc ${WRAPPER_INCLUDE_FILES})
-    IF("${inc}" MATCHES "<.*>")
-      # if the include file is a <stdlib> include file, don't surround the name with qotes.
-      SET(include "${inc}")
-    ELSE("${inc}" MATCHES "<.*>")
-      SET(include "\"${inc}\"")
-    ENDIF("${inc}" MATCHES "<.*>")
-    SET(CONFIG_WRAPPER_INCLUDES "${CONFIG_WRAPPER_INCLUDES}#include ${include}\n")
-  ENDFOREACH(inc)
-  SET(CONFIG_WRAPPER_MODULE_NAME "${WRAPPER_MODULE_NAME}")
-  SET(CONFIG_WRAPPER_TYPEDEFS "${WRAPPER_TYPEDEFS}")
-  SET(CONFIG_WRAPPER_FORCE_INSTANTIATE "${WRAPPER_FORCE_INSTANTIATE}")
-
-  # Create the cxx file.
-  SET(cxx_file "${WRAPPER_LIBRARY_OUTPUT_DIR}/${file_name}")
-
-  CONFIGURE_FILE("${WRAP_ITK_CONFIG_DIR}/wrap_.cxx.in"
-    "${cxx_file}" @ONLY IMMEDIATE)
-  
-  # And add the cxx file to the list of cableswig inputs.
-  SET(WRAPPER_LIBRARY_CABLESWIG_INPUTS 
-    ${WRAPPER_LIBRARY_CABLESWIG_INPUTS} "${cxx_file}")
-ENDMACRO(WRITE_WRAP_CXX)
-
-
-################################################################################
-# Macros for writing the global module CableSwig inputs which specify all the
-# groups to be bundled together into one module. 
-################################################################################
-
-MACRO(WRITE_MODULE_FILES)
-  # Write the wrap_LIBRARY_NAME.cxx file which specifies all the wrapped groups.
-  
-  MESSAGE(STATUS "${WRAPPER_LIBRARY_NAME}: Creating module wrapper files.")
-
-  
-  SET(group_list "")
-  FOREACH(group_name ${WRAPPER_LIBRARY_GROUPS})
-    SET(group_list "${group_list}    \"${group_name}\",\n")
-  ENDFOREACH(group_name ${group})
-  STRING(REGEX REPLACE ",\n$" "\n" group_list "${group_list}")
-
-  SET(CONFIG_GROUP_LIST "${group_list}")
-  
-  # Create the cxx file.
-  SET(cxx_file "${WRAPPER_LIBRARY_OUTPUT_DIR}/wrap_${WRAPPER_LIBRARY_NAME}.cxx")
-  CONFIGURE_FILE("${WRAP_ITK_CONFIG_DIR}/wrap_ITK.cxx.in"
-    "${cxx_file}" @ONLY IMMEDIATE)
-  
-
-  IF(WRAP_ITK_TCL)
-    WRITE_MODULE_FOR_LANGUAGE("Tcl")
-  ENDIF(WRAP_ITK_TCL)
-  IF(WRAP_ITK_PYTHON)
-    WRITE_MODULE_FOR_LANGUAGE("Python")
-  ENDIF(WRAP_ITK_PYTHON)
-  IF(WRAP_ITK_JAVA)
-    WRITE_MODULE_FOR_LANGUAGE("Java")
-  ENDIF(WRAP_ITK_JAVA)
-  IF(WRAP_ITK_PERL)
-    WRITE_MODULE_FOR_LANGUAGE("Perl")
-  ENDIF(WRAP_ITK_PERL)
-ENDMACRO(WRITE_MODULE_FILES)
-
-MACRO(WRITE_MODULE_FOR_LANGUAGE language)
-  # Write the language specific CableSwig input which declares which language is
-  # to be used and includes the general module cableswig input.
-  SET(CONFIG_LANGUAGE "${language}")
-  SET(CONFIG_MODULE_NAME ${WRAPPER_LIBRARY_NAME})
-  STRING(TOUPPER ${language} CONFIG_UPPER_LANG)
-  
-  # Create the cxx file.
-  SET(cxx_file "${WRAPPER_LIBRARY_OUTPUT_DIR}/wrap_${WRAPPER_LIBRARY_NAME}${language}.cxx")  
-  CONFIGURE_FILE("${WRAP_ITK_CONFIG_DIR}/wrap_ITKLang.cxx.in"
-    "${cxx_file}" @ONLY IMMEDIATE)
-  
-ENDMACRO(WRITE_MODULE_FOR_LANGUAGE)
 
 
 ################################################################################
@@ -302,7 +303,9 @@ MACRO(WRAP_NAMED_CLASS class swig_name)
 
   SET(WRAPPER_CLASS "${class}")
   SET(WRAPPER_SWIG_NAME "${swig_name}")
+  SET(WRAPPER_WARN_ABOUT_NO_TEMPLATE ON)
   # clear the wrap parameters
+  # TODO: It shouldn't be used with the new architecture!!
   SET(WRAPPER_TEMPLATES)
 ENDMACRO(WRAP_NAMED_CLASS)
 
@@ -317,25 +320,28 @@ MACRO(WRAP_NON_TEMPLATE_CLASS class)
   # POINTER and POINTER_WITH_SUPERCLASS.
 
   WRAP_CLASS("${class}" ${ARGN})
+  # to avoid useless warning: no template can be defined in 
+  SET(WRAPPER_WARN_ABOUT_NO_TEMPLATE OFF)
   ADD_ONE_TYPEDEF("${WRAPPER_WRAP_METHOD}" "${WRAPPER_CLASS}" "${WRAPPER_SWIG_NAME}")
+  END_WRAP_CLASS()
   
   WRAP_NON_TEMPLATE_CLASS_ALL_LANGUAGES(${class})
 ENDMACRO(WRAP_NON_TEMPLATE_CLASS class)
 
 
-MACRO(WRAP_NAMED_NON_TEMPLATE_CLASS class swig_name)
-  # Similar to WRAP_NAMED_CLASS in that it generates typedefs for CableSwig input.
-  # However, since no templates need to be declared, there's no need for 
-  # WRAP_CLASS ... (declare templates) .. END_WRAP_CLASS. Instead
-  # WRAP_NAMED_NON_TEMPLATE_CLASS takes care of it all.
-  # A fully-qualified 'class' parameter is required as above. The swig name for
-  # this class is provided by the second parameter.
-  # Lastly, this class takes an optional 'wrap method' parameter. Valid values are:
-  # POINTER and POINTER_WITH_SUPERCLASS.
-
-  WRAP_NAMED_CLASS("${class}" "${swig_name}" ${ARGN})
-  ADD_ONE_TYPEDEF("${WRAPPER_WRAP_METHOD}" "${WRAPPER_CLASS}" "${WRAPPER_SWIG_NAME}")
-ENDMACRO(WRAP_NAMED_NON_TEMPLATE_CLASS class)
+# MACRO(WRAP_NAMED_NON_TEMPLATE_CLASS class swig_name)
+#   # Similar to WRAP_NAMED_CLASS in that it generates typedefs for CableSwig input.
+#   # However, since no templates need to be declared, there's no need for 
+#   # WRAP_CLASS ... (declare templates) .. END_WRAP_CLASS. Instead
+#   # WRAP_NAMED_NON_TEMPLATE_CLASS takes care of it all.
+#   # A fully-qualified 'class' parameter is required as above. The swig name for
+#   # this class is provided by the second parameter.
+#   # Lastly, this class takes an optional 'wrap method' parameter. Valid values are:
+#   # POINTER and POINTER_WITH_SUPERCLASS.
+# 
+#   WRAP_NAMED_CLASS("${class}" "${swig_name}" ${ARGN})
+#   ADD_ONE_TYPEDEF("${WRAPPER_WRAP_METHOD}" "${WRAPPER_CLASS}" "${WRAPPER_SWIG_NAME}")
+# ENDMACRO(WRAP_NAMED_NON_TEMPLATE_CLASS class)
 
 
 MACRO(WRAP_INCLUDE include_file)
@@ -357,11 +363,7 @@ MACRO(WRAP_INCLUDE include_file)
       ${WRAPPER_INCLUDE_FILES}
       ${include_file}
     )
-    IF("${include_file}" MATCHES "<.*>")
-      SET(MODULE_INCLUDES "${MODULE_INCLUDES}#include ${include_file}\n")
-    ELSE("${include_file}" MATCHES "<.*>")
-      SET(MODULE_INCLUDES "${MODULE_INCLUDES}#include \"${include_file}\"\n")
-    ENDIF("${include_file}" MATCHES "<.*>")
+    WRAP_INCLUDE_ALL_LANGUAGES("${include_file}")
   ENDIF(NOT already_included)
 ENDMACRO(WRAP_INCLUDE)
 
@@ -373,18 +375,20 @@ MACRO(END_WRAP_CLASS)
   # Global vars used: WRAPPER_CLASS WRAPPER_WRAP_METHOD WRAPPER_TEMPLATES WRAPPER_SWIG_NAME
   # Global vars modified: WRAPPER_TYPEDEFS
   
-  IF("${WRAPPER_TEMPLATES}" STREQUAL "")
-    # display a warning if the class is empty
-    MESSAGE("Warning: No template declared for ${WRAPPER_CLASS}. Perhaps should you turn on more WRAP_* options?")
-  ENDIF("${WRAPPER_TEMPLATES}" STREQUAL "")
-
   # the regexp used to get the values separated by a #
-  SET(sharp_regexp "([0-9A-Za-z_]*)[ ]*#[ ]*(.*)")
-  FOREACH(wrap ${WRAPPER_TEMPLATES})
-    STRING(REGEX REPLACE "${sharp_regexp}" "\\1" mangled_suffix "${wrap}")
-    STRING(REGEX REPLACE "${sharp_regexp}" "\\2" template_params "${wrap}")
-    ADD_ONE_TYPEDEF("${WRAPPER_WRAP_METHOD}" "${WRAPPER_CLASS}" "${WRAPPER_SWIG_NAME}${mangled_suffix}" "${template_params}")
-  ENDFOREACH(wrap)
+  IF(NOT "${WRAPPER_TEMPLATES}" STREQUAL "")
+    SET(sharp_regexp "([0-9A-Za-z_]*)[ ]*#[ ]*(.*)")
+    FOREACH(wrap ${WRAPPER_TEMPLATES})
+      STRING(REGEX REPLACE "${sharp_regexp}" "\\1" mangled_suffix "${wrap}")
+      STRING(REGEX REPLACE "${sharp_regexp}" "\\2" template_params "${wrap}")
+      ADD_ONE_TYPEDEF("${WRAPPER_WRAP_METHOD}" "${WRAPPER_CLASS}" "${WRAPPER_SWIG_NAME}${mangled_suffix}" "${template_params}")
+    ENDFOREACH(wrap)
+  ELSE(NOT "${WRAPPER_TEMPLATES}" STREQUAL "")
+    IF(WRAPPER_WARN_ABOUT_NO_TEMPLATE)
+      # display a warning if the class is empty
+      MESSAGE("Warning: No template declared for ${WRAPPER_CLASS}. Perhaps should you turn on more WRAP_* options?")
+    ENDIF(WRAPPER_WARN_ABOUT_NO_TEMPLATE)
+  ENDIF(NOT "${WRAPPER_TEMPLATES}" STREQUAL "")
   
   END_WRAP_CLASS_ALL_LANGUAGES()
 ENDMACRO(END_WRAP_CLASS)
@@ -392,8 +396,6 @@ ENDMACRO(END_WRAP_CLASS)
 
 MACRO(ADD_SIMPLE_TYPEDEF wrap_class swig_name)
   # Add a typedef, without support for any option
-  SET(WRAPPER_TYPEDEFS "${WRAPPER_TYPEDEFS}      typedef ${wrap_class} ${swig_name};\n")
-  
   ADD_SIMPLE_TYPEDEF_ALL_LANGUAGES("${wrap_class}" "${swig_name}")
 ENDMACRO(ADD_SIMPLE_TYPEDEF)
 
@@ -421,9 +423,8 @@ MACRO(ADD_ONE_TYPEDEF wrap_method wrap_class swig_name)
     SET(full_class_name "${wrap_class}")
   ENDIF(template_parameters)
   
-  # insert a blank line to separate the classes
-  SET(WRAPPER_TYPEDEFS "${WRAPPER_TYPEDEFS}\n")
-
+  ADD_ONE_TYPEDEF_ALL_LANGUAGES("${wrap_method}" "${wrap_class}" "${swig_name}" "${ARGV3}")
+  
   # Add a typedef for the class. We have this funny looking full_name::base_name
   # thing (it expands to, for example "typedef itk::Foo<baz, 2>::Foo"), to 
   # trick gcc_xml into creating code for the class. If we left off the trailing
@@ -442,8 +443,7 @@ MACRO(ADD_ONE_TYPEDEF wrap_method wrap_class swig_name)
 
   IF("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
     ADD_SIMPLE_TYPEDEF("${full_class_name}" "${swig_name}")
-    # add a peace of code for type instantiation
-    SET(WRAPPER_FORCE_INSTANTIATE "${WRAPPER_FORCE_INSTANTIATE}  sizeof(${swig_name});\n")
+    # cable swig part will add a peace of code for type instantiation
   ELSE("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
     ADD_SIMPLE_TYPEDEF("${full_class_name}::${base_name}" "${swig_name}")
   ENDIF("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
@@ -453,8 +453,6 @@ MACRO(ADD_ONE_TYPEDEF wrap_method wrap_class swig_name)
     ADD_SIMPLE_TYPEDEF("${full_class_name}::Pointer::SmartPointer" "${swig_name}_Pointer")
   ENDIF("${wrap_method}" MATCHES "POINTER")
 
-  ADD_ONE_TYPEDEF_ALL_LANGUAGES("${wrap_method}" "${wrap_class}" "${swig_name}" "${ARGV3}")
-  
 ENDMACRO(ADD_ONE_TYPEDEF)
 
 
@@ -481,7 +479,10 @@ MACRO(WRAP_TEMPLATE name types)
   # Global vars used: WRAPPER_TEMPLATES
   # Global vars modified: WRAPPER_TEMPLATES
 
-  SET(WRAPPER_TEMPLATES ${WRAPPER_TEMPLATES} "${name} # ${types}")
+#   SET(WRAPPER_TEMPLATES ${WRAPPER_TEMPLATES} "${name} # ${types}")
+  SET(WRAPPER_WARN_ABOUT_NO_TEMPLATE OFF)
+  ADD_ONE_TYPEDEF("${WRAPPER_WRAP_METHOD}" "${WRAPPER_CLASS}" "${WRAPPER_SWIG_NAME}${name}" "${types}")
+  WRAP_TEMPLATE_ALL_LANGUAGES("${name}" "${types}")
 ENDMACRO(WRAP_TEMPLATE)
 
 ###################################

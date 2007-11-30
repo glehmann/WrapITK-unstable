@@ -211,21 +211,6 @@ ENDMACRO(WRAP_LIBRARY_PYTHON)
 
 
 MACRO(END_WRAP_LIBRARY_PYTHON)
-
-  SET(cpp_files )
-
-  SET(python_files )
-
-  SET(modules )
-  
-  # the list of interface this module depends and build the deps for the python configuration file
-  SET(module_target_depend )
-  SET(WRAP_ITK_PYTHON_CONFIGURATION_DEPENDS "")
-  FOREACH(dep ${WRAPPER_LIBRARY_DEPENDS})
-    SET(module_target_depend ${module_target_depend} ${${dep}_SWIG_FILES})
-    SET(WRAP_ITK_PYTHON_CONFIGURATION_DEPENDS "${WRAP_ITK_PYTHON_CONFIGURATION_DEPENDS} '${dep}',")  
-  ENDFOREACH(dep)
-  
   # create the python config file
   CONFIGURE_FILE("${WRAP_ITK_PYTHON_SOURCE_DIR}/ModuleConfig.py.in"
     "${WRAP_ITK_PYTHON_BINARY_DIR}/Configuration/${WRAPPER_LIBRARY_NAME}Config.py"
@@ -243,10 +228,15 @@ MACRO(END_WRAP_LIBRARY_PYTHON)
     "${WRAP_ITK_PYTHON_BINARY_DIR}/${WRAPPER_LIBRARY_NAME}.py"
     @ONLY IMMEDIATE)
 
-  FOREACH(source ${WRAPPER_LIBRARY_CABLESWIG_INPUTS})
+#   ADD_CUSTOM_TARGET(${WRAPPER_LIBRARY_NAME}SwigPython DEPENDS ${cpp_files} ${python_files})
+#   ADD_CUSTOM_TARGET(${WRAPPER_LIBRARY_NAME}Python DEPENDS ${modules})
+
+ENDMACRO(END_WRAP_LIBRARY_PYTHON)
+
+
+MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON group_name)
   
-    GET_FILENAME_COMPONENT(base_name ${source} NAME_WE)
-    STRING(REGEX REPLACE "^wrap_" "" group_name "${base_name}")
+    SET(base_name wrap_${group_name})
     
     # create the swig interface for all the groups in the module
     #
@@ -257,7 +247,9 @@ MACRO(END_WRAP_LIBRARY_PYTHON)
 
     ADD_CUSTOM_COMMAND(
       OUTPUT ${cpp_file} ${python_file}
-      COMMAND swig -c++ -python -fcompact -O -features autodoc=1 -Werror -w508 -w312 -w314 -w509 -w302 -w362
+      COMMAND swig -c++ -python -O -features autodoc=1 -Werror
+#       -fcompact
+      -w508 -w312 -w314 -w509 -w302 -w362
       -w389 # operator[], to be suppressed later...
       -w384 -w383 # operator++ ane operator--
       -w361 # operator!
@@ -268,22 +260,15 @@ MACRO(END_WRAP_LIBRARY_PYTHON)
       -outdir ${LIBRARY_OUTPUT_PATH}
       ${interface_file}
       WORKING_DIRECTORY ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python
-      DEPENDS ${interface_file} ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/${base_name}_ext.i ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i ${module_target_depend}
+      DEPENDS ${interface_file} ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/${base_name}_ext.i ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i
     )
-    ADD_CUSTOM_TARGET(${base_name}SwigPython DEPENDS ${cpp_file})
+    ADD_CUSTOM_TARGET(${group_name}SwigPython DEPENDS ${cpp_file})
+    ADD_DEPENDENCIES(${module}SwigPython ${WRAPPER_LIBRARY_NAME}Swig)
     
-    # add the current interface files to the deps
-    SET(module_target_depend ${module_target_depend} ${interface_file})
-    
-    SET(cpp_files ${cpp_files} ${cpp_file})
-    
-    SET(modules ${modules} ${lib})
-
-    SET(python_files ${python_files} ${python_file})
-
     ADD_LIBRARY(${lib} MODULE ${cpp_file} ${WRAPPER_LIBRARY_CXX_SOURCES})
     SET_TARGET_PROPERTIES(${lib} PROPERTIES PREFIX "_")
     TARGET_LINK_LIBRARIES(${lib} ${WRAPPER_LIBRARY_LINK_LIBRARIES} ${PYTHON_LIBRARY})
+    ADD_DEPENDENCIES(${lib} ${module}SwigPython)
     
 # gcc visibility can't be used without getting errors when passing objects
 # from one module to an other
@@ -292,7 +277,6 @@ MACRO(END_WRAP_LIBRARY_PYTHON)
 #      SET_TARGET_PROPERTIES(${lib} PROPERTIES COMPILE_FLAGS "-fvisibility=hidden")
 #    ENDIF(CMAKE_COMPILER_IS_GNUCC)
     
-  ENDFOREACH(source)
   
 #  ADD_LIBRARY(${WRAPPER_LIBRARY_NAME}Python MODULE ${cpp_files})
 #  SET_TARGET_PROPERTIES(${WRAPPER_LIBRARY_NAME}Python PROPERTIES PREFIX "_")
@@ -301,11 +285,14 @@ MACRO(END_WRAP_LIBRARY_PYTHON)
 #    ${PYTHON_LIBRARY}
 #  )
 
-  ADD_CUSTOM_TARGET(${WRAPPER_LIBRARY_NAME}SwigPython DEPENDS ${cpp_files} ${python_files})
-  
-  ADD_CUSTOM_TARGET(${WRAPPER_LIBRARY_NAME}Python DEPENDS ${modules})
 
-ENDMACRO(END_WRAP_LIBRARY_PYTHON)
+  # MESSAGE("${WRAP_ITK_PYTHON_SWIG_EXT}")
+  CONFIGURE_FILE("${WRAP_ITK_PYTHON_SOURCE_DIR}/module_ext.i.in"
+    "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/wrap_${module}_ext.i"
+    @ONLY IMMEDIATE)
+
+ENDMACRO(END_INCLUDE_WRAP_CMAKE_PYTHON group_name)
+
 
 
 MACRO(ADD_ONE_TYPEDEF_PYTHON wrap_method wrap_class swig_name template_params)
@@ -410,14 +397,6 @@ MACRO(INCLUDE_WRAP_CMAKE_PYTHON module)
   SET(WRAP_ITK_PYTHON_LIBRARY_MODULE "${WRAP_ITK_PYTHON_LIBRARY_MODULE}from ${module}Python import *\n")
 
 ENDMACRO(INCLUDE_WRAP_CMAKE_PYTHON)
-
-
-MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON module)
-  # MESSAGE("${WRAP_ITK_PYTHON_SWIG_EXT}")
-  CONFIGURE_FILE("${WRAP_ITK_PYTHON_SOURCE_DIR}/module_ext.i.in"
-    "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/wrap_${module}_ext.i"
-    @ONLY IMMEDIATE)
-ENDMACRO(END_INCLUDE_WRAP_CMAKE_PYTHON)
 
 
 MACRO(ADD_SIMPLE_TYPEDEF_PYTHON wrap_class swig_name)
