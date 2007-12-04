@@ -935,16 +935,6 @@ MACRO(CONFIGURE_PYTHON_CONFIG_FILES outdir)
   WRAP_ITK_INSTALL("/Python/Configuration" "${outdir}/${WRAPPER_LIBRARY_NAME}Config.py")
 ENDMACRO(CONFIGURE_PYTHON_CONFIG_FILES)
 
-MACRO(CONFIGURE_PYTHON_LOADER_FILE outdir)
-  # Create the loader file for importing just the current wrapper library. Uses
-  # the global WRAPPER_LIBRARY_NAME variable.
-  
-  SET(CONFIG_LIBRARY_NAME "${WRAPPER_LIBRARY_NAME}")
-  CONFIGURE_FILE("${WRAP_ITK_CONFIG_DIR}/LanguageSupport/ModuleLoader.py.in"
-    "${outdir}/${WRAPPER_LIBRARY_NAME}.py"
-    @ONLY IMMEDIATE)
-ENDMACRO(CONFIGURE_PYTHON_LOADER_FILE)
-
 MACRO(CONFIGURE_PYTHON_EXTERNAL_PROJECT_CONFIG outdir)
   # Create a helper file to set some sys.path entries so that external projects
   # can be easily loaded even when not installed. To use, call 'import ProjectConfig'
