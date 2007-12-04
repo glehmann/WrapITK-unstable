@@ -106,9 +106,15 @@ MACRO(END_INCLUDE_WRAP_CMAKE_SWIG_INTERFACE module)
 
 # MESSAGE("${opts}")
 
+  # configure the test driver, to set the python path to the pygccxml dir
+  FIND_PROGRAM(ITK_TEST_DRIVER itkTestDriver)
+  SET(PYTHON_PYGCCXML_DRIVER "${ITK_TEST_DRIVER}"
+    --add-before-env PYTHONPATH "${WRAP_ITK_CMAKE_DIR}/pygccxml-0.8.2/"
+    "${PYTHON_EXECUTABLE}"
+  )
   ADD_CUSTOM_COMMAND(
     OUTPUT ${interface_file}
-    COMMAND python ${WRAP_ITK_CMAKE_DIR}/igenerator.py
+    COMMAND ${PYTHON_PYGCCXML_DRIVER} ${WRAP_ITK_CMAKE_DIR}/igenerator.py
       ${opts}
       --mdx ${mdx_file}
       --take-includes ${includes_file}
