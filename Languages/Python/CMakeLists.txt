@@ -247,7 +247,7 @@ MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON group_name)
 
     ADD_CUSTOM_COMMAND(
       OUTPUT ${cpp_file} ${python_file}
-      COMMAND swig -c++ -python -O -features autodoc=1 -Werror
+      COMMAND ${SWIG_EXECUTABLE} -c++ -python -O -features autodoc=1 -Werror
 #       -fcompact
       -w508 -w312 -w314 -w509 -w302 -w362
       -w389 # operator[], to be suppressed later...
@@ -260,7 +260,7 @@ MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON group_name)
       -outdir ${LIBRARY_OUTPUT_PATH}
       ${interface_file}
       WORKING_DIRECTORY ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python
-      DEPENDS ${interface_file} ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/${base_name}_ext.i ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i
+      DEPENDS ${interface_file} ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/${base_name}_ext.i ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i ${SWIG_EXECUTABLE}
     )
     ADD_CUSTOM_TARGET(${group_name}SwigPython DEPENDS ${cpp_file})
     ADD_DEPENDENCIES(${module}SwigPython ${WRAPPER_LIBRARY_NAME}Swig)
