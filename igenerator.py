@@ -333,7 +333,7 @@ print >> outputFile
 # [1:-1] is there to drop the quotes
 for lang in ["CHICKEN", "CSHARP", "GUILE", "JAVA", "LUA", "MODULA3", "MZSCHEME", "OCAML", "PERL", "PERL5", "PHP", "PHP4", "PHP5", "PIKE", "PYTHON", "R", "RUBY", "SEXP", "TCL", "XML"]:
   print >> outputFile, "#ifdef SWIG%s" % lang
-  print >> outputFile, "%%module %s%s" % ( cable_ns.variable('group').value[1:-1], lang.title() )
+  print >> outputFile, "%%module %s%s" % ( cable_ns.variable('group').value[len('(const char*)"'):-1], lang.title() )
   print >> outputFile, "#endif"
 print >> outputFile
 
