@@ -423,7 +423,7 @@ for typedef in wrappers_ns.typedefs():
 
 # copy the classes in a new ordered list, according to the dependencies
 # classes is sorted to be sure to always get the same result everywhere
-name_local_classes = [c[1] for c in classes]
+name_local_classes = [c[0] for c in classes]
 classes = sorted(classes)
 name_already_in_typedefs = []
 typedefs = []
