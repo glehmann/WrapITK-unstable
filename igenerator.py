@@ -408,7 +408,7 @@ print >> outputFile
 # to build a list of classes with the dependecies
 # classes :: [(name, [dep_name], typedef)]
 classes = []
-for typedef in list(wrappers_ns.typedefs()):
+for typedef in wrappers_ns.typedefs():
   
   # begin a new class
   if isinstance( typedef.type.declaration, pygccxml.declarations.class_declaration.class_t ):
