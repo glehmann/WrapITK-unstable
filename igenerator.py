@@ -405,25 +405,47 @@ print >> outputFile
 
 
 # iterate over all the typedefs in the _cable_::wrappers namespace
-# to generate the .i file
-for typedef in reversed(list(wrappers_ns.typedefs())):
-  
-  # declare the typedef
-  # print >> outputFile, "%{"
-  # print >> outputFile, "typedef %s %s;" % (typedef.type.decl_string, typedef.name)
-  # print >> outputFile, "%}"
-  # print >> outputFile
-
+# to build a list of classes with the dependecies
+# classes :: [(name, [dep_name], typedef)]
+classes = []
+for typedef in list(wrappers_ns.typedefs()):
   
   # begin a new class
   if isinstance( typedef.type.declaration, pygccxml.declarations.class_declaration.class_t ):
-    generate_class( typedef )
+    classes.append( (typedef.name, [get_alias(super_class.related_class.decl_string) for super_class in typedef.type.declaration.bases], typedef) )
     
   elif isinstance( typedef.type.declaration, pygccxml.declarations.enumeration.enumeration_t ):
     warn( 6, "Enum are currently supported only nested in a class." )
       
   else:
     warn( 5, "Unknown type type: %s" % str(typedef.type.declaration) )
+
+
+# copy the classes in a new ordered list, according to the dependencies
+# classes is sorted to be sure to always get the same result everywhere
+name_local_classes = [c[1] for c in classes]
+classes = sorted(classes)
+name_already_in_typedefs = []
+typedefs = []
+while len(classes) != 0:
+  nclasses = []
+  for name, deps, typedef in classes:
+    ok = True
+    for d in deps:
+      if d in name_local_classes and d not in name_already_in_typedefs:
+        ok = False
+    if ok:
+      name_already_in_typedefs.append(name)
+      typedefs.append(typedef)
+    else:
+      nclasses.append( (name, deps, typedef) )
+  classes = nclasses
+
+
+# now really generate the swig interface
+for typedef in typedefs:
+  # begin a new class
+  generate_class( typedef )
 
 
 if error:
