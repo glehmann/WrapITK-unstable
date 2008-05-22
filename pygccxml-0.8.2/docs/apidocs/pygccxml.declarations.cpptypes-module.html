@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pygccxml.declarations.cpptypes</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pygccxml-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.language-binding.net">pygccxml</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pygccxml-module.html">Package&nbsp;pygccxml</a> ::
+        <a href="pygccxml.declarations-module.html">Package&nbsp;declarations</a> ::
+        Module&nbsp;cpptypes
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="pygccxml.declarations.cpptypes-module.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== MODULE DESCRIPTION ==================== -->
+<h1 class="epydoc">Module cpptypes</h1><br /><br />
+defines classes, that describe C++ types<br /><br />
+
+<!-- ==================== CLASSES ==================== -->
+<a name="section-Classes"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Classes"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.type_t-class.html">type_t</a><br />
+      base class for all types
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.dummy_type_t-class.html">dummy_type_t</a><br />
+      provides <a 
+        href="pygccxml.declarations.cpptypes.type_t-class.html" 
+        class="link">type_t</a> interface for a string, that defines C++ 
+        type.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.unknown_t-class.html">unknown_t</a><br />
+      type, that represents all C++ types, that could not be parsed  
+        by GCC-XML
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.fundamental_t-class.html">fundamental_t</a><br />
+      base class for all fundamental, build-in types
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.java_fundamental_t-class.html">java_fundamental_t</a><br />
+      base class for all JNI defined fundamental types
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.void_t-class.html">void_t</a><br />
+      represents void type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.char_t-class.html">char_t</a><br />
+      represents char type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.unsigned_char_t-class.html">unsigned_char_t</a><br />
+      represents unsigned char type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.wchar_t-class.html">wchar_t</a><br />
+      represents wchar_t type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.short_int_t-class.html">short_int_t</a><br />
+      represents short int type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.short_unsigned_int_t-class.html">short_unsigned_int_t</a><br />
+      represents short unsigned int type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.bool_t-class.html">bool_t</a><br />
+      represents bool type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.int_t-class.html">int_t</a><br />
+      represents int type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.unsigned_int_t-class.html">unsigned_int_t</a><br />
+      represents unsigned int type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.long_int_t-class.html">long_int_t</a><br />
+      represents long int type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.long_unsigned_int_t-class.html">long_unsigned_int_t</a><br />
+      represents long unsigned int type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.long_long_int_t-class.html">long_long_int_t</a><br />
+      represents long long int type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.long_long_unsigned_int_t-class.html">long_long_unsigned_int_t</a><br />
+      represents long long unsigned int type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.float_t-class.html">float_t</a><br />
+      represents float type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.double_t-class.html">double_t</a><br />
+      represents double type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.long_double_t-class.html">long_double_t</a><br />
+      represents long double type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.complex_double_t-class.html">complex_double_t</a><br />
+      represents complex double type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.complex_long_double_t-class.html">complex_long_double_t</a><br />
+      represents complex long double type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.complex_float_t-class.html">complex_float_t</a><br />
+      represents complex float type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.jbyte_t-class.html">jbyte_t</a><br />
+      represents jbyte type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.jshort_t-class.html">jshort_t</a><br />
+      represents jshort type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.jint_t-class.html">jint_t</a><br />
+      represents jint type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.jlong_t-class.html">jlong_t</a><br />
+      represents jlong type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.jfloat_t-class.html">jfloat_t</a><br />
+      represents jfloat type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.jdouble_t-class.html">jdouble_t</a><br />
+      represents jdouble type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.jchar_t-class.html">jchar_t</a><br />
+      represents jchar type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.jboolean_t-class.html">jboolean_t</a><br />
+      represents jboolean type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.compound_t-class.html">compound_t</a><br />
+      class that allows to represent compound types like <code>const 
+        int*</code>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.volatile_t-class.html">volatile_t</a><br />
+      represents <code>volatile whatever</code> type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.const_t-class.html">const_t</a><br />
+      represents <code>whatever const</code> type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.pointer_t-class.html">pointer_t</a><br />
+      represents <code>whatever*</code> type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.reference_t-class.html">reference_t</a><br />
+      represents <code>whatever&amp;</code> type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.array_t-class.html">array_t</a><br />
+      represents C++ array type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.calldef_type_t-class.html">calldef_type_t</a><br />
+      base class for all types that describes &quot;callable&quot; 
+        declaration
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.free_function_type_t-class.html">free_function_type_t</a><br />
+      describes free function type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.member_function_type_t-class.html">member_function_type_t</a><br />
+      describes member function type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.member_variable_type_t-class.html">member_variable_type_t</a><br />
+      describes member variable type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.declarated_t-class.html">declarated_t</a><br />
+      class that binds between to hierarchies: <a 
+        href="pygccxml.declarations.cpptypes.type_t-class.html" 
+        class="link">type_t</a> and declaration_t
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes.type_qualifiers_t-class.html">type_qualifiers_t</a><br />
+      contains additional information about type: mutable, static, 
+        extern
+  </td>
+</tr>
+</table>
+
+<br />
+<!-- ==================== VARIABLES ==================== -->
+<a name="section-Variables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Variables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.cpptypes-module.html#FUNDAMENTAL_TYPES">FUNDAMENTAL_TYPES</a> = <code title="{'short unsigned int': &lt;pygccxml.declarations.cpptypes.short_unsigned_int_t object at 0x00DA77D0&gt;, 'int': &lt;pygccxml.declarations.cpptypes.int_t object at 0x00DA7850&gt;, 'complex long double': &lt;pygccxml.declarations.cpptypes.complex_long_double_t object at 0x00DA7AD0&gt;, 'float': &lt;pygccxml.declarations.cpptypes.float_t object at 0x00DA7A10&gt;, 'long unsigned int': &lt;pygccxml.declarations.cpptypes.long_unsigned_int_t object at 0x00DA7950&gt;, 'long long unsigned int': &lt;pygccxml.declarations.cpptypes.long_long_unsigned_int_t object at 0x00DA79D0&gt;, '__java_long': &lt;pygccxml.declarations.cpptypes.jlong_t o...">{'short unsigned int': &lt;pygccxml.declarations.cpptyp...</code><br />
+      defines a mapping between fundamental type name and its synonym to
+      the instance of class that describes the type
+  </td>
+</tr>
+</table>
+
+<br />
+<!-- ==================== VARIABLES DETAILS ==================== -->
+<a name="section-VariablesDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-VariablesDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="FUNDAMENTAL_TYPES"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">FUNDAMENTAL_TYPES</h3>
+  <br />defines a mapping between fundamental type name and its synonym to the
+  instance of class that describes the type
+  <dl><dt></dt><dd>
+    <dl><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+{'__java_boolean': &lt;pygccxml.declarations.cpptypes.jboolean_t object a<span class="variable-linewrap"><img src="crarr.png" alt="" /></span>
+t 0x00DA7F50&gt;,
+ '__java_byte': &lt;pygccxml.declarations.cpptypes.jbyte_t object at 0x00<span class="variable-linewrap"><img src="crarr.png" alt="" /></span>
+DA7D90&gt;,
+ '__java_char': &lt;pygccxml.declarations.cpptypes.jchar_t object at 0x00<span class="variable-linewrap"><img src="crarr.png" alt="" /></span>
+DA7F10&gt;,
+ '__java_double': &lt;pygccxml.declarations.cpptypes.jdouble_t object at <span class="variable-linewrap"><img src="crarr.png" alt="" /></span>
+0x00DA7ED0&gt;,
+<span class="variable-ellipsis">...</span>                                                                    
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pygccxml-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.language-binding.net">pygccxml</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha3 on Thu Oct 19 08:14:25 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

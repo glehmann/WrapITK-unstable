@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pygccxml.declarations.class_declaration.class_t</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pygccxml-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.language-binding.net">pygccxml</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pygccxml-module.html">Package&nbsp;pygccxml</a> ::
+        <a href="pygccxml.declarations-module.html">Package&nbsp;declarations</a> ::
+        <a href="pygccxml.declarations.class_declaration-module.html">Module&nbsp;class_declaration</a> ::
+        Class&nbsp;class_t
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="pygccxml.declarations.class_declaration.class_t-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class class_t</h1><br /><br />
+<pre class="base-tree">
+               object --+        
+                        |        
+declaration.declaration_t --+    
+                            |    
+          <a href="pygccxml.declarations.scopedef.scopedef_t-class.html">scopedef.scopedef_t</a> --+
+                                |
+                               <strong class="uidshort">class_t</strong>
+</pre>
+
+<hr />
+describes class definition<br /><br />
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">''</span>,
+        <span class="summary-sig-arg">class_type</span>=<span class="summary-sig-default">&quot;class&quot;</span>,
+        <span class="summary-sig-arg">is_abstract</span>=<span class="summary-sig-default">False</span>)</span><br />
+      creates class that describes C++ class definition
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#__str__" class="summary-sig-name">__str__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Default __str__ method.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#__eq__" class="summary-sig-name">__eq__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">other</span>)</span>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#get_members" class="summary-sig-name">get_members</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">access</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns list of members according to access type
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#adopt_declaration" class="summary-sig-name">adopt_declaration</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">decl</span>,
+        <span class="summary-sig-arg">access</span>)</span><br />
+      adds new declaration to the class
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#remove_declaration" class="summary-sig-name">remove_declaration</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">decl</span>)</span><br />
+      removes decl from  members list
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#find_out_member_access_type" class="summary-sig-name">find_out_member_access_type</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">member</span>)</span><br />
+      returns member access type
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html">scopedef.scopedef_t</a></code></b>:
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#__getitem__">__getitem__</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#calldef">calldef</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#calldefs">calldefs</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#casting_operator">casting_operator</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#casting_operators">casting_operators</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#class_">class_</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#classes">classes</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#clear_optimizer">clear_optimizer</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#constructor">constructor</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#constructors">constructors</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#decl">decl</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#decls">decls</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#enum">enum</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#enumeration">enumeration</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#enumerations">enumerations</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#enums">enums</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#init_optimizer">init_optimizer</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#member_function">member_function</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#member_functions">member_functions</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#member_operator">member_operator</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#member_operators">member_operators</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#operator">operator</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#operators">operators</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#typedef">typedef</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#typedefs">typedefs</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#variable">variable</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#variables">variables</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>declaration.declaration_t</code></b>:
+      <code>__lt__</code>,
+      <code>__ne__</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#USE_DEMANGLED_AS_NAME">USE_DEMANGLED_AS_NAME</a> = <code title="True">True</code>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html">scopedef.scopedef_t</a></code></b>:
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#ALLOW_EMPTY_MDECL_WRAPPER">ALLOW_EMPTY_MDECL_WRAPPER</a></code>,
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#RECURSIVE_DEFAULT">RECURSIVE_DEFAULT</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#class_type">class_type</a><br />
+      describes class <a 
+      href="pygccxml.declarations.class_declaration.CLASS_TYPES-class.html"
+      class="link">type</a>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#bases">bases</a><br />
+      list of <a 
+      href="pygccxml.declarations.class_declaration.hierarchy_info_t-class.html"
+      class="link">base classes</a>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#recursive_bases">recursive_bases</a><br />
+      returns a list of all <a 
+      href="pygccxml.declarations.class_declaration.hierarchy_info_t-class.html"
+      class="link">base classes</a>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#derived">derived</a><br />
+      list of <a 
+      href="pygccxml.declarations.class_declaration.hierarchy_info_t-class.html"
+      class="link">derived classes</a>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#recursive_derived">recursive_derived</a><br />
+      returns a list of all <a 
+      href="pygccxml.declarations.class_declaration.hierarchy_info_t-class.html"
+      class="link">derive classes</a>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#is_abstract">is_abstract</a><br />
+      describes whether class abstract or not
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#public_members">public_members</a><br />
+      list of all public members
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#private_members">private_members</a><br />
+      list of all private members
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#protected_members">protected_members</a><br />
+      list of all protected members
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html#aliases">aliases</a><br />
+      List of <a 
+      href="pygccxml.declarations.typedef.typedef_t-class.html" 
+      class="link">aliases</a> to this instance
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html">scopedef.scopedef_t</a></code></b>:
+      <code><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#declarations">declarations</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>declaration.declaration_t</code></b>:
+      <code>cache</code>,
+      <code>decl_string</code>,
+      <code>demangled</code>,
+      <code>is_artificial</code>,
+      <code>location</code>,
+      <code>mangled</code>,
+      <code>name</code>,
+      <code>parent</code>,
+      <code>top_parent</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">''</span>,
+        <span class="sig-arg">class_type</span>=<span class="sig-default">&quot;class&quot;</span>,
+        <span class="sig-arg">is_abstract</span>=<span class="sig-default">False</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />creates class that describes C++ class definition
+  <dl><dt></dt><dd>
+    <dl><dt>Overrides:
+      <a href="pygccxml.declarations.scopedef.scopedef_t-class.html#__init__">scopedef.scopedef_t.__init__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__str__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__str__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Informal representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br /><p>Default __str__ method.</p>
+  <p>This version just returns the decl_string and the class. Derived 
+  classes may override this method to provide more detailed 
+  information.</p>
+  A __str__ method for a declaration should always provide enough 
+  information so that it uniquely identifies the declaration and the user 
+  is able to find the declaration in his source code.
+  <dl><dt></dt><dd>
+    <dl><dt>Overrides:
+      declaration.declaration_t.__str__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__eq__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__eq__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">other</span>)</span>
+    <br /><em class="fname">(Equality operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+    <dl><dt>Overrides:
+      <a href="pygccxml.declarations.scopedef.scopedef_t-class.html#__eq__">scopedef.scopedef_t.__eq__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="get_members"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_members</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">access</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br /><p>returns list of members according to access type</p>
+  If access equals to None, then returned list will contain all members.
+  You should not modify the list content, otherwise different optimization 
+  data will stop work and may to give you wrong results.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>access</code></strong> (<a 
+          href="pygccxml.declarations.class_declaration.ACCESS_TYPES-class.html"
+          class="link">ACCESS_TYPES</a>) - describes desired members</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd>[ members ]</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="adopt_declaration"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">adopt_declaration</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">decl</span>,
+        <span class="sig-arg">access</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />adds new declaration to the class
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>decl</code></strong> - reference to a declaration</li>
+        <li><strong class="pname"><code>access</code></strong> (<a 
+          href="pygccxml.declarations.class_declaration.ACCESS_TYPES-class.html"
+          class="link">ACCESS_TYPES</a>) - member access type</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="remove_declaration"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">remove_declaration</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">decl</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />removes decl from  members list
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>decl</code></strong> (declaration_t) - declaration to be removed</li>
+    </ul>
+    <dl><dt>Overrides:
+      <a href="pygccxml.declarations.scopedef.scopedef_t-class.html#remove_declaration">scopedef.scopedef_t.remove_declaration</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="find_out_member_access_type"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">find_out_member_access_type</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">member</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns member access type
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>member</code></strong> (declaration_t) - member of the class</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><a 
+          href="pygccxml.declarations.class_declaration.ACCESS_TYPES-class.html"
+          class="link">ACCESS_TYPES</a></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="USE_DEMANGLED_AS_NAME"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">USE_DEMANGLED_AS_NAME</h3>
+  
+  <dl><dt></dt><dd>
+    <dl><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+True                                                                   
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== PROPERTY DETAILS ==================== -->
+<a name="section-PropertyDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Property Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-PropertyDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="class_type"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">class_type</h3>
+  <br />describes class <a 
+  href="pygccxml.declarations.class_declaration.CLASS_TYPES-class.html" 
+  class="link">type</a>
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_class_type" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_class_type</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+    <dl><dt>Set Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_set_class_type" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._set_class_type</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">new_class_type</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="bases"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">bases</h3>
+  <br />list of <a 
+  href="pygccxml.declarations.class_declaration.hierarchy_info_t-class.html"
+  class="link">base classes</a>
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_bases" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_bases</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+    <dl><dt>Set Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_set_bases" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._set_bases</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">new_bases</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="recursive_bases"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">recursive_bases</h3>
+  <br />returns a list of all <a 
+  href="pygccxml.declarations.class_declaration.hierarchy_info_t-class.html"
+  class="link">base classes</a>
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_recursive_bases" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_recursive_bases</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="derived"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">derived</h3>
+  <br />list of <a 
+  href="pygccxml.declarations.class_declaration.hierarchy_info_t-class.html"
+  class="link">derived classes</a>
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_derived" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_derived</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+    <dl><dt>Set Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_set_derived" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._set_derived</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">new_derived</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="recursive_derived"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">recursive_derived</h3>
+  <br />returns a list of all <a 
+  href="pygccxml.declarations.class_declaration.hierarchy_info_t-class.html"
+  class="link">derive classes</a>
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_recursive_derived" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_recursive_derived</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="is_abstract"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">is_abstract</h3>
+  <br />describes whether class abstract or not
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_is_abstract" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_is_abstract</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+    <dl><dt>Set Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_set_is_abstract" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._set_is_abstract</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">is_abstract</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="public_members"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">public_members</h3>
+  <br />list of all public members
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_public_members" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_public_members</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+    <dl><dt>Set Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_set_public_members" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._set_public_members</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">new_public_members</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="private_members"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">private_members</h3>
+  <br />list of all private members
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_private_members" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_private_members</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+    <dl><dt>Set Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_set_private_members" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._set_private_members</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">new_private_members</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="protected_members"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">protected_members</h3>
+  <br />list of all protected members
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_protected_members" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_protected_members</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+    <dl><dt>Set Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_set_protected_members" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._set_protected_members</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">new_protected_members</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="aliases"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">aliases</h3>
+  <br />List of <a href="pygccxml.declarations.typedef.typedef_t-class.html" 
+  class="link">aliases</a> to this instance
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_get_aliases" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._get_aliases</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+    <dl><dt>Set Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.class_declaration.class_t-class.html#_set_aliases" class="summary-sig-name">pygccxml.declarations.class_declaration.class_t._set_aliases</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">new_aliases</span>)</span>
+    </dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pygccxml-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.language-binding.net">pygccxml</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha3 on Thu Oct 19 08:14:26 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

@@ -1,0 +1,1639 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pygccxml.declarations.scopedef.scopedef_t</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pygccxml-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.language-binding.net">pygccxml</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pygccxml-module.html">Package&nbsp;pygccxml</a> ::
+        <a href="pygccxml.declarations-module.html">Package&nbsp;declarations</a> ::
+        <a href="pygccxml.declarations.scopedef-module.html">Module&nbsp;scopedef</a> ::
+        Class&nbsp;scopedef_t
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="pygccxml.declarations.scopedef.scopedef_t-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class scopedef_t</h1><br /><br />
+<pre class="base-tree">
+               object --+    
+                        |    
+declaration.declaration_t --+
+                            |
+                           <strong class="uidshort">scopedef_t</strong>
+</pre>
+
+<dl><dt>Known Subclasses:</dt>
+<dd>
+    <a href="pygccxml.declarations.namespace.namespace_t-class.html">namespace.namespace_t</a>,
+    <a href="pygccxml.declarations.class_declaration.class_t-class.html">class_declaration.class_t</a>
+</dd></dl>
+
+<hr />
+<p>Base class for <a 
+  href="pygccxml.declarations.namespace.namespace_t-class.html" 
+  class="link">namespace_t</a> and <a 
+  href="pygccxml.declarations.class_declaration.class_t-class.html" 
+  class="link">class_t</a> classes.</p>
+  <p>This is the base class for all declaration classes that may have 
+  children nodes. The children can be accessed via the 
+  <code>declarations</code> property.</p>
+  <p>Also this class provides &quot;get/select/find&quot; interface. Using 
+  this class you can get instance or instances of internal 
+  declaration(s).</p>
+  You can find declaration(s) using next criteria:
+  <ol1>
+    <li>
+      name - declaration name, could be full qualified name
+    </li>
+    <li>
+      header_dir - directory, to which belongs file, that the 
+      declaration was declarated in. header_dir should be absolute 
+      path.
+    </li>
+    <li>
+      header_file - file that the declaration was declarated in.
+    </li>
+    <li>
+      function - user ( your ) custom criteria. The interesting thing is
+      that this function will be joined with other arguments ( criteria 
+      ).
+    </li>
+    <li>
+      recursive - the search declaration range, if True will be search 
+      in internal declarations too.
+    </li>
+  </ol>
+  <p>Every &quot;select&quot; API you can invoke and pass as first argument
+  at declaration name or function. This class will find out correctly what 
+  argument represents.</p>
+  Example:
+<pre class="literalblock">
+   ns - referrers to global namespace
+   ns.member_function( &quot;do_something ) - will return reference to member
+   function named &quot;do_something&quot;. If there is no such function exception
+   will be raised. If there is more then one function exception will be
+   raised too.
+</pre>
+  Example 2:
+<pre class="literalblock">
+   ns - referers to global namespace
+   do_smths = ns.member_functions( &quot;do_something ) - will return instance
+   of L{mdecl_wrapper_t} object. This object allows you few things:
+
+   1. To iterate on selected declarations
+   2. To set some property to desired value using one line of code only:
+      do_smths.call_policies = x
+   3. To call some function on every instance using one line of code:
+      do_smths.exclude()
+
+   Pay attention: you can not use &quot;get&quot; functions or properties.
+</pre><br /><br />
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">''</span>)</span><br />
+      x.__init__(...) initializes x; see x.__class__.__doc__ for 
+      signature
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#__eq__" class="summary-sig-name">__eq__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">other</span>)</span><br />
+      function will return true, if both declarations refers to the same
+      object.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#remove_declaration" class="summary-sig-name">remove_declaration</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">decl</span>)</span>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#clear_optimizer" class="summary-sig-name">clear_optimizer</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Cleans query optimizer state
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#init_optimizer" class="summary-sig-name">init_optimizer</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Initializes query optimizer state.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#decl" class="summary-sig-name">decl</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">decl_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to declaration, that is matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#decls" class="summary-sig-name">decls</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">decl_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of declarations, that are matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#class_" class="summary-sig-name">class_</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to class declaration, that is matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#classes" class="summary-sig-name">classes</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of class declarations, that are matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#variable" class="summary-sig-name">variable</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to variable declaration, that is matched defined
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#variables" class="summary-sig-name">variables</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of variable declarations, that are matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#calldef" class="summary-sig-name">calldef</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to &quot;calldef&quot; declaration, that is 
+      matched defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#calldefs" class="summary-sig-name">calldefs</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of calldef declarations, that are matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#operator" class="summary-sig-name">operator</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">symbol</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to operator declaration, that is matched defined
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#operators" class="summary-sig-name">operators</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">symbol</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of operator declarations, that are matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#member_function" class="summary-sig-name">member_function</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to member declaration, that is matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#member_functions" class="summary-sig-name">member_functions</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of member function declarations, that are matched 
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#constructor" class="summary-sig-name">constructor</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to constructor declaration, that is matched 
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#constructors" class="summary-sig-name">constructors</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of constructor declarations, that are matched 
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#member_operator" class="summary-sig-name">member_operator</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">symbol</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to member operator declaration, that is matched 
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#member_operators" class="summary-sig-name">member_operators</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">symbol</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of member operator declarations, that are matched 
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#casting_operator" class="summary-sig-name">casting_operator</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to casting operator declaration, that is matched
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#casting_operators" class="summary-sig-name">casting_operators</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">return_type</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">arg_types</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of casting operator declarations, that are matched 
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#enumeration" class="summary-sig-name">enumeration</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to enumeration declaration, that is matched 
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#enum" class="summary-sig-name">enum</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      adding small aliase to enumeration method
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#enumerations" class="summary-sig-name">enumerations</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of enumeration declarations, that are matched 
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#enums" class="summary-sig-name">enums</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of enumeration declarations, that are matched 
+      defined criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#typedef" class="summary-sig-name">typedef</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns reference to typedef declaration, that is matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#typedefs" class="summary-sig-name">typedefs</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">function</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_dir</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">header_file</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">recursive</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">allow_empty</span>=<span class="summary-sig-default">None</span>)</span><br />
+      returns a set of typedef declarations, that are matched defined 
+      criterias
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#__getitem__" class="summary-sig-name">__getitem__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name_or_function</span>)</span><br />
+      Allow simple name based find of decls.
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>declaration.declaration_t</code></b>:
+      <code>__lt__</code>,
+      <code>__ne__</code>,
+      <code>__str__</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.scopedef.scopedef_t-class.html#RECURSIVE_DEFAULT">RECURSIVE_DEFAULT</a> = <code title="True">True</code>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">&nbsp;</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.scopedef.scopedef_t-class.html#ALLOW_EMPTY_MDECL_WRAPPER">ALLOW_EMPTY_MDECL_WRAPPER</a> = <code title="False">False</code>
+  </td>
+</tr>
+</table>
+
+<br />
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <span class="summary-type">list of declaration_t</span>
+  </td><td class="summary">
+    <a href="pygccxml.declarations.scopedef.scopedef_t-class.html#declarations">declarations</a><br />
+      A list of children declarations.
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>declaration.declaration_t</code></b>:
+      <code>cache</code>,
+      <code>decl_string</code>,
+      <code>demangled</code>,
+      <code>is_artificial</code>,
+      <code>location</code>,
+      <code>mangled</code>,
+      <code>name</code>,
+      <code>parent</code>,
+      <code>top_parent</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">''</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />x.__init__(...) initializes x; see x.__class__.__doc__ for 
+  signature
+  <dl><dt></dt><dd>
+    <dl><dt>Overrides:
+      declaration.declaration_t.__init__
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__eq__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__eq__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">other</span>)</span>
+    <br /><em class="fname">(Equality operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />function will return true, if both declarations refers to the same 
+  object. This function could be implemented in terms of _get__cmp__data, 
+  but in this case it will downgrade performance. self.mangled property is 
+  not compared, because it could be chaned from one compilation time to an 
+  other.
+  <dl><dt></dt><dd>
+    <dl><dt>Overrides:
+      declaration.declaration_t.__eq__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="remove_declaration"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">remove_declaration</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">decl</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="clear_optimizer"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">clear_optimizer</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />Cleans query optimizer state
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="init_optimizer"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">init_optimizer</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />Initializes query optimizer state. There are 4 internals hash 
+  tables:
+  <ol1>
+    <li>
+      from type to declarations
+    </li>
+    <li>
+      from type to declarations for non-recursive queries
+    </li>
+    <li>
+      from type to name to declarations
+    </li>
+    <li>
+      from type to name to declarations for non-recursive queries
+    </li>
+  </ol>
+  Almost every query includes declaration type information. Also very 
+  common query is to search some declaration(s) by name or full name. Those
+  hashtables allows to search declaration very quick.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="decl"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">decl</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">decl_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to declaration, that is matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="decls"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">decls</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">decl_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of declarations, that are matched defined criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="class_"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">class_</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to class declaration, that is matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="classes"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">classes</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of class declarations, that are matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="variable"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">variable</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to variable declaration, that is matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="variables"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">variables</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of variable declarations, that are matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="calldef"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">calldef</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to &quot;calldef&quot; declaration, that is matched 
+  defined criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="calldefs"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">calldefs</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of calldef declarations, that are matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="operator"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">operator</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">symbol</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to operator declaration, that is matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="operators"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">operators</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">symbol</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of operator declarations, that are matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="member_function"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">member_function</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to member declaration, that is matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="member_functions"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">member_functions</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of member function declarations, that are matched 
+  defined criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="constructor"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">constructor</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to constructor declaration, that is matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="constructors"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">constructors</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of constructor declarations, that are matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="member_operator"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">member_operator</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">symbol</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to member operator declaration, that is matched 
+  defined criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="member_operators"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">member_operators</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">symbol</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of member operator declarations, that are matched 
+  defined criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="casting_operator"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">casting_operator</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to casting operator declaration, that is matched 
+  defined criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="casting_operators"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">casting_operators</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">return_type</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">arg_types</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of casting operator declarations, that are matched 
+  defined criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="enumeration"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">enumeration</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to enumeration declaration, that is matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="enum"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">enum</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />adding small aliase to enumeration method
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="enumerations"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">enumerations</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of enumeration declarations, that are matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="enums"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">enums</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of enumeration declarations, that are matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="typedef"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">typedef</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns reference to typedef declaration, that is matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="typedefs"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">typedefs</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">function</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_dir</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">header_file</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">recursive</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">allow_empty</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />returns a set of typedef declarations, that are matched defined 
+  criterias
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__getitem__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__getitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name_or_function</span>)</span>
+    <br /><em class="fname">(Indexing operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </table>
+  
+  <br />Allow simple name based find of decls.  Internally just calls decls() 
+  method. @param name_or_function  Name of decl to lookup or finder 
+  function.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="RECURSIVE_DEFAULT"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">RECURSIVE_DEFAULT</h3>
+  
+  <dl><dt></dt><dd>
+    <dl><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+True                                                                   
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="ALLOW_EMPTY_MDECL_WRAPPER"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">ALLOW_EMPTY_MDECL_WRAPPER</h3>
+  
+  <dl><dt></dt><dd>
+    <dl><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+False                                                                  
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== PROPERTY DETAILS ==================== -->
+<a name="section-PropertyDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Property Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-PropertyDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="declarations"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">declarations</h3>
+  <br />A list of children declarations.
+  <dl><dt></dt><dd>
+    <dl><dt>Get Method:</dt>
+    <dd><span class="summary-sig"><a href="pygccxml.declarations.scopedef.scopedef_t-class.html#_get_declarations" class="summary-sig-name">pygccxml.declarations.scopedef.scopedef_t._get_declarations</a>(<span class="summary-sig-arg">self</span>)</span>
+    </dd></dl>
+    <dl><dt>Type:</dt>
+      <dd>list of declaration_t</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pygccxml-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.language-binding.net">pygccxml</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha3 on Thu Oct 19 08:14:27 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>
