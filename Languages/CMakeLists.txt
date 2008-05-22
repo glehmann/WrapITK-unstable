@@ -83,7 +83,7 @@ ENDMACRO(ADD_SIMPLE_TYPEDEF_ALL_LANGUAGES wrap_class swig_name)
 ###############################################################################
 # build the languages list
 
-SET(WRAP_ITK_LANGUAGES )
+SET(WRAP_ITK_LANGUAGES CACHE INTERNAL "Internal languages list.")
 FILE(GLOB local_files *)
 FOREACH(f ${local_files})
   FILE(RELATIVE_PATH lang "${CMAKE_CURRENT_SOURCE_DIR}" "${f}")
