@@ -269,7 +269,7 @@ class scanner_t( xml.sax.handler.ContentHandler ):
                     size = int( attrs[XML_AN_MAX] )
                 except ValueError:
                     try:
-                        size = int( attrs[ XML_AN_MAX ], 16 )
+                        size = int( attrs[ XML_AN_MAX ].replace("u", ""), 16 )
                     except ValueError:
                         warnings.warn( 'unable to find out array size from expression "%s"' % attrs[ XML_AN_MAX ] )
         return array_t( type_, size + 1 )
