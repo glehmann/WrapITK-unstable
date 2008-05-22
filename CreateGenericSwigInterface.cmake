@@ -114,7 +114,7 @@ MACRO(END_INCLUDE_WRAP_CMAKE_SWIG_INTERFACE module)
   )
   ADD_CUSTOM_COMMAND(
     OUTPUT ${interface_file}
-    COMMAND ${PYTHON_PYGCCXML_DRIVER} ${WRAP_ITK_CMAKE_DIR}/igenerator.py
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/igenerator.py
       ${opts}
       --mdx ${mdx_file}
       --take-includes ${includes_file}
@@ -124,7 +124,7 @@ MACRO(END_INCLUDE_WRAP_CMAKE_SWIG_INTERFACE module)
       # --verbose
       ${xml_file}
       ${interface_file}
-    DEPENDS ${xml_file} ${idx_file} ${includes_file} ${WRAP_ITK_CMAKE_DIR}/igenerator.py ${SWIG_INTERFACE_FILES}
+    DEPENDS ${xml_file} ${idx_file} ${includes_file} ${CMAKE_BINARY_DIR}/igenerator.py ${SWIG_INTERFACE_FILES}
   )
   ADD_CUSTOM_TARGET(${module}Swig DEPENDS ${interface_file})
   ADD_DEPENDENCIES(${module}Swig ${WRAPPER_LIBRARY_NAME}Idx)
@@ -140,3 +140,10 @@ MACRO(END_INCLUDE_WRAP_CMAKE_SWIG_INTERFACE module)
   SET(SWIG_INTERFACE_FILES ${SWIG_INTERFACE_FILES} ${interface_file})
   SET(SWIG_INTERFACE_MODULE_CONTENT "${SWIG_INTERFACE_MODULE_CONTENT}%import wrap_${module}.i\n")
 ENDMACRO(END_INCLUDE_WRAP_CMAKE_SWIG_INTERFACE)
+
+
+# create the igenerator.py with the pygccxml path in it
+SET(PYGCCXML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/pygccxml-0.8.2/")
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/igenerator.py.in" 
+  "${CMAKE_CURRENT_BINARY_DIR}/igenerator.py"
+  @ONLY IMMEDIATE)
