@@ -207,6 +207,7 @@ ENDIF(PY_SITE_PACKAGES_PATH)
 MACRO(WRAP_LIBRARY_PYTHON library_name)
   SET(WRAP_ITK_PYTHON_CONFIGURATION_TEMPLATES "")
   SET(WRAP_ITK_PYTHON_LIBRARY_MODULE "")
+  SET(WRAP_ITK_PYTHON_LIBRARY_DEPS )
 ENDMACRO(WRAP_LIBRARY_PYTHON)
 
 
@@ -245,6 +246,12 @@ MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON group_name)
     SET(python_file "${LIBRARY_OUTPUT_PATH}/${lib}.py")
     SET(cpp_file "${CMAKE_CURRENT_BINARY_DIR}/${base_name}Python.cpp")
 
+    # prepare dependencies
+    SET(DEPS )
+    FOREACH(dep ${WRAPPER_LIBRARY_DEPENDS})
+      SET(DEPS ${DEPS} ${${dep}SwigFiles})
+    ENDFOREACH(dep)
+ 
     ADD_CUSTOM_COMMAND(
       OUTPUT ${cpp_file} ${python_file}
       COMMAND ${SWIG_EXECUTABLE} -c++ -python -O -features autodoc=1 -Werror
@@ -260,16 +267,17 @@ MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON group_name)
       -outdir ${LIBRARY_OUTPUT_PATH}
       ${interface_file}
       WORKING_DIRECTORY ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python
-      DEPENDS ${interface_file} ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/${base_name}_ext.i ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i ${SWIG_EXECUTABLE}
+      DEPENDS ${DEPS} ${WRAP_ITK_PYTHON_LIBRARY_DEPS} ${interface_file} ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/${base_name}_ext.i ${WRAP_ITK_PYTHON_SOURCE_DIR}/python.i ${SWIG_EXECUTABLE}
     )
-    ADD_CUSTOM_TARGET(${group_name}SwigPython DEPENDS ${cpp_file})
-    ADD_DEPENDENCIES(${module}SwigPython ${WRAPPER_LIBRARY_NAME}Swig)
     
     ADD_LIBRARY(${lib} MODULE ${cpp_file} ${WRAPPER_LIBRARY_CXX_SOURCES})
     SET_TARGET_PROPERTIES(${lib} PROPERTIES PREFIX "_")
     TARGET_LINK_LIBRARIES(${lib} ${WRAPPER_LIBRARY_LINK_LIBRARIES} ${PYTHON_LIBRARY})
-    ADD_DEPENDENCIES(${lib} ${module}SwigPython)
-    
+#    ADD_DEPENDENCIES(${lib} ${WRAPPER_LIBRARY_NAME}Swig)
+    FOREACH(dep ${WRAPPER_LIBRARY_DEPENDS})
+      ADD_DEPENDENCIES(${lib} ${dep}Swig)
+    ENDFOREACH(dep)
+
 # gcc visibility can't be used without getting errors when passing objects
 # from one module to an other
 #
@@ -290,6 +298,8 @@ MACRO(END_INCLUDE_WRAP_CMAKE_PYTHON group_name)
   CONFIGURE_FILE("${WRAP_ITK_PYTHON_SOURCE_DIR}/module_ext.i.in"
     "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/wrap_${module}_ext.i"
     @ONLY IMMEDIATE)
+
+  SET(WRAP_ITK_PYTHON_LIBRARY_DEPS ${WRAP_ITK_PYTHON_LIBRARY_DEPS} "${python_file}" "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/python/${base_name}_ext.i")
 
 ENDMACRO(END_INCLUDE_WRAP_CMAKE_PYTHON group_name)
 
