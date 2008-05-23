@@ -85,12 +85,16 @@ MACRO(END_WRAP_LIBRARY_SWIG_INTERFACE)
      @ONLY IMMEDIATE )
 
   SET(module_interface_file "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/${WRAPPER_LIBRARY_NAME}.i")
+  SET(module_interface_ext_file "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/${WRAPPER_LIBRARY_NAME}_ext.i")
   SET(deps_imports )
   FOREACH(dep ${WRAPPER_LIBRARY_DEPENDS})
     SET(deps_imports "${deps_imports}%import ${dep}.i\n")
   ENDFOREACH(dep)
   SET(CONFIG_MODULE_INTERFACE_CONTENT "${deps_imports}${SWIG_INTERFACE_MODULE_CONTENT}")  
   CONFIGURE_FILE("${WRAP_ITK_CONFIG_DIR}/module.i.in" "${module_interface_file}"
+    @ONLY IMMEDIATE )
+  SET(WRAP_ITK_FILE_CONTENT )
+  CONFIGURE_FILE("${WRAP_ITK_CONFIG_DIR}/empty.in" "${module_interface_ext_file}"
     @ONLY IMMEDIATE )
   
   # create the file which store all the includes
@@ -154,6 +158,12 @@ MACRO(END_INCLUDE_WRAP_CMAKE_SWIG_INTERFACE module)
   SET(SWIG_INTERFACE_MODULE_CONTENT "${SWIG_INTERFACE_MODULE_CONTENT}%import wrap_${module}.i\n")
 
   SET(SWIG_INTERFACE_MODULES ${SWIG_INTERFACE_MODULES} ${module})
+
+  SET(interface_ext_file "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/wrap_${module}_ext.i")
+  SET(WRAP_ITK_FILE_CONTENT )
+  CONFIGURE_FILE("${WRAP_ITK_CONFIG_DIR}/empty.in" "${interface_ext_file}"
+    @ONLY IMMEDIATE )
+
 ENDMACRO(END_INCLUDE_WRAP_CMAKE_SWIG_INTERFACE)
 
 
