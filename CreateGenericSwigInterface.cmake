@@ -172,6 +172,62 @@ MACRO(END_INCLUDE_WRAP_CMAKE_SWIG_INTERFACE module)
 ENDMACRO(END_INCLUDE_WRAP_CMAKE_SWIG_INTERFACE)
 
 
+MACRO(ADD_ONE_TYPEDEF_SWIG_INTERFACE wrap_method wrap_class swig_name)
+  # Add one  typedef to WRAPPER_TYPEDEFS
+  # 'wrap_method' is the one of the valid WRAPPER_WRAP_METHODS from WRAP_CLASS,
+  # 'wrap_class' is the fully-qualified C++ name of the class
+  # 'swig_name' is what the swigged class should be called
+  # The optional last argument is the template parameters that should go between 
+  # the < > brackets in the C++ template definition.
+  # Only pass 3 parameters to wrap a non-templated class
+  #
+  # Global vars used: none
+  # Global vars modified: WRAPPER_TYPEDEFS
+  
+  # get the base C++ class name (no namespaces) from wrap_class:
+  STRING(REGEX REPLACE "(.*::)" "" base_name "${wrap_class}")
+
+  SET(wrap_pointer 0)
+  SET(template_parameters "${ARGV3}")
+  IF(template_parameters)
+    SET(full_class_name "${wrap_class}< ${template_parameters} >")
+  ELSE(template_parameters)
+    SET(full_class_name "${wrap_class}")
+  ENDIF(template_parameters)
+  
+  # ADD_ONE_TYPEDEF_ALL_LANGUAGES("${wrap_method}" "${wrap_class}" "${swig_name}" "${ARGV3}")
+  
+  # Add a typedef for the class. We have this funny looking full_name::base_name
+  # thing (it expands to, for example "typedef itk::Foo<baz, 2>::Foo"), to 
+  # trick gcc_xml into creating code for the class. If we left off the trailing
+  # base_name, then gcc_xml wouldn't see the typedef as a class instantiation,
+  # and thus wouldn't create XML for any of the methods, etc.
+
+  IF("${wrap_method}" MATCHES "2_SUPERCLASSES")
+    ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE("${full_class_name}::Superclass::Superclass::Self" "${swig_name}_Superclass_Superclass")
+    ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE("${full_class_name}::Superclass::Superclass::Pointer::SmartPointer" "${swig_name}_Superclass_Superclass_Pointer")
+  ENDIF("${wrap_method}" MATCHES "2_SUPERCLASSES")
+
+  IF("${wrap_method}" MATCHES "SUPERCLASS")
+    ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE("${full_class_name}::Superclass::Self" "${swig_name}_Superclass")
+    ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE("${full_class_name}::Superclass::Pointer::SmartPointer" "${swig_name}_Superclass_Pointer")
+  ENDIF("${wrap_method}" MATCHES "SUPERCLASS")
+
+  IF("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
+    ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE("${full_class_name}" "${swig_name}")
+    # cable swig part will add a peace of code for type instantiation
+  ELSE("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
+    ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE("${full_class_name}" "${swig_name}")
+  ENDIF("${wrap_method}" MATCHES "FORCE_INSTANTIATE")
+
+  IF("${wrap_method}" MATCHES "POINTER")
+    # add a pointer typedef if we are so asked
+    ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE("${full_class_name}::Pointer::SmartPointer" "${swig_name}_Pointer")
+  ENDIF("${wrap_method}" MATCHES "POINTER")
+
+ENDMACRO(ADD_ONE_TYPEDEF_SWIG_INTERFACE)
+
+
 MACRO(ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE wrap_class swig_name)
   SET(SWIG_INTERFACE_TYPEDEFS "${SWIG_INTERFACE_TYPEDEFS}typedef ${wrap_class} ${swig_name};\n")
 ENDMACRO(ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE)
