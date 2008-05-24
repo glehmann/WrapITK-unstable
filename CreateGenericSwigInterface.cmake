@@ -89,9 +89,12 @@ MACRO(END_WRAP_LIBRARY_SWIG_INTERFACE)
   SET(module_interface_file "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/${WRAPPER_LIBRARY_NAME}.i")
   SET(module_interface_ext_file "${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/${WRAPPER_LIBRARY_NAME}_ext.i")
   SET(deps_imports )
+  SET(deps_includes )
   FOREACH(dep ${WRAPPER_LIBRARY_DEPENDS})
     SET(deps_imports "${deps_imports}%import ${dep}.i\n")
+    SET(deps_includes "${deps_includes}#include \"${dep}.includes\"\n")
   ENDFOREACH(dep)
+  SET(SWIG_INTERFACE_INCLUDES "${deps_includes}#include \"${WRAPPER_LIBRARY_NAME}.includes\"")
   SET(CONFIG_MODULE_INTERFACE_CONTENT "${deps_imports}${SWIG_INTERFACE_MODULE_CONTENT}")  
   CONFIGURE_FILE("${WRAP_ITK_CONFIG_DIR}/module.i.in" "${module_interface_file}"
     @ONLY IMMEDIATE )
@@ -173,6 +176,7 @@ MACRO(ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE wrap_class swig_name)
   SET(SWIG_INTERFACE_TYPEDEFS "${SWIG_INTERFACE_TYPEDEFS}typedef ${wrap_class} ${swig_name};\n")
 ENDMACRO(ADD_SIMPLE_TYPEDEF_SWIG_INTERFACE)
 
+INCLUDE_DIRECTORIES("${WRAPPER_MASTER_INDEX_OUTPUT_DIR}")
 
 # create the igenerator.py with the pygccxml path in it
 SET(PYGCCXML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/pygccxml-0.8.2/")
